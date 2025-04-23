@@ -57,48 +57,57 @@ try {
 }
 
 // Recent transactions
-$query = "SELECT t.*, u.username FROM transactions t 
-          JOIN users u ON t.user_id = u.id 
-          ORDER BY t.created_at DESC LIMIT 10";
-$result = $db->query($query);
-$recent_transactions = [];
-while ($row = $result->fetch_assoc()) {
-    $recent_transactions[] = $row;
-}
+try {
+    $query = "SELECT t.*, u.username FROM transactions t 
+            JOIN users u ON t.user_id = u.id 
+            ORDER BY t.created_at DESC LIMIT 10";
+    $result = $conn->query($query);
+    $recent_transactions = [];
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $recent_transactions[] = $row;
+    }
 
-// Recent redemptions
-$query = "SELECT r.*, u.username, rw.name as reward_name FROM redemptions r 
-          JOIN users u ON r.user_id = u.id 
-          JOIN rewards rw ON r.reward_id = rw.id 
-          ORDER BY r.created_at DESC LIMIT 10";
-$result = $db->query($query);
-$recent_redemptions = [];
-while ($row = $result->fetch_assoc()) {
-    $recent_redemptions[] = $row;
-}
+    // Recent redemptions
+    $query = "SELECT r.*, u.username, rw.name as reward_name FROM redemptions r 
+            JOIN users u ON r.user_id = u.id 
+            JOIN rewards rw ON r.reward_id = rw.id 
+            ORDER BY r.created_at DESC LIMIT 10";
+    $result = $conn->query($query);
+    $recent_redemptions = [];
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $recent_redemptions[] = $row;
+    }
 
-// Daily activity (last 7 days)
-$query = "SELECT COUNT(*) as count, DATE(created_at) as date 
-          FROM transactions 
-          WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) 
-          GROUP BY DATE(created_at) 
-          ORDER BY date ASC";
-$result = $db->query($query);
-$daily_activity = [];
-while ($row = $result->fetch_assoc()) {
-    $daily_activity[$row['date']] = $row['count'];
-}
+    // Daily activity (last 7 days) - SQLite version
+    $query = "SELECT COUNT(*) as count, DATE(created_at) as date 
+            FROM transactions 
+            WHERE created_at >= datetime('now', '-7 days') 
+            GROUP BY DATE(created_at) 
+            ORDER BY date ASC";
+    $result = $conn->query($query);
+    $daily_activity = [];
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $daily_activity[$row['date']] = $row['count'];
+    }
 
-// New users (last 7 days)
-$query = "SELECT COUNT(*) as count, DATE(created_at) as date 
-          FROM users 
-          WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) 
-          GROUP BY DATE(created_at) 
-          ORDER BY date ASC";
-$result = $db->query($query);
-$new_users = [];
-while ($row = $result->fetch_assoc()) {
-    $new_users[$row['date']] = $row['count'];
+    // New users (last 7 days) - SQLite version
+    $query = "SELECT COUNT(*) as count, DATE(created_at) as date 
+            FROM users 
+            WHERE created_at >= datetime('now', '-7 days') 
+            GROUP BY DATE(created_at) 
+            ORDER BY date ASC";
+    $result = $conn->query($query);
+    $new_users = [];
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $new_users[$row['date']] = $row['count'];
+    }
+} catch (PDOException $e) {
+    error_log("Error fetching admin dashboard data: " . $e->getMessage());
+    // Set empty arrays in case of error
+    $recent_transactions = [];
+    $recent_redemptions = [];
+    $daily_activity = [];
+    $new_users = [];
 }
 
 include 'header.php';

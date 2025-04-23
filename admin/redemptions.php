@@ -48,24 +48,29 @@ if (isset($_GET['action'])) {
     if ($action === 'view' && isset($_GET['id'])) {
         $redemption_id = (int)$_GET['id'];
         
-        // Get redemption details
-        $stmt = $conn->prepare("
-            SELECT r.*, u.username, u.email, rw.name as reward_name, rw.description as reward_description 
-            FROM redemptions r
-            JOIN users u ON r.user_id = u.id
-            JOIN rewards rw ON r.reward_id = rw.id
-            WHERE r.id = ?
-        ");
-        $stmt->bind_param("i", $redemption_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-        if ($result->num_rows === 0) {
+        try {
+            // Get redemption details
+            $stmt = $conn->prepare("
+                SELECT r.*, u.username, u.email, rw.name as reward_name, rw.description as reward_description 
+                FROM redemptions r
+                JOIN users u ON r.user_id = u.id
+                JOIN rewards rw ON r.reward_id = rw.id
+                WHERE r.id = :redemption_id
+            ");
+            $stmt->bindValue(':redemption_id', $redemption_id, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            $redemption = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$redemption) {
+                header('Location: redemptions.php');
+                exit;
+            }
+        } catch (PDOException $e) {
+            error_log("Error fetching redemption details: " . $e->getMessage());
             header('Location: redemptions.php');
             exit;
         }
-        
-        $redemption = $result->fetch_assoc();
     }
 }
 
@@ -82,41 +87,42 @@ $query = "
     WHERE 1=1
 ";
 $params = [];
-$types = "";
 
 if ($status_filter !== '') {
-    $query .= " AND r.status = ?";
-    $params[] = $status_filter;
-    $types .= "s";
+    $query .= " AND r.status = :status";
+    $params[':status'] = $status_filter;
 }
 
 if ($user_filter > 0) {
-    $query .= " AND r.user_id = ?";
-    $params[] = $user_filter;
-    $types .= "i";
+    $query .= " AND r.user_id = :user_id";
+    $params[':user_id'] = $user_filter;
 }
 
 $query .= " ORDER BY r.created_at DESC";
 
-// Execute query
-$stmt = $conn->prepare($query);
-if (!empty($params)) {
-    $stmt->bind_param($types, ...$params);
-}
-$stmt->execute();
-$result = $stmt->get_result();
-
-$redemptions = [];
-while ($row = $result->fetch_assoc()) {
-    $redemptions[] = $row;
-}
-
-// Get all users for filter dropdown
-$users_query = "SELECT id, username FROM users ORDER BY username ASC";
-$users_result = $db->query($users_query);
-$users = [];
-while ($row = $users_result->fetch_assoc()) {
-    $users[$row['id']] = $row['username'];
+try {
+    // Execute query
+    $stmt = $conn->prepare($query);
+    if (!empty($params)) {
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
+    }
+    $stmt->execute();
+    
+    $redemptions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Get all users for filter dropdown
+    $users_query = "SELECT id, username FROM users ORDER BY username ASC";
+    $stmt = $conn->query($users_query);
+    $users = [];
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $users[$row['id']] = $row['username'];
+    }
+} catch (PDOException $e) {
+    error_log("Error fetching redemptions: " . $e->getMessage());
+    $redemptions = [];
+    $users = [];
 }
 
 include 'header.php';

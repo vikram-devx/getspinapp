@@ -24,53 +24,52 @@ $filter_date_to = isset($_GET['date_to']) ? $_GET['date_to'] : '';
 // Build query with filters
 $query = "SELECT t.*, u.username FROM transactions t JOIN users u ON t.user_id = u.id WHERE 1=1";
 $params = [];
-$types = "";
 
 if ($filter_user > 0) {
-    $query .= " AND t.user_id = ?";
-    $params[] = $filter_user;
-    $types .= "i";
+    $query .= " AND t.user_id = :user_id";
+    $params[':user_id'] = $filter_user;
 }
 
 if ($filter_type != '') {
-    $query .= " AND t.type = ?";
-    $params[] = $filter_type;
-    $types .= "s";
+    $query .= " AND t.type = :type";
+    $params[':type'] = $filter_type;
 }
 
 if ($filter_date_from != '') {
-    $query .= " AND DATE(t.created_at) >= ?";
-    $params[] = $filter_date_from;
-    $types .= "s";
+    $query .= " AND DATE(t.created_at) >= :date_from";
+    $params[':date_from'] = $filter_date_from;
 }
 
 if ($filter_date_to != '') {
-    $query .= " AND DATE(t.created_at) <= ?";
-    $params[] = $filter_date_to;
-    $types .= "s";
+    $query .= " AND DATE(t.created_at) <= :date_to";
+    $params[':date_to'] = $filter_date_to;
 }
 
 $query .= " ORDER BY t.created_at DESC LIMIT 500";
 
-// Execute query
-$stmt = $conn->prepare($query);
-if (!empty($params)) {
-    $stmt->bind_param($types, ...$params);
-}
-$stmt->execute();
-$result = $stmt->get_result();
-
-$transactions = [];
-while ($row = $result->fetch_assoc()) {
-    $transactions[] = $row;
-}
-
-// Get all users for filter dropdown
-$users_query = "SELECT id, username FROM users ORDER BY username ASC";
-$users_result = $db->query($users_query);
-$users = [];
-while ($row = $users_result->fetch_assoc()) {
-    $users[$row['id']] = $row['username'];
+try {
+    // Execute query
+    $stmt = $conn->prepare($query);
+    if (!empty($params)) {
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
+    }
+    $stmt->execute();
+    
+    $transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Get all users for filter dropdown
+    $users_query = "SELECT id, username FROM users ORDER BY username ASC";
+    $stmt = $conn->query($users_query);
+    $users = [];
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $users[$row['id']] = $row['username'];
+    }
+} catch (PDOException $e) {
+    error_log("Error fetching transactions: " . $e->getMessage());
+    $transactions = [];
+    $users = [];
 }
 
 // Calculate totals
