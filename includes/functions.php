@@ -613,7 +613,7 @@ function getAllRedemptions() {
             JOIN rewards rw ON r.reward_id = rw.id
             ORDER BY r.created_at DESC
         ";
-        $result = $db->query($query);
+        $result = $conn->query($query);
         
         $redemptions = [];
         if ($result) {

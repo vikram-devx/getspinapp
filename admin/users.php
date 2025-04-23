@@ -27,29 +27,27 @@ if (isset($_GET['action'])) {
         $user_id = (int)$_GET['id'];
         
         // Get user details
-        $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
-        $stmt->bind_param("i", $user_id);
+        $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_id");
+        $stmt->bindValue(':user_id', $user_id);
         $stmt->execute();
-        $result = $stmt->get_result();
         
-        if ($result->num_rows === 0) {
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$user) {
             header('Location: users.php');
             exit;
         }
-        
-        $user = $result->fetch_assoc();
         
         // Get user stats
         $stats = getUserStats($user_id);
         
         // Get user transactions
-        $stmt = $conn->prepare("SELECT * FROM transactions WHERE user_id = ? ORDER BY created_at DESC LIMIT 10");
-        $stmt->bind_param("i", $user_id);
+        $stmt = $conn->prepare("SELECT * FROM transactions WHERE user_id = :user_id ORDER BY created_at DESC LIMIT 10");
+        $stmt->bindValue(':user_id', $user_id);
         $stmt->execute();
-        $transactions_result = $stmt->get_result();
         
         $transactions = [];
-        while ($row = $transactions_result->fetch_assoc()) {
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $transactions[] = $row;
         }
         
