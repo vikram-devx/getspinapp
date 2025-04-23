@@ -16,35 +16,45 @@ $db = Database::getInstance();
 $conn = $db->getConnection();
 
 // Get overview statistics
-// Total users
-$query = "SELECT COUNT(*) as total FROM users";
-$result = $db->query($query);
-$row = $result->fetch_assoc();
-$total_users = $row['total'];
+try {
+    // Total users
+    $query = "SELECT COUNT(*) as total FROM users";
+    $result = $conn->query($query);
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    $total_users = $row['total'];
 
-// Total points in circulation
-$query = "SELECT SUM(points) as total FROM users";
-$result = $db->query($query);
-$row = $result->fetch_assoc();
-$total_points = $row['total'] ?: 0;
+    // Total points in circulation
+    $query = "SELECT SUM(points) as total FROM users";
+    $result = $conn->query($query);
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    $total_points = $row['total'] ?: 0;
 
-// Total completed offers
-$query = "SELECT COUNT(*) as total FROM user_offers WHERE completed = 1";
-$result = $db->query($query);
-$row = $result->fetch_assoc();
-$total_offers = $row['total'];
+    // Total completed offers
+    $query = "SELECT COUNT(*) as total FROM user_offers WHERE completed = 1";
+    $result = $conn->query($query);
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    $total_offers = $row['total'];
 
-// Total redemptions
-$query = "SELECT COUNT(*) as total FROM redemptions";
-$result = $db->query($query);
-$row = $result->fetch_assoc();
-$total_redemptions = $row['total'];
+    // Total redemptions
+    $query = "SELECT COUNT(*) as total FROM redemptions";
+    $result = $conn->query($query);
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    $total_redemptions = $row['total'];
 
-// Pending redemptions
-$query = "SELECT COUNT(*) as total FROM redemptions WHERE status = 'pending'";
-$result = $db->query($query);
-$row = $result->fetch_assoc();
-$pending_redemptions = $row['total'];
+    // Pending redemptions
+    $query = "SELECT COUNT(*) as total FROM redemptions WHERE status = 'pending'";
+    $result = $conn->query($query);
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    $pending_redemptions = $row['total'];
+} catch (PDOException $e) {
+    error_log("Error fetching admin dashboard statistics: " . $e->getMessage());
+    // Set defaults in case of error
+    $total_users = 0;
+    $total_points = 0;
+    $total_offers = 0;
+    $total_redemptions = 0;
+    $pending_redemptions = 0;
+}
 
 // Recent transactions
 $query = "SELECT t.*, u.username FROM transactions t 

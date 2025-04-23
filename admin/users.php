@@ -52,13 +52,12 @@ if (isset($_GET['action'])) {
         }
         
         // Get user redemptions
-        $stmt = $conn->prepare("SELECT r.*, rw.name as reward_name FROM redemptions r JOIN rewards rw ON r.reward_id = rw.id WHERE r.user_id = ? ORDER BY r.created_at DESC");
-        $stmt->bind_param("i", $user_id);
+        $stmt = $conn->prepare("SELECT r.*, rw.name as reward_name FROM redemptions r JOIN rewards rw ON r.reward_id = rw.id WHERE r.user_id = :user_id ORDER BY r.created_at DESC");
+        $stmt->bindValue(':user_id', $user_id);
         $stmt->execute();
-        $redemptions_result = $stmt->get_result();
         
         $redemptions = [];
-        while ($row = $redemptions_result->fetch_assoc()) {
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $redemptions[] = $row;
         }
     }
@@ -71,17 +70,17 @@ if (isset($_GET['action'])) {
         $description = isset($_POST['description']) ? trim($_POST['description']) : 'Admin adjustment';
         
         // Get current user points
-        $stmt = $conn->prepare("SELECT points FROM users WHERE id = ?");
-        $stmt->bind_param("i", $user_id);
+        $stmt = $conn->prepare("SELECT points FROM users WHERE id = :user_id");
+        $stmt->bindValue(':user_id', $user_id);
         $stmt->execute();
-        $result = $stmt->get_result();
         
-        if ($result->num_rows === 0) {
+        $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$user_data) {
             $message = 'User not found';
             $message_type = 'danger';
         } else {
-            $user = $result->fetch_assoc();
-            $current_points = $user['points'];
+            $current_points = $user_data['points'];
             
             // Validate points adjustment
             if ($points <= 0) {
@@ -114,8 +113,9 @@ if (isset($_GET['action'])) {
         $user_id = (int)$_GET['id'];
         $is_admin = isset($_POST['is_admin']) ? 1 : 0;
         
-        $stmt = $conn->prepare("UPDATE users SET is_admin = ? WHERE id = ?");
-        $stmt->bind_param("ii", $is_admin, $user_id);
+        $stmt = $conn->prepare("UPDATE users SET is_admin = :is_admin WHERE id = :user_id");
+        $stmt->bindValue(':is_admin', $is_admin, PDO::PARAM_INT);
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
         
         if ($stmt->execute()) {
             $message = 'User role updated successfully';

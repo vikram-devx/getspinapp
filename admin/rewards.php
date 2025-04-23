@@ -78,17 +78,16 @@ if (isset($_GET['action'])) {
         }
         
         // Get reward details for the form
-        $stmt = $conn->prepare("SELECT * FROM rewards WHERE id = ?");
-        $stmt->bind_param("i", $reward_id);
+        $stmt = $conn->prepare("SELECT * FROM rewards WHERE id = :reward_id");
+        $stmt->bindValue(':reward_id', $reward_id, PDO::PARAM_INT);
         $stmt->execute();
-        $result = $stmt->get_result();
         
-        if ($result->num_rows === 0) {
+        $reward = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$reward) {
             header('Location: rewards.php');
             exit;
         }
-        
-        $reward = $result->fetch_assoc();
     }
     
     // Delete reward
