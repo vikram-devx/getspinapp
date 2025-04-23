@@ -14,29 +14,39 @@ function getOffers($ip = null, $user_agent = null, $offer_type = null, $max = nu
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
     }
     
-    // Build the API URL
-    $api_url = OGADS_API_URL . '?ip=' . urlencode($ip) . '&user_agent=' . urlencode($user_agent);
+    // Setup API request data
+    $data = [
+        'ip' => $ip,                   // Client IP (REQUIRED)
+        'user_agent' => $user_agent,   // Client User Agent (REQUIRED)
+    ];
     
     // Add optional parameters if provided
     if ($offer_type) {
-        $api_url .= '&ctype=' . urlencode($offer_type);
+        $data['ctype'] = $offer_type;
     }
     
     if ($max) {
-        $api_url .= '&max=' . urlencode($max);
+        $data['max'] = $max;
     }
     
     if ($min) {
-        $api_url .= '&min=' . urlencode($min);
+        $data['min'] = $min;
     }
+    
+    // Create URL with query parameters
+    $url = OGADS_API_URL . '?' . http_build_query($data);
     
     // Set up cURL
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $api_url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        'Authorization: Bearer ' . OGADS_API_KEY,
-        'Accept: application/json'
+    
+    // Set CURL options
+    curl_setopt_array($ch, [
+        CURLOPT_URL            => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER     => [
+            'Authorization: Bearer ' . OGADS_API_KEY,
+            'Accept: application/json'
+        ],
     ]);
     
     // Execute cURL request
@@ -44,10 +54,11 @@ function getOffers($ip = null, $user_agent = null, $offer_type = null, $max = nu
     
     // Check for errors
     if (curl_errno($ch)) {
+        $error = curl_error($ch);
         curl_close($ch);
         return [
             'status' => 'error',
-            'message' => 'API Request Error: ' . curl_error($ch)
+            'message' => 'API Request Error: ' . $error
         ];
     }
     
@@ -58,6 +69,7 @@ function getOffers($ip = null, $user_agent = null, $offer_type = null, $max = nu
     
     // Check if response is valid
     if (!$data || json_last_error() !== JSON_ERROR_NONE) {
+        error_log("Invalid API Response: " . $response);
         return [
             'status' => 'error',
             'message' => 'Invalid API Response'
@@ -75,48 +87,59 @@ function getUserStats($user_id) {
     $db = Database::getInstance();
     $conn = $db->getConnection();
     
-    // Get total earnings
-    $stmt = $conn->prepare("SELECT SUM(points) as total_earned FROM transactions WHERE user_id = ? AND type = 'earn'");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $total_earned = $result->fetch_assoc()['total_earned'] ?: 0;
-    
-    // Get total spent
-    $stmt = $conn->prepare("SELECT SUM(points) as total_spent FROM transactions WHERE user_id = ? AND type = 'spend'");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $total_spent = $result->fetch_assoc()['total_spent'] ?: 0;
-    
-    // Get completed offers count
-    $stmt = $conn->prepare("SELECT COUNT(*) as completed_offers FROM user_offers WHERE user_id = ? AND completed = 1");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $completed_offers = $result->fetch_assoc()['completed_offers'] ?: 0;
-    
-    // Get redeemed rewards count
-    $stmt = $conn->prepare("SELECT COUNT(*) as redeemed_rewards FROM redemptions WHERE user_id = ? AND status = 'completed'");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $redeemed_rewards = $result->fetch_assoc()['redeemed_rewards'] ?: 0;
-    
-    // Get current points
-    $stmt = $conn->prepare("SELECT points FROM users WHERE id = ?");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $current_points = $result->fetch_assoc()['points'] ?: 0;
-    
-    return [
-        'total_earned' => $total_earned,
-        'total_spent' => $total_spent,
-        'completed_offers' => $completed_offers,
-        'redeemed_rewards' => $redeemed_rewards,
-        'current_points' => $current_points
-    ];
+    try {
+        // Get total earnings
+        $stmt = $conn->prepare("SELECT SUM(points) as total_earned FROM transactions WHERE user_id = :user_id AND type = 'earn'");
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $total_earned = $result['total_earned'] ?: 0;
+        
+        // Get total spent
+        $stmt = $conn->prepare("SELECT SUM(points) as total_spent FROM transactions WHERE user_id = :user_id AND type = 'spend'");
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $total_spent = $result['total_spent'] ?: 0;
+        
+        // Get completed offers count
+        $stmt = $conn->prepare("SELECT COUNT(*) as completed_offers FROM user_offers WHERE user_id = :user_id AND completed = 1");
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $completed_offers = $result['completed_offers'] ?: 0;
+        
+        // Get redeemed rewards count
+        $stmt = $conn->prepare("SELECT COUNT(*) as redeemed_rewards FROM redemptions WHERE user_id = :user_id AND status = 'completed'");
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $redeemed_rewards = $result['redeemed_rewards'] ?: 0;
+        
+        // Get current points
+        $stmt = $conn->prepare("SELECT points FROM users WHERE id = :user_id");
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $current_points = $result['points'] ?: 0;
+        
+        return [
+            'total_earned' => $total_earned,
+            'total_spent' => $total_spent,
+            'completed_offers' => $completed_offers,
+            'redeemed_rewards' => $redeemed_rewards,
+            'current_points' => $current_points
+        ];
+    } catch (PDOException $e) {
+        error_log("Error getting user stats: " . $e->getMessage());
+        return [
+            'total_earned' => 0,
+            'total_spent' => 0,
+            'completed_offers' => 0,
+            'redeemed_rewards' => 0,
+            'current_points' => 0
+        ];
+    }
 }
 
 // Function to get available rewards
@@ -124,15 +147,22 @@ function getRewards() {
     $db = Database::getInstance();
     $conn = $db->getConnection();
     
-    $query = "SELECT * FROM rewards WHERE is_active = 1 ORDER BY points_required ASC";
-    $result = $db->query($query);
-    
-    $rewards = [];
-    while ($row = $result->fetch_assoc()) {
-        $rewards[] = $row;
+    try {
+        $query = "SELECT * FROM rewards WHERE is_active = 1 ORDER BY points_required ASC";
+        $result = $db->query($query);
+        
+        $rewards = [];
+        if ($result) {
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $rewards[] = $row;
+            }
+        }
+        
+        return $rewards;
+    } catch (PDOException $e) {
+        error_log("Error getting rewards: " . $e->getMessage());
+        return [];
     }
-    
-    return $rewards;
 }
 
 // Function to get reward by ID
@@ -140,16 +170,22 @@ function getRewardById($reward_id) {
     $db = Database::getInstance();
     $conn = $db->getConnection();
     
-    $stmt = $conn->prepare("SELECT * FROM rewards WHERE id = ?");
-    $stmt->bind_param("i", $reward_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    if ($result->num_rows === 0) {
+    try {
+        $stmt = $conn->prepare("SELECT * FROM rewards WHERE id = :reward_id");
+        $stmt->bindValue(':reward_id', $reward_id);
+        $stmt->execute();
+        
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$result) {
+            return null;
+        }
+        
+        return $result;
+    } catch (PDOException $e) {
+        error_log("Error getting reward by ID: " . $e->getMessage());
         return null;
     }
-    
-    return $result->fetch_assoc();
 }
 
 // Function to redeem a reward
@@ -178,15 +214,17 @@ function redeemReward($user_id, $reward_id) {
         ];
     }
     
-    // Begin transaction
-    $conn->begin_transaction();
-    
     try {
+        // Begin transaction
+        $conn->beginTransaction();
+        
         // Create redemption record
-        $stmt = $conn->prepare("INSERT INTO redemptions (user_id, reward_id, points_used, status) VALUES (?, ?, ?, 'pending')");
-        $stmt->bind_param("iii", $user_id, $reward_id, $reward['points_required']);
+        $stmt = $conn->prepare("INSERT INTO redemptions (user_id, reward_id, points_used, status) VALUES (:user_id, :reward_id, :points_used, 'pending')");
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->bindValue(':reward_id', $reward_id);
+        $stmt->bindValue(':points_used', $reward['points_required']);
         $stmt->execute();
-        $redemption_id = $conn->insert_id;
+        $redemption_id = $conn->lastInsertId();
         
         // Deduct points from user
         $description = "Redeemed " . $reward['name'];
@@ -202,7 +240,7 @@ function redeemReward($user_id, $reward_id) {
         ];
     } catch (Exception $e) {
         // Roll back transaction on error
-        $conn->rollback();
+        $conn->rollBack();
         
         return [
             'status' => 'error',
@@ -216,17 +254,22 @@ function getUserTransactions($user_id, $limit = 10) {
     $db = Database::getInstance();
     $conn = $db->getConnection();
     
-    $stmt = $conn->prepare("SELECT * FROM transactions WHERE user_id = ? ORDER BY created_at DESC LIMIT ?");
-    $stmt->bind_param("ii", $user_id, $limit);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    $transactions = [];
-    while ($row = $result->fetch_assoc()) {
-        $transactions[] = $row;
+    try {
+        $stmt = $conn->prepare("SELECT * FROM transactions WHERE user_id = :user_id ORDER BY created_at DESC LIMIT :limit");
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        $transactions = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $transactions[] = $row;
+        }
+        
+        return $transactions;
+    } catch (PDOException $e) {
+        error_log("Error getting user transactions: " . $e->getMessage());
+        return [];
     }
-    
-    return $transactions;
 }
 
 // Function to get user redemptions

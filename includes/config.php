@@ -2,11 +2,9 @@
 // Configuration settings for the application
 session_start();
 
-// Database Configuration
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'rewards_app');
+// Database Configuration - SQLite
+define('DB_TYPE', 'sqlite');
+define('DB_PATH', __DIR__ . '/../data/rewards_app.sqlite');
 
 // OGAds API Configuration
 define('OGADS_API_KEY', '31621|84YSBHzNxHsFkLk6aRohyLBWYn7f0HGQpHBHQo8F1ae7067f');
@@ -27,4 +25,9 @@ error_reporting(E_ALL);
 
 // Timezone
 date_default_timezone_set('UTC');
+
+// Create data directory if it doesn't exist
+if (!file_exists(__DIR__ . '/../data')) {
+    mkdir(__DIR__ . '/../data', 0777, true);
+}
 ?>

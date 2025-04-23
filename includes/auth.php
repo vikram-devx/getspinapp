@@ -12,49 +12,58 @@ class Auth {
     public function register($username, $email, $password) {
         $conn = $this->db->getConnection();
         
-        // Check if username already exists
-        $stmt = $conn->prepare("SELECT id FROM users WHERE username = ?");
-        $stmt->bind_param("s", $username);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-        if ($result->num_rows > 0) {
+        try {
+            // Check if username already exists
+            $stmt = $conn->prepare("SELECT id FROM users WHERE username = :username");
+            $stmt->bindValue(':username', $username);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($result) {
+                return [
+                    'status' => 'error',
+                    'message' => 'Username already exists'
+                ];
+            }
+            
+            // Check if email already exists
+            $stmt = $conn->prepare("SELECT id FROM users WHERE email = :email");
+            $stmt->bindValue(':email', $email);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($result) {
+                return [
+                    'status' => 'error',
+                    'message' => 'Email already exists'
+                ];
+            }
+            
+            // Hash the password
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            
+            // Insert new user
+            $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)");
+            $stmt->bindValue(':username', $username);
+            $stmt->bindValue(':email', $email);
+            $stmt->bindValue(':password', $hashed_password);
+            
+            if ($stmt->execute()) {
+                return [
+                    'status' => 'success',
+                    'message' => 'Registration successful',
+                    'user_id' => $conn->lastInsertId()
+                ];
+            } else {
+                return [
+                    'status' => 'error',
+                    'message' => 'Registration failed'
+                ];
+            }
+        } catch (PDOException $e) {
             return [
                 'status' => 'error',
-                'message' => 'Username already exists'
-            ];
-        }
-        
-        // Check if email already exists
-        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-        if ($result->num_rows > 0) {
-            return [
-                'status' => 'error',
-                'message' => 'Email already exists'
-            ];
-        }
-        
-        // Hash the password
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        
-        // Insert new user
-        $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $username, $email, $hashed_password);
-        
-        if ($stmt->execute()) {
-            return [
-                'status' => 'success',
-                'message' => 'Registration successful',
-                'user_id' => $stmt->insert_id
-            ];
-        } else {
-            return [
-                'status' => 'error',
-                'message' => 'Registration failed: ' . $stmt->error
+                'message' => 'Registration failed: ' . $e->getMessage()
             ];
         }
     }
@@ -63,46 +72,51 @@ class Auth {
     public function login($username, $password) {
         $conn = $this->db->getConnection();
         
-        // Get user by username
-        $stmt = $conn->prepare("SELECT id, username, email, password, points, is_admin FROM users WHERE username = ?");
-        $stmt->bind_param("s", $username);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-        if ($result->num_rows === 0) {
-            return [
-                'status' => 'error',
-                'message' => 'Invalid username or password'
-            ];
-        }
-        
-        $user = $result->fetch_assoc();
-        
-        // Verify password
-        if (password_verify($password, $user['password'])) {
-            // Set session variables
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $user['username'];
-            $_SESSION['email'] = $user['email'];
-            $_SESSION['points'] = $user['points'];
-            $_SESSION['is_admin'] = $user['is_admin'];
-            $_SESSION['logged_in'] = true;
+        try {
+            // Get user by username
+            $stmt = $conn->prepare("SELECT id, username, email, password, points, is_admin FROM users WHERE username = :username");
+            $stmt->bindValue(':username', $username);
+            $stmt->execute();
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
             
-            return [
-                'status' => 'success',
-                'message' => 'Login successful',
-                'user' => [
-                    'id' => $user['id'],
-                    'username' => $user['username'],
-                    'email' => $user['email'],
-                    'points' => $user['points'],
-                    'is_admin' => $user['is_admin']
-                ]
-            ];
-        } else {
+            if (!$user) {
+                return [
+                    'status' => 'error',
+                    'message' => 'Invalid username or password'
+                ];
+            }
+            
+            // Verify password
+            if (password_verify($password, $user['password'])) {
+                // Set session variables
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['username'] = $user['username'];
+                $_SESSION['email'] = $user['email'];
+                $_SESSION['points'] = $user['points'];
+                $_SESSION['is_admin'] = $user['is_admin'];
+                $_SESSION['logged_in'] = true;
+                
+                return [
+                    'status' => 'success',
+                    'message' => 'Login successful',
+                    'user' => [
+                        'id' => $user['id'],
+                        'username' => $user['username'],
+                        'email' => $user['email'],
+                        'points' => $user['points'],
+                        'is_admin' => $user['is_admin']
+                    ]
+                ];
+            } else {
+                return [
+                    'status' => 'error',
+                    'message' => 'Invalid username or password'
+                ];
+            }
+        } catch (PDOException $e) {
             return [
                 'status' => 'error',
-                'message' => 'Invalid username or password'
+                'message' => 'Login failed: ' . $e->getMessage()
             ];
         }
     }
@@ -114,7 +128,7 @@ class Auth {
     
     // Check if user is admin
     public function isAdmin() {
-        return isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === 1;
+        return isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1;
     }
     
     // Logout user
@@ -140,39 +154,50 @@ class Auth {
         $user_id = $_SESSION['user_id'];
         $conn = $this->db->getConnection();
         
-        $stmt = $conn->prepare("SELECT id, username, email, points, is_admin, created_at FROM users WHERE id = ?");
-        $stmt->bind_param("i", $user_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-        if ($result->num_rows === 0) {
+        try {
+            $stmt = $conn->prepare("SELECT id, username, email, points, is_admin, created_at FROM users WHERE id = :user_id");
+            $stmt->bindValue(':user_id', $user_id);
+            $stmt->execute();
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$user) {
+                return null;
+            }
+            
+            return $user;
+        } catch (PDOException $e) {
+            error_log('Error getting user: ' . $e->getMessage());
             return null;
         }
-        
-        return $result->fetch_assoc();
     }
     
     // Update user points
     public function updatePoints($user_id, $points, $type, $description, $reference_id = null, $reference_type = null) {
         $conn = $this->db->getConnection();
         
-        // Begin transaction
-        $conn->begin_transaction();
-        
         try {
+            // Begin transaction
+            $conn->beginTransaction();
+            
             // Update user points
             if ($type === 'earn') {
-                $stmt = $conn->prepare("UPDATE users SET points = points + ? WHERE id = ?");
+                $stmt = $conn->prepare("UPDATE users SET points = points + :points WHERE id = :user_id");
             } else {
-                $stmt = $conn->prepare("UPDATE users SET points = points - ? WHERE id = ?");
+                $stmt = $conn->prepare("UPDATE users SET points = points - :points WHERE id = :user_id");
             }
             
-            $stmt->bind_param("ii", $points, $user_id);
+            $stmt->bindValue(':points', $points);
+            $stmt->bindValue(':user_id', $user_id);
             $stmt->execute();
             
             // Record transaction
-            $stmt = $conn->prepare("INSERT INTO transactions (user_id, type, points, description, reference_id, reference_type) VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("ississ", $user_id, $type, $points, $description, $reference_id, $reference_type);
+            $stmt = $conn->prepare("INSERT INTO transactions (user_id, type, points, description, reference_id, reference_type) VALUES (:user_id, :type, :points, :description, :reference_id, :reference_type)");
+            $stmt->bindValue(':user_id', $user_id);
+            $stmt->bindValue(':type', $type);
+            $stmt->bindValue(':points', $points);
+            $stmt->bindValue(':description', $description);
+            $stmt->bindValue(':reference_id', $reference_id);
+            $stmt->bindValue(':reference_type', $reference_type);
             $stmt->execute();
             
             // Update session points if it's the current user
@@ -191,9 +216,9 @@ class Auth {
                 'status' => 'success',
                 'message' => 'Points updated successfully'
             ];
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             // Roll back transaction on error
-            $conn->rollback();
+            $conn->rollBack();
             
             return [
                 'status' => 'error',

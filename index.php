@@ -18,8 +18,10 @@ $query = "SELECT * FROM rewards WHERE is_active = 1 ORDER BY points_required ASC
 $result = $db->query($query);
 
 $showcase_rewards = [];
-while ($row = $result->fetch_assoc()) {
-    $showcase_rewards[] = $row;
+if ($result) {
+    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        $showcase_rewards[] = $row;
+    }
 }
 
 include 'includes/header.php';
