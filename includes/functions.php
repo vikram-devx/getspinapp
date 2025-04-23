@@ -664,21 +664,28 @@ function getAllTransactions() {
     $db = Database::getInstance();
     $conn = $db->getConnection();
     
-    $query = "
-        SELECT t.*, u.username 
-        FROM transactions t
-        JOIN users u ON t.user_id = u.id
-        ORDER BY t.created_at DESC
-        LIMIT 1000
-    ";
-    $result = $db->query($query);
-    
-    $transactions = [];
-    while ($row = $result->fetch_assoc()) {
-        $transactions[] = $row;
+    try {
+        $query = "
+            SELECT t.*, u.username 
+            FROM transactions t
+            JOIN users u ON t.user_id = u.id
+            ORDER BY t.created_at DESC
+            LIMIT 1000
+        ";
+        $result = $conn->query($query);
+        
+        $transactions = [];
+        if ($result) {
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $transactions[] = $row;
+            }
+        }
+        
+        return $transactions;
+    } catch (PDOException $e) {
+        error_log("Error getting all transactions: " . $e->getMessage());
+        return [];
     }
-    
-    return $transactions;
 }
 
 // Format points as currency
