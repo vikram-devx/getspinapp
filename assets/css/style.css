@@ -1,0 +1,321 @@
+/* Global Styles */
+:root {
+    --primary-color: #4e73df;
+    --secondary-color: #6c757d;
+    --success-color: #1cc88a;
+    --info-color: #36b9cc;
+    --warning-color: #f6c23e;
+    --danger-color: #e74a3b;
+    --light-color: #f8f9fc;
+    --dark-color: #5a5c69;
+}
+
+body {
+    background-color: #f8f9fc;
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    flex: 1;
+}
+
+/* Navbar Styles */
+.navbar {
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    padding: 0.75rem 1rem;
+    font-size: 1.25rem;
+}
+
+/* Card Styles */
+.card {
+    border: none;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid #e3e6f0;
+    padding: 1rem 1.25rem;
+}
+
+.card-header:first-child {
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+/* Avatar Styles */
+.avatar-placeholder {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* Points Display */
+.points-display {
+    background-color: #f8f9fc;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+/* Task Cards */
+.task-card {
+    transition: transform 0.2s;
+}
+
+.task-card:hover {
+    transform: translateY(-5px);
+}
+
+.task-card .task-payout {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+/* Reward Cards */
+.reward-card {
+    transition: transform 0.2s;
+}
+
+.reward-card:hover {
+    transform: translateY(-5px);
+}
+
+.reward-card .reward-points {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+/* Progress Bar */
+.progress {
+    height: 0.5rem;
+    border-radius: 0.25rem;
+}
+
+/* Footer */
+.footer {
+    background-color: #fff;
+    border-top: 1px solid #e3e6f0;
+    box-shadow: 0 -0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    padding: 1.5rem 0;
+    font-size: 0.875rem;
+}
+
+/* Tab Content */
+.tab-content {
+    padding: 1.5rem;
+    background-color: #fff;
+    border-radius: 0 0 0.5rem 0.5rem;
+}
+
+/* Offer Type Labels */
+.offer-type {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.offer-type-cpi {
+    background-color: #e3f2fd;
+    color: #0d6efd;
+}
+
+.offer-type-cpa {
+    background-color: #f0f8ff;
+    color: #0dcaf0;
+}
+
+.offer-type-pin {
+    background-color: #e8f5e9;
+    color: #198754;
+}
+
+.offer-type-vid {
+    background-color: #fff8e1;
+    color: #ffc107;
+}
+
+/* Status Labels */
+.status-label {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.status-pending {
+    background-color: #fff8e1;
+    color: #ffc107;
+}
+
+.status-completed {
+    background-color: #e8f5e9;
+    color: #198754;
+}
+
+.status-rejected {
+    background-color: #ffebee;
+    color: #dc3545;
+}
+
+/* Login & Register Forms */
+.auth-form {
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+/* Dashboard Layout */
+.dashboard-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.dashboard-sidebar {
+    flex: 0 0 100%;
+}
+
+.dashboard-content {
+    flex: 1;
+}
+
+@media (min-width: 992px) {
+    .dashboard-sidebar {
+        flex: 0 0 300px;
+    }
+}
+
+/* Admin Dashboard */
+.admin-dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    color: #fff;
+}
+
+.stat-card-primary {
+    background: linear-gradient(45deg, #4e73df, #224abe);
+}
+
+.stat-card-success {
+    background: linear-gradient(45deg, #1cc88a, #13855c);
+}
+
+.stat-card-info {
+    background: linear-gradient(45deg, #36b9cc, #258391);
+}
+
+.stat-card-warning {
+    background: linear-gradient(45deg, #f6c23e, #dda20a);
+}
+
+.stat-card .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.stat-card .stat-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+/* Landing Page */
+.hero-section {
+    padding: 3rem 0;
+    background: linear-gradient(45deg, #4e73df, #224abe);
+    color: #fff;
+    border-radius: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.how-it-works {
+    padding: 3rem 0;
+}
+
+.step-card {
+    text-align: center;
+    padding: 2rem;
+}
+
+.step-card .step-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.rewards-showcase {
+    padding: 3rem 0;
+    background-color: #f8f9fc;
+}
+
+.rewards-showcase .card {
+    border: none;
+    transition: transform 0.2s;
+}
+
+.rewards-showcase .card:hover {
+    transform: translateY(-10px);
+}
+
+/* Testimonials */
+.testimonial-card {
+    padding: 2rem;
+    border-radius: 0.5rem;
+    background-color: #fff;
+    margin-bottom: 1.5rem;
+}
+
+.testimonial-card .testimonial-content {
+    font-style: italic;
+    margin-bottom: 1rem;
+}
+
+.testimonial-card .testimonial-author {
+    font-weight: 700;
+}
+
+/* Loader */
+.loader {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--primary-color);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

@@ -1,0 +1,87 @@
+<?php
+require_once 'includes/config.php';
+require_once 'includes/auth.php';
+
+$auth = new Auth();
+
+// Handle logout action
+if (isset($_GET['action']) && $_GET['action'] === 'logout') {
+    $auth->logout();
+    header('Location: login.php');
+    exit;
+}
+
+// If user is already logged in, redirect to dashboard
+if ($auth->isLoggedIn()) {
+    header('Location: dashboard.php');
+    exit;
+}
+
+$error = '';
+
+// Process login form
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = isset($_POST['username']) ? trim($_POST['username']) : '';
+    $password = isset($_POST['password']) ? $_POST['password'] : '';
+    
+    // Basic validation
+    if (empty($username) || empty($password)) {
+        $error = 'All fields are required';
+    } else {
+        // Login the user
+        $result = $auth->login($username, $password);
+        
+        if ($result['status'] === 'success') {
+            header('Location: dashboard.php');
+            exit;
+        } else {
+            $error = $result['message'];
+        }
+    }
+}
+
+include 'includes/header.php';
+?>
+
+<div class="row">
+    <div class="col-lg-6 offset-lg-3">
+        <div class="card auth-form">
+            <div class="card-body p-4">
+                <div class="auth-header">
+                    <h2>Welcome Back</h2>
+                    <p class="text-muted">Login to access your account</p>
+                </div>
+                
+                <?php if ($error): ?>
+                <div class="alert alert-danger"><?php echo $error; ?></div>
+                <?php endif; ?>
+                
+                <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>" required>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                    </div>
+                    
+                    <div class="text-center mb-3">
+                        <a href="#" class="text-decoration-none">Forgot your password?</a>
+                    </div>
+                </form>
+                
+                <div class="auth-footer">
+                    <p>Don't have an account? <a href="register.php">Register</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php include 'includes/footer.php'; ?>
