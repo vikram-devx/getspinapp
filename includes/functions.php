@@ -277,23 +277,27 @@ function getUserRedemptions($user_id) {
     $db = Database::getInstance();
     $conn = $db->getConnection();
     
-    $stmt = $conn->prepare("
-        SELECT r.*, rw.name, rw.points_required 
-        FROM redemptions r
-        JOIN rewards rw ON r.reward_id = rw.id
-        WHERE r.user_id = ?
-        ORDER BY r.created_at DESC
-    ");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    $redemptions = [];
-    while ($row = $result->fetch_assoc()) {
-        $redemptions[] = $row;
+    try {
+        $stmt = $conn->prepare("
+            SELECT r.*, rw.name, rw.points_required 
+            FROM redemptions r
+            JOIN rewards rw ON r.reward_id = rw.id
+            WHERE r.user_id = :user_id
+            ORDER BY r.created_at DESC
+        ");
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->execute();
+        
+        $redemptions = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $redemptions[] = $row;
+        }
+        
+        return $redemptions;
+    } catch (PDOException $e) {
+        error_log("Error getting user redemptions: " . $e->getMessage());
+        return [];
     }
-    
-    return $redemptions;
 }
 
 // Function to generate a tracking URL for an offer
@@ -307,34 +311,45 @@ function recordOfferAttempt($user_id, $offer_id, $ip_address) {
     $db = Database::getInstance();
     $conn = $db->getConnection();
     
-    // Check if the user has already attempted this offer
-    $stmt = $conn->prepare("SELECT id FROM user_offers WHERE user_id = ? AND offer_id = ?");
-    $stmt->bind_param("is", $user_id, $offer_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    if ($result->num_rows > 0) {
-        // User has already attempted this offer
+    try {
+        // Check if the user has already attempted this offer
+        $stmt = $conn->prepare("SELECT id FROM user_offers WHERE user_id = :user_id AND offer_id = :offer_id");
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->bindValue(':offer_id', $offer_id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($result) {
+            // User has already attempted this offer
+            return [
+                'status' => 'error',
+                'message' => 'You have already attempted this offer'
+            ];
+        }
+        
+        // Record the offer attempt
+        $stmt = $conn->prepare("INSERT INTO user_offers (user_id, offer_id, ip_address) VALUES (:user_id, :offer_id, :ip_address)");
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->bindValue(':offer_id', $offer_id);
+        $stmt->bindValue(':ip_address', $ip_address);
+        
+        if ($stmt->execute()) {
+            return [
+                'status' => 'success',
+                'message' => 'Offer attempt recorded',
+                'user_offer_id' => $conn->lastInsertId()
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => 'Failed to record offer attempt'
+            ];
+        }
+    } catch (PDOException $e) {
+        error_log("Error recording offer attempt: " . $e->getMessage());
         return [
             'status' => 'error',
-            'message' => 'You have already attempted this offer'
-        ];
-    }
-    
-    // Record the offer attempt
-    $stmt = $conn->prepare("INSERT INTO user_offers (user_id, offer_id, ip_address) VALUES (?, ?, ?)");
-    $stmt->bind_param("iss", $user_id, $offer_id, $ip_address);
-    
-    if ($stmt->execute()) {
-        return [
-            'status' => 'success',
-            'message' => 'Offer attempt recorded',
-            'user_offer_id' => $stmt->insert_id
-        ];
-    } else {
-        return [
-            'status' => 'error',
-            'message' => 'Failed to record offer attempt: ' . $stmt->error
+            'message' => 'Failed to record offer attempt: Database error'
         ];
     }
 }
@@ -360,34 +375,50 @@ function completeUserOffer($user_id, $offer_id, $payout) {
     $conn = $db->getConnection();
     $auth = new Auth();
     
-    // Begin transaction
-    $conn->begin_transaction();
-    
     try {
+        // Begin transaction
+        $conn->beginTransaction();
+        
         // Calculate points based on payout
         $points = (int)($payout * POINTS_CONVERSION_RATE);
         
         // Update user offer record
         $stmt = $conn->prepare("
             UPDATE user_offers 
-            SET completed = 1, points_earned = ?, completed_at = NOW() 
-            WHERE user_id = ? AND offer_id = ?
+            SET completed = 1, points_earned = :points, completed_at = datetime('now') 
+            WHERE user_id = :user_id AND offer_id = :offer_id
         ");
-        $stmt->bind_param("iis", $points, $user_id, $offer_id);
+        $stmt->bindValue(':points', $points);
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->bindValue(':offer_id', $offer_id);
         $stmt->execute();
         
-        // Check if any rows were affected
-        if ($stmt->affected_rows === 0) {
+        // Check if any rows were affected (SQLite doesn't have affected_rows, we need to query)
+        $checkStmt = $conn->prepare("SELECT COUNT(*) FROM user_offers WHERE user_id = :user_id AND offer_id = :offer_id");
+        $checkStmt->bindValue(':user_id', $user_id);
+        $checkStmt->bindValue(':offer_id', $offer_id);
+        $checkStmt->execute();
+        $count = (int)$checkStmt->fetchColumn();
+        
+        if ($count === 0) {
             // Create a record if it doesn't exist
             $stmt = $conn->prepare("
                 INSERT INTO user_offers (user_id, offer_id, completed, points_earned, completed_at) 
-                VALUES (?, ?, 1, ?, NOW())
+                VALUES (:user_id, :offer_id, 1, :points, datetime('now'))
             ");
-            $stmt->bind_param("isi", $user_id, $offer_id, $points);
+            $stmt->bindValue(':user_id', $user_id);
+            $stmt->bindValue(':offer_id', $offer_id);
+            $stmt->bindValue(':points', $points);
             $stmt->execute();
+            $user_offer_id = $conn->lastInsertId();
+        } else {
+            // Get the id of the updated record
+            $idStmt = $conn->prepare("SELECT id FROM user_offers WHERE user_id = :user_id AND offer_id = :offer_id");
+            $idStmt->bindValue(':user_id', $user_id);
+            $idStmt->bindValue(':offer_id', $offer_id);
+            $idStmt->execute();
+            $user_offer_id = $idStmt->fetchColumn();
         }
-        
-        $user_offer_id = $stmt->insert_id;
         
         // Add points to user
         $description = "Completed offer: " . $offer_id;
@@ -403,7 +434,8 @@ function completeUserOffer($user_id, $offer_id, $payout) {
         ];
     } catch (Exception $e) {
         // Roll back transaction on error
-        $conn->rollback();
+        $conn->rollBack();
+        error_log("Error completing offer: " . $e->getMessage());
         
         return [
             'status' => 'error',
@@ -419,15 +451,22 @@ function getAllUsers() {
     $db = Database::getInstance();
     $conn = $db->getConnection();
     
-    $query = "SELECT * FROM users ORDER BY id DESC";
-    $result = $db->query($query);
-    
-    $users = [];
-    while ($row = $result->fetch_assoc()) {
-        $users[] = $row;
+    try {
+        $query = "SELECT * FROM users ORDER BY id DESC";
+        $result = $db->query($query);
+        
+        $users = [];
+        if ($result) {
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $users[] = $row;
+            }
+        }
+        
+        return $users;
+    } catch (PDOException $e) {
+        error_log("Error getting all users: " . $e->getMessage());
+        return [];
     }
-    
-    return $users;
 }
 
 // Get all rewards
@@ -435,15 +474,22 @@ function getAllRewards() {
     $db = Database::getInstance();
     $conn = $db->getConnection();
     
-    $query = "SELECT * FROM rewards ORDER BY points_required ASC";
-    $result = $db->query($query);
-    
-    $rewards = [];
-    while ($row = $result->fetch_assoc()) {
-        $rewards[] = $row;
+    try {
+        $query = "SELECT * FROM rewards ORDER BY points_required ASC";
+        $result = $db->query($query);
+        
+        $rewards = [];
+        if ($result) {
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $rewards[] = $row;
+            }
+        }
+        
+        return $rewards;
+    } catch (PDOException $e) {
+        error_log("Error getting all rewards: " . $e->getMessage());
+        return [];
     }
-    
-    return $rewards;
 }
 
 // Add a new reward
@@ -451,19 +497,30 @@ function addReward($name, $description, $points_required, $is_active = 1) {
     $db = Database::getInstance();
     $conn = $db->getConnection();
     
-    $stmt = $conn->prepare("INSERT INTO rewards (name, description, points_required, is_active) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssii", $name, $description, $points_required, $is_active);
-    
-    if ($stmt->execute()) {
-        return [
-            'status' => 'success',
-            'message' => 'Reward added successfully',
-            'reward_id' => $stmt->insert_id
-        ];
-    } else {
+    try {
+        $stmt = $conn->prepare("INSERT INTO rewards (name, description, points_required, is_active) VALUES (:name, :description, :points_required, :is_active)");
+        $stmt->bindValue(':name', $name);
+        $stmt->bindValue(':description', $description);
+        $stmt->bindValue(':points_required', $points_required);
+        $stmt->bindValue(':is_active', $is_active);
+        
+        if ($stmt->execute()) {
+            return [
+                'status' => 'success',
+                'message' => 'Reward added successfully',
+                'reward_id' => $conn->lastInsertId()
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => 'Failed to add reward'
+            ];
+        }
+    } catch (PDOException $e) {
+        error_log("Error adding reward: " . $e->getMessage());
         return [
             'status' => 'error',
-            'message' => 'Failed to add reward: ' . $stmt->error
+            'message' => 'Failed to add reward: Database error'
         ];
     }
 }
@@ -473,18 +530,30 @@ function updateReward($reward_id, $name, $description, $points_required, $is_act
     $db = Database::getInstance();
     $conn = $db->getConnection();
     
-    $stmt = $conn->prepare("UPDATE rewards SET name = ?, description = ?, points_required = ?, is_active = ? WHERE id = ?");
-    $stmt->bind_param("ssiii", $name, $description, $points_required, $is_active, $reward_id);
-    
-    if ($stmt->execute()) {
-        return [
-            'status' => 'success',
-            'message' => 'Reward updated successfully'
-        ];
-    } else {
+    try {
+        $stmt = $conn->prepare("UPDATE rewards SET name = :name, description = :description, points_required = :points_required, is_active = :is_active WHERE id = :reward_id");
+        $stmt->bindValue(':name', $name);
+        $stmt->bindValue(':description', $description);
+        $stmt->bindValue(':points_required', $points_required);
+        $stmt->bindValue(':is_active', $is_active);
+        $stmt->bindValue(':reward_id', $reward_id);
+        
+        if ($stmt->execute()) {
+            return [
+                'status' => 'success',
+                'message' => 'Reward updated successfully'
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => 'Failed to update reward'
+            ];
+        }
+    } catch (PDOException $e) {
+        error_log("Error updating reward: " . $e->getMessage());
         return [
             'status' => 'error',
-            'message' => 'Failed to update reward: ' . $stmt->error
+            'message' => 'Failed to update reward: Database error'
         ];
     }
 }
@@ -494,32 +563,39 @@ function deleteReward($reward_id) {
     $db = Database::getInstance();
     $conn = $db->getConnection();
     
-    // Check if any redemptions exist for this reward
-    $stmt = $conn->prepare("SELECT COUNT(*) as count FROM redemptions WHERE reward_id = ?");
-    $stmt->bind_param("i", $reward_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $count = $result->fetch_assoc()['count'];
-    
-    if ($count > 0) {
+    try {
+        // Check if any redemptions exist for this reward
+        $stmt = $conn->prepare("SELECT COUNT(*) FROM redemptions WHERE reward_id = :reward_id");
+        $stmt->bindValue(':reward_id', $reward_id);
+        $stmt->execute();
+        $count = (int)$stmt->fetchColumn();
+        
+        if ($count > 0) {
+            return [
+                'status' => 'error',
+                'message' => 'Cannot delete reward: It has been redeemed by users'
+            ];
+        }
+        
+        $stmt = $conn->prepare("DELETE FROM rewards WHERE id = :reward_id");
+        $stmt->bindValue(':reward_id', $reward_id);
+        
+        if ($stmt->execute()) {
+            return [
+                'status' => 'success',
+                'message' => 'Reward deleted successfully'
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => 'Failed to delete reward'
+            ];
+        }
+    } catch (PDOException $e) {
+        error_log("Error deleting reward: " . $e->getMessage());
         return [
             'status' => 'error',
-            'message' => 'Cannot delete reward: It has been redeemed by users'
-        ];
-    }
-    
-    $stmt = $conn->prepare("DELETE FROM rewards WHERE id = ?");
-    $stmt->bind_param("i", $reward_id);
-    
-    if ($stmt->execute()) {
-        return [
-            'status' => 'success',
-            'message' => 'Reward deleted successfully'
-        ];
-    } else {
-        return [
-            'status' => 'error',
-            'message' => 'Failed to delete reward: ' . $stmt->error
+            'message' => 'Failed to delete reward: Database error'
         ];
     }
 }
@@ -529,21 +605,28 @@ function getAllRedemptions() {
     $db = Database::getInstance();
     $conn = $db->getConnection();
     
-    $query = "
-        SELECT r.*, u.username, rw.name as reward_name 
-        FROM redemptions r
-        JOIN users u ON r.user_id = u.id
-        JOIN rewards rw ON r.reward_id = rw.id
-        ORDER BY r.created_at DESC
-    ";
-    $result = $db->query($query);
-    
-    $redemptions = [];
-    while ($row = $result->fetch_assoc()) {
-        $redemptions[] = $row;
+    try {
+        $query = "
+            SELECT r.*, u.username, rw.name as reward_name 
+            FROM redemptions r
+            JOIN users u ON r.user_id = u.id
+            JOIN rewards rw ON r.reward_id = rw.id
+            ORDER BY r.created_at DESC
+        ";
+        $result = $db->query($query);
+        
+        $redemptions = [];
+        if ($result) {
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $redemptions[] = $row;
+            }
+        }
+        
+        return $redemptions;
+    } catch (PDOException $e) {
+        error_log("Error getting all redemptions: " . $e->getMessage());
+        return [];
     }
-    
-    return $redemptions;
 }
 
 // Update redemption status
@@ -551,18 +634,27 @@ function updateRedemptionStatus($redemption_id, $status) {
     $db = Database::getInstance();
     $conn = $db->getConnection();
     
-    $stmt = $conn->prepare("UPDATE redemptions SET status = ? WHERE id = ?");
-    $stmt->bind_param("si", $status, $redemption_id);
-    
-    if ($stmt->execute()) {
-        return [
-            'status' => 'success',
-            'message' => 'Redemption status updated successfully'
-        ];
-    } else {
+    try {
+        $stmt = $conn->prepare("UPDATE redemptions SET status = :status WHERE id = :redemption_id");
+        $stmt->bindValue(':status', $status);
+        $stmt->bindValue(':redemption_id', $redemption_id);
+        
+        if ($stmt->execute()) {
+            return [
+                'status' => 'success',
+                'message' => 'Redemption status updated successfully'
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => 'Failed to update redemption status'
+            ];
+        }
+    } catch (PDOException $e) {
+        error_log("Error updating redemption status: " . $e->getMessage());
         return [
             'status' => 'error',
-            'message' => 'Failed to update redemption status: ' . $stmt->error
+            'message' => 'Failed to update redemption status: Database error'
         ];
     }
 }
