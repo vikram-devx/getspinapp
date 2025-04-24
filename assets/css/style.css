@@ -319,3 +319,17 @@ body {
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
+/* Game Redemption Details */
+.text-muted small {
+    display: block;
+    margin-top: 5px;
+    padding: 5px;
+    background-color: #f8f9fc;
+    border-radius: 4px;
+    border-left: 3px solid var(--info-color);
+}
+
+.badge.bg-info {
+    margin-left: 5px;
+}

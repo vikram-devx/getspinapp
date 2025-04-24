@@ -188,7 +188,20 @@ include 'includes/header.php';
                                             <tbody>
                                                 <?php foreach ($recent_redemptions as $redemption): ?>
                                                 <tr>
-                                                    <td><?php echo htmlspecialchars($redemption['name']); ?></td>
+                                                    <td>
+                                                        <?php echo htmlspecialchars($redemption['name']); ?>
+                                                        <?php 
+                                                        // Check if this is a game reward with redemption details
+                                                        if (($redemption['reward_id'] == 6 || $redemption['reward_id'] == 7) && !empty($redemption['redemption_details'])):
+                                                            $details = json_decode($redemption['redemption_details'], true);
+                                                            if ($details && isset($details['username'])):
+                                                        ?>
+                                                        <br>
+                                                        <small class="text-muted">
+                                                            Username: <strong><?php echo htmlspecialchars($details['username']); ?></strong>
+                                                        </small>
+                                                        <?php endif; endif; ?>
+                                                    </td>
                                                     <td>
                                                         <?php if ($redemption['status'] === 'pending'): ?>
                                                             <span class="badge bg-warning">Pending</span>
@@ -276,7 +289,21 @@ include 'includes/header.php';
                             <tbody>
                                 <?php foreach ($redemptions as $redemption): ?>
                                 <tr>
-                                    <td><?php echo htmlspecialchars($redemption['name']); ?></td>
+                                    <td>
+                                        <?php echo htmlspecialchars($redemption['name']); ?>
+                                        <?php 
+                                        // Check if this is a game reward and has redemption details
+                                        if (($redemption['reward_id'] == 6 || $redemption['reward_id'] == 7) && !empty($redemption['redemption_details'])):
+                                            $details = json_decode($redemption['redemption_details'], true);
+                                            if ($details && isset($details['username']) && isset($details['spins'])):
+                                        ?>
+                                        <br>
+                                        <small class="text-muted">
+                                            Game Username: <strong><?php echo htmlspecialchars($details['username']); ?></strong><br>
+                                            Spins: <strong><?php echo htmlspecialchars($details['spins']); ?></strong>
+                                        </small>
+                                        <?php endif; endif; ?>
+                                    </td>
                                     <td><?php echo formatPoints($redemption['points_used']); ?></td>
                                     <td>
                                         <?php if ($redemption['status'] === 'pending'): ?>
