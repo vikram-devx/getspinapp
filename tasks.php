@@ -77,11 +77,37 @@ if (isset($_GET['action'])) {
                 }
             } else {
                 // For real API offers
-                $offer_details = getOfferDetails($offer_id);
+                // First, check if we already know the offer link from our cache
+                $offer_link = '';
                 
-                if ($offer_details['status'] === 'success' && isset($offer_details['offer']) && isset($offer_details['offer']['tracking_url'])) {
+                // Try to find the offer in our current offers array
+                foreach ($offers as $offer) {
+                    if (isset($offer['offerid']) && $offer['offerid'] == $offer_id && isset($offer['link'])) {
+                        $offer_link = $offer['link'];
+                        break;
+                    }
+                }
+                
+                // If we couldn't find the offer in our cache, try to get it from the API
+                if (empty($offer_link)) {
+                    $offer_details = getOfferDetails($offer_id);
+                    
+                    // Check for 'link' field which is the correct field name in OGAds API
+                    if ($offer_details['status'] === 'success' && isset($offer_details['offer']) && 
+                        (isset($offer_details['offer']['link']) || isset($offer_details['offer']['tracking_url']))) {
+                        
+                        // Use whichever field is available
+                        if (isset($offer_details['offer']['link'])) {
+                            $offer_link = $offer_details['offer']['link'];
+                        } else {
+                            $offer_link = $offer_details['offer']['tracking_url'];
+                        }
+                    }
+                }
+                
+                if (!empty($offer_link)) {
                     // Append our postback parameters to the tracking URL
-                    $tracking_url = $offer_details['offer']['tracking_url'];
+                    $tracking_url = $offer_link;
                     $tracking_url .= (strpos($tracking_url, '?') !== false ? '&' : '?') . 'aff_sub=' . $user_id;
                     
                     // Redirect the user to the offer URL
@@ -388,15 +414,9 @@ include 'includes/header.php';
                 <h6>Requirements</h6>
                 <p id="taskRequirements"></p>
                 
-                <div class="d-flex justify-content-between mb-3">
-                    <div>
-                        <h6>Payout</h6>
-                        <p id="taskPayout" class="mb-0"></p>
-                    </div>
-                    <div>
-                        <h6>Points</h6>
-                        <p id="taskPoints" class="mb-0"></p>
-                    </div>
+                <div class="text-center mb-3">
+                    <h6>Points Reward</h6>
+                    <p id="taskPoints" class="mb-0 fw-bold"></p>
                 </div>
                 
                 <form id="taskForm" method="get" action="">

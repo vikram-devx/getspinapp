@@ -51,16 +51,16 @@ $(document).ready(function() {
         var taskTitle = $(this).data('title');
         var taskDescription = $(this).data('description');
         var taskRequirements = $(this).data('requirements');
-        var taskPayout = $(this).data('payout');
         var taskPoints = $(this).data('points');
         
         // Populate modal with task details
         $('#taskModalLabel').text(taskTitle);
         $('#taskDescription').text(taskDescription);
         $('#taskRequirements').html(taskRequirements);
-        $('#taskPayout').text(taskPayout);
         $('#taskPoints').text(taskPoints);
-        $('#taskForm').attr('action', 'tasks.php?action=start&offer_id=' + taskId);
+        
+        // Set the offer ID in the form's hidden input
+        $('#taskForm').find('input[name="offer_id"]').val(taskId);
         
         // Show the modal
         var taskModal = new bootstrap.Modal(document.getElementById('taskModal'));
