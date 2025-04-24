@@ -2,7 +2,7 @@ modules = ["php", "postgresql-16"]
 
 [nix]
 channel = "stable-24_05"
-packages = ["php"]
+packages = ["php", "sqlite"]
 
 [workflows]
 runButton = "Project"
