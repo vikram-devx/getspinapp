@@ -168,6 +168,23 @@ include 'header.php';
                             <th>Points Used:</th>
                             <td><?php echo formatPoints($redemption['points_used']); ?></td>
                         </tr>
+                        <?php if (!empty($redemption['redemption_details']) && ($redemption['reward_id'] == 6 || $redemption['reward_id'] == 7)): 
+                            $details = json_decode($redemption['redemption_details'], true);
+                            if ($details && isset($details['game_type']) && isset($details['username']) && isset($details['spins'])): 
+                        ?>
+                        <tr>
+                            <th>Game Type:</th>
+                            <td><?php echo htmlspecialchars($details['game_type']); ?></td>
+                        </tr>
+                        <tr>
+                            <th>Game Username:</th>
+                            <td><?php echo htmlspecialchars($details['username']); ?></td>
+                        </tr>
+                        <tr>
+                            <th>Spins:</th>
+                            <td><?php echo htmlspecialchars($details['spins']); ?></td>
+                        </tr>
+                        <?php endif; endif; ?>
                         <tr>
                             <th>Status:</th>
                             <td>
@@ -301,7 +318,12 @@ include 'header.php';
                                         <?php echo htmlspecialchars($redemption['username']); ?>
                                     </a>
                                 </td>
-                                <td><?php echo htmlspecialchars($redemption['reward_name']); ?></td>
+                                <td>
+                                    <?php echo htmlspecialchars($redemption['reward_name']); ?>
+                                    <?php if ($redemption['reward_id'] == 6 || $redemption['reward_id'] == 7): ?>
+                                        <span class="badge bg-info">Game Reward</span>
+                                    <?php endif; ?>
+                                </td>
                                 <td><?php echo formatPoints($redemption['points_used']); ?></td>
                                 <td>
                                     <?php if ($redemption['status'] === 'pending'): ?>
