@@ -29,6 +29,14 @@ function getOffers($ip = null, $user_agent = null, $offer_type = null, $max = nu
     // If IP is not provided, get the user's IP
     if (!$ip) {
         $ip = $_SERVER['REMOTE_ADDR'];
+        
+        // Check if the IP is a private/local IP address
+        if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
+            // This is a private IP, use a public IP for testing
+            // Using a common test IP (example.com's IP) to ensure we get geo data
+            $ip = '93.184.216.34'; 
+            error_log("Using public IP for OGAds API request: " . $ip);
+        }
     }
     
     // If user agent is not provided, get the user's user agent
@@ -148,10 +156,21 @@ function getOfferDetails($offer_id) {
     
     $api_url = OGADS_API_URL; // Always use the URL from constants
     
+    // Get the IP address
+    $ip = $_SERVER['REMOTE_ADDR'];
+    
+    // Check if the IP is a private/local IP address
+    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
+        // This is a private IP, use a public IP for testing
+        // Using a common test IP (example.com's IP) to ensure we get geo data
+        $ip = '93.184.216.34'; 
+        error_log("Using public IP for OGAds API offer details request: " . $ip);
+    }
+    
     // For v2 API, we need to use GET method as POST is not supported
     $data = [
         'offer_id' => $offer_id,
-        'ip' => $_SERVER['REMOTE_ADDR'],
+        'ip' => $ip,
         'user_agent' => $_SERVER['HTTP_USER_AGENT']
     ];
     
