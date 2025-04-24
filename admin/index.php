@@ -354,8 +354,8 @@ include 'header.php';
                         <div class="col-md-4">
                             <div class="mb-4">
                                 <h5>Database</h5>
-                                <p><strong>Host:</strong> <?php echo DB_HOST; ?></p>
-                                <p><strong>Database:</strong> <?php echo DB_NAME; ?></p>
+                                <p><strong>Type:</strong> SQLite</p>
+                                <p><strong>Database File:</strong> data/rewards_app.sqlite</p>
                                 <p><strong>Total Tables:</strong> 7</p>
                             </div>
                         </div>

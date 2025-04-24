@@ -69,6 +69,22 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
         <!-- Heading -->
         <div class="sidebar-heading">
+            Configuration
+        </div>
+
+        <!-- Nav Item - API Settings -->
+        <li class="nav-item">
+            <a class="nav-link <?php echo $current_page === 'api_settings.php' ? 'active' : ''; ?>" href="api_settings.php">
+                <i class="fas fa-fw fa-cogs"></i>
+                OGAds API Settings
+            </a>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <!-- Heading -->
+        <div class="sidebar-heading">
             Other
         </div>
 
