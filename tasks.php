@@ -144,27 +144,48 @@ error_log("OGAds API Response: " . print_r($offers_result, true));
 $offers = [];
 
 // Check if we got a valid response
-if ($offers_result['status'] === 'success' && isset($offers_result['offers']) && is_array($offers_result['offers']) && !isset($offers_result['offers']['error'])) {
-    // API returned valid offers
-    $offers = $offers_result['offers'];
-    
-    // Format offers for display if needed
-    // This would depend on the exact structure of the API response
-    
-    if (count($offers) === 0) {
+if ($offers_result['status'] === 'success') {
+    // API returned a response (might have offers or an error message)
+    if (isset($offers_result['offers']['error'])) {
+        // API returned an error, but it's still a valid API connection
+        $error_message = $offers_result['offers']['error'];
+        $message = "No offers available: " . $error_message;
+        $message_type = "info";
+        
+        // Use sample offers for demonstration
+        $use_sample_offers = true;
+    } elseif (isset($offers_result['offers']) && is_array($offers_result['offers']) && !empty($offers_result['offers'])) {
+        // API returned valid offers
+        $offers = $offers_result['offers'];
+        $use_sample_offers = false;
+    } else {
+        // API returned success but no offers (empty array or null)
         $message = "No offers available for your region at this time.";
         $message_type = "info";
+        $use_sample_offers = true;
     }
 } else {
-    // Use sample offers for testing when the API is not responding as expected
-    $error_message = isset($offers_result['offers']['error']) ? $offers_result['offers']['error'] : "Connection issue";
+    // API request failed completely
+    $error_message = isset($offers_result['message']) ? $offers_result['message'] : "Connection issue";
     
-    if (empty($api_key) || $api_key === OGADS_API_KEY) {
+    if (empty($api_key)) {
         $message = "API Key not configured. Please set up your OGAds API Key in the admin panel.";
     } else {
-        $message = "Using sample offers for demonstration. The OGAds API reported: " . $error_message;
+        $message = "API Error: " . $error_message;
     }
     $message_type = "info";
+    
+    // Use sample offers for this case
+    $use_sample_offers = true;
+}
+
+// Initialize $offers as an empty array if it's not set
+if (!isset($offers)) {
+    $offers = [];
+}
+
+// If we need to use sample offers, set them up
+if ($use_sample_offers) {
     
     // Provide sample offers for testing
     $offers = [
