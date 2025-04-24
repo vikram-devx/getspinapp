@@ -68,7 +68,7 @@ try {
     }
 
     // Recent redemptions
-    $query = "SELECT r.*, u.username, rw.name as reward_name FROM redemptions r 
+    $query = "SELECT r.*, r.reward_id, r.redemption_details, u.username, rw.name as reward_name FROM redemptions r 
             JOIN users u ON r.user_id = u.id 
             JOIN rewards rw ON r.reward_id = rw.id 
             ORDER BY r.created_at DESC LIMIT 10";
@@ -256,7 +256,12 @@ include 'header.php';
                                 <?php foreach ($recent_redemptions as $redemption): ?>
                                 <tr>
                                     <td><?php echo htmlspecialchars($redemption['username']); ?></td>
-                                    <td><?php echo htmlspecialchars($redemption['reward_name']); ?></td>
+                                    <td>
+                                        <?php echo htmlspecialchars($redemption['reward_name']); ?>
+                                        <?php if (($redemption['reward_id'] == 6 || $redemption['reward_id'] == 7) && !empty($redemption['redemption_details'])): ?>
+                                            <span class="badge bg-info">Game Reward</span>
+                                        <?php endif; ?>
+                                    </td>
                                     <td>
                                         <?php if ($redemption['status'] === 'pending'): ?>
                                             <span class="badge bg-warning">Pending</span>

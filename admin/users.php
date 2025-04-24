@@ -52,7 +52,7 @@ if (isset($_GET['action'])) {
         }
         
         // Get user redemptions
-        $stmt = $conn->prepare("SELECT r.*, rw.name as reward_name FROM redemptions r JOIN rewards rw ON r.reward_id = rw.id WHERE r.user_id = :user_id ORDER BY r.created_at DESC");
+        $stmt = $conn->prepare("SELECT r.*, r.reward_id, r.redemption_details, rw.name as reward_name FROM redemptions r JOIN rewards rw ON r.reward_id = rw.id WHERE r.user_id = :user_id ORDER BY r.created_at DESC");
         $stmt->bindValue(':user_id', $user_id);
         $stmt->execute();
         
@@ -305,7 +305,20 @@ include 'header.php';
                                         <?php if (count($redemptions) > 0): ?>
                                             <?php foreach ($redemptions as $redemption): ?>
                                             <tr>
-                                                <td><?php echo htmlspecialchars($redemption['reward_name']); ?></td>
+                                                <td>
+                                                    <?php echo htmlspecialchars($redemption['reward_name']); ?>
+                                                    <?php if (($redemption['reward_id'] == 6 || $redemption['reward_id'] == 7) && !empty($redemption['redemption_details'])): 
+                                                        $details = json_decode($redemption['redemption_details'], true);
+                                                        if ($details && isset($details['username']) && isset($details['spins'])): 
+                                                    ?>
+                                                    <span class="badge bg-info">Game Reward</span>
+                                                    <br>
+                                                    <small class="text-muted">
+                                                        Game Username: <strong><?php echo htmlspecialchars($details['username']); ?></strong><br>
+                                                        Spins: <strong><?php echo htmlspecialchars($details['spins']); ?></strong>
+                                                    </small>
+                                                    <?php endif; endif; ?>
+                                                </td>
                                                 <td><?php echo formatPoints($redemption['points_used']); ?></td>
                                                 <td>
                                                     <?php if ($redemption['status'] === 'pending'): ?>
