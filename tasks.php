@@ -43,15 +43,20 @@ if (isset($_GET['action'])) {
                 // Auto-credit points for sample offers after a short delay
                 // In a real system, this would be handled by the postback URL
                 $payout = 0;
+                $offer_type = 'cpa'; // Default offer type
+                
                 switch ($offer_id) {
                     case 'offer1':
                         $payout = 1.5;
+                        $offer_type = 'cpi'; // Set correct offer type for offer1
                         break;
                     case 'offer2':
                         $payout = 2.0;
+                        $offer_type = 'cpa';
                         break;
                     case 'offer3':
                         $payout = 3.5;
+                        $offer_type = 'cpa';
                         break;
                 }
                 
@@ -62,10 +67,12 @@ if (isset($_GET['action'])) {
                     $auth->updatePoints($user_id, $points, 'earn', $description, $offer_id, 'offer');
                     
                     // Mark offer as completed
-                    $stmt = $conn->prepare("UPDATE user_offers SET completed = 1, points_earned = :points, completed_at = datetime('now') WHERE user_id = :user_id AND offer_id = :offer_id");
+                    $stmt = $conn->prepare("UPDATE user_offers SET completed = 1, points_earned = :points, completed_at = datetime('now'), offer_type = :offer_type, payout = :payout WHERE user_id = :user_id AND offer_id = :offer_id");
                     $stmt->bindValue(':points', $points);
                     $stmt->bindValue(':user_id', $user_id);
                     $stmt->bindValue(':offer_id', $offer_id);
+                    $stmt->bindValue(':offer_type', $offer_type);
+                    $stmt->bindValue(':payout', $payout);
                     $stmt->execute();
                 }
             } else {
