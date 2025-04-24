@@ -30,6 +30,9 @@ if (isset($_GET['action'])) {
         $offer_id = $_GET['offer_id'];
         $ip_address = $_SERVER['REMOTE_ADDR'];
         
+        // For debugging
+        error_log("Starting task for offer ID: " . $offer_id);
+        
         // Record the offer attempt
         $result = recordOfferAttempt($user_id, $offer_id, $ip_address);
         
