@@ -75,61 +75,99 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute();
             $api_key = $stmt->fetchColumn();
             
-            if (!$api_key) {
-                $message = 'API Key is not set. Please enter an API Key first.';
+            // Check for API key in both database and environment
+            $env_api_key = getenv('OGADS_API_KEY');
+            
+            if (!$api_key && !$env_api_key) {
+                $message = 'API Key is not set. Please enter an API Key first or configure OGADS_API_KEY environment variable.';
                 $message_type = 'warning';
+            } elseif ($env_api_key && (!$api_key || $api_key != $env_api_key)) {
+                // If environment API key is available but different from database, use it
+                $api_key = $env_api_key;
+                
+                // Update the database with the environment API key
+                $stmt = $conn->prepare("INSERT OR REPLACE INTO settings (setting_key, setting_value) VALUES ('ogads_api_key', :api_key)");
+                $stmt->bindParam(':api_key', $api_key);
+                $stmt->execute();
+                
+                error_log("Used environment API key instead of database key");
+            }
             } else {
                 // Test connection to the API
+                error_log("Testing OGAds API connection");
+                
+                // First attempt: Try POST method
                 $ch = curl_init();
+                $api_url = OGADS_API_URL;
                 
-                // The OGAds API v2 requires POST method with proper endpoint
-                $api_url = 'https://unlockcontent.net/api/v2';
-                curl_setopt($ch, CURLOPT_URL, $api_url);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_POST, true);
-                
-                // Add mandatory parameters according to API docs
+                // Setup API request data 
                 $request_data = [
                     'ip' => $_SERVER['REMOTE_ADDR'],
                     'user_agent' => $_SERVER['HTTP_USER_AGENT'],
-                    'max' => 1,
-                    'check' => 1 // Adding a parameter to indicate this is a check request
+                    'max' => 1
                 ];
                 
-                // Try different authorization header formats to see which one works with OGAds API
-                // This will help determine what format the API expects
-                curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                    'X-API-Key: ' . $api_key, // Some APIs use this format
-                    'Content-Type: application/json',
-                    'Accept: application/json'
+                // Set up cURL with POST method
+                curl_setopt_array($ch, [
+                    CURLOPT_URL            => $api_url,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_POST           => true,
+                    CURLOPT_POSTFIELDS     => json_encode($request_data),
+                    CURLOPT_HTTPHEADER     => [
+                        'Authorization: Bearer ' . $api_key,
+                        'Content-Type: application/json',
+                        'Accept: application/json'
+                    ],
                 ]);
                 
-                // Encode request data as JSON
-                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($request_data));
+                error_log("Testing OGAds API with POST method");
+                error_log("URL: " . $api_url);
+                error_log("Data: " . json_encode($request_data));
                 
-                // Set additional curl options for better debugging
-                curl_setopt($ch, CURLOPT_VERBOSE, true);
-                curl_setopt($ch, CURLOPT_HEADER, true);
+                // Execute POST request
+                $response_post = curl_exec($ch);
+                $http_code_post = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                 
-                // Log request details for debugging
-                error_log("Testing OGAds API connection with URL: " . $api_url);
-                error_log("Testing OGAds API connection with data: " . print_r($request_data, true));
-                
-                $response = curl_exec($ch);
-                $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-                $headers = substr($response, 0, $header_size);
-                $body = substr($response, $header_size);
-                $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                
-                // Log response for debugging
-                error_log("OGAds API Test Response Code: " . $http_code);
-                error_log("OGAds API Test Response Headers: " . $headers);
-                error_log("OGAds API Test Response Body: " . $body);
+                error_log("POST Response Code: " . $http_code_post);
+                error_log("POST Response: " . $response_post);
                 
                 curl_close($ch);
                 
-                // Set response to the body for further processing
-                $response = $body;
+                // Second attempt: Try GET method if POST failed with 405
+                if ($http_code_post === 405) {
+                    error_log("POST method not allowed, trying GET method");
+                    
+                    $ch = curl_init();
+                    
+                    // Create query string for GET request
+                    $query_params = http_build_query($request_data);
+                    $get_url = $api_url . '?' . $query_params;
+                    
+                    curl_setopt_array($ch, [
+                        CURLOPT_URL            => $get_url,
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_HTTPHEADER     => [
+                            'Authorization: Bearer ' . $api_key,
+                            'Accept: application/json'
+                        ],
+                    ]);
+                    
+                    error_log("Testing OGAds API with GET method");
+                    error_log("URL: " . $get_url);
+                    
+                    // Execute GET request
+                    $response = curl_exec($ch);
+                    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                    
+                    error_log("GET Response Code: " . $http_code);
+                    error_log("GET Response: " . $response);
+                    
+                    curl_close($ch);
+                } else {
+                    // Use POST response
+                    $response = $response_post;
+                    $http_code = $http_code_post;
+                }
                 
                 if ($http_code === 200) {
                     $message = 'API connection successful! Received valid response from OGAds API.';
@@ -137,11 +175,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     $error_message = '';
                     $response_data = json_decode($response, true);
-                    if ($response_data && isset($response_data['error'])) {
-                        $error_message = " Error: " . $response_data['error'];
+                    
+                    // Handle specific error codes
+                    if ($http_code === 401) {
+                        $error_message = " - Invalid API key or authorization issue. Please check your API key is correct.";
+                    } elseif ($http_code === 403) {
+                        $error_message = " - Access forbidden. Your account may not have proper permissions.";
+                    } elseif ($http_code === 404) {
+                        $error_message = " - API endpoint not found. Please check the API URL configuration.";
+                    } elseif ($http_code === 405) {
+                        $error_message = " - Method not allowed. The API may have changed its expected request method.";
+                    } elseif ($http_code === 429) {
+                        $error_message = " - Too many requests. API rate limit reached.";
+                    } elseif ($http_code >= 500) {
+                        $error_message = " - OGAds server error. Please try again later.";
                     }
+                    
+                    // Add response error if available
+                    if ($response_data && isset($response_data['error'])) {
+                        $error_message .= " Response: " . $response_data['error'];
+                    }
+                    
                     $message = 'API connection failed. Status code: ' . $http_code . $error_message;
                     $message_type = 'danger';
+                    
+                    // Provide clearer guidance
+                    $message .= '<br><br>Troubleshooting tips: 
+                    <ul>
+                        <li>Confirm your API key is correctly entered without extra spaces</li>
+                        <li>Check if your OGAds account is active and has the necessary permissions</li>
+                        <li>Try again later if it might be a temporary server issue</li>
+                        <li>Contact OGAds support if the problem persists</li>
+                    </ul>';
                 }
             }
         }

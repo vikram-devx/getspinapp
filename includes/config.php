@@ -7,7 +7,8 @@ define('DB_TYPE', 'sqlite');
 define('DB_PATH', __DIR__ . '/../data/rewards_app.sqlite');
 
 // OGAds API Configuration
-define('OGADS_API_KEY', '31621|84YSBHzNxHsFkLk6aRohyLBWYn7f0HGQpHBHQo8F1ae7067f');
+// Get API key from environment variable if available, otherwise use the default
+define('OGADS_API_KEY', getenv('OGADS_API_KEY') ? getenv('OGADS_API_KEY') : '31621|84YSBHzNxHsFkLk6aRohyLBWYn7f0HGQpHBHQo8F1ae7067f');
 define('OGADS_API_URL', 'https://unlockcontent.net/api/v2');
 
 // Application Settings
