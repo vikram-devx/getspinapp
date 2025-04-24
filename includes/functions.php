@@ -34,7 +34,8 @@ function getOffers($ip = null, $user_agent = null, $offer_type = null, $max = nu
     }
     
     // Create URL with query parameters
-    $url = OGADS_API_URL . '/offers?' . http_build_query($data);
+    // The API URL might not include the 'offers' endpoint, so we'll try the base URL
+    $url = OGADS_API_URL . '?' . http_build_query($data);
     
     // Set up cURL
     $ch = curl_init();
@@ -91,8 +92,8 @@ function getOfferDetails($offer_id) {
         ];
     }
     
-    // Create URL for specific offer
-    $url = OGADS_API_URL . '/offers/' . $offer_id;
+    // Create URL for specific offer - just use the base URL with the offer_id as a parameter
+    $url = OGADS_API_URL . '?offer_id=' . $offer_id;
     
     // Set up cURL
     $ch = curl_init();

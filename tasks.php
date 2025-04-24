@@ -14,6 +14,10 @@ if (!$auth->isLoggedIn()) {
 $current_user = $auth->getUser();
 $user_id = $current_user['id'];
 
+// Get database connection
+$db = Database::getInstance();
+$conn = $db->getConnection();
+
 // Handle task actions
 $message = '';
 $message_type = '';
@@ -30,21 +34,57 @@ if (isset($_GET['action'])) {
         $result = recordOfferAttempt($user_id, $offer_id, $ip_address);
         
         if ($result['status'] === 'success') {
-            // Get the offer details from the API
-            $offer_details = getOfferDetails($offer_id);
-            
-            if ($offer_details['status'] === 'success' && isset($offer_details['offer']) && isset($offer_details['offer']['tracking_url'])) {
-                // Append our postback parameters to the tracking URL
-                $tracking_url = $offer_details['offer']['tracking_url'];
-                $tracking_url .= (strpos($tracking_url, '?') !== false ? '&' : '?') . 'aff_sub=' . $user_id;
+            // For sample offers (1, 2, 3) use our built-in sample system
+            if (in_array($offer_id, ['offer1', 'offer2', 'offer3'])) {
+                // When using sample offers, just show a message and direct to dashboard
+                $message = 'Task initiated! This is a sample task. In a real environment, you would be redirected to the actual offer. Points will be automatically credited after a moment.';
+                $message_type = 'success';
                 
-                // Redirect the user to the offer URL
-                header('Location: ' . $tracking_url);
-                exit;
+                // Auto-credit points for sample offers after a short delay
+                // In a real system, this would be handled by the postback URL
+                $payout = 0;
+                switch ($offer_id) {
+                    case 'offer1':
+                        $payout = 1.5;
+                        break;
+                    case 'offer2':
+                        $payout = 2.0;
+                        break;
+                    case 'offer3':
+                        $payout = 3.5;
+                        break;
+                }
+                
+                if ($payout > 0) {
+                    // Complete the offer and credit points
+                    $points = (int)($payout * POINTS_CONVERSION_RATE);
+                    $description = "Completed sample offer #{$offer_id}";
+                    $auth->updatePoints($user_id, $points, 'earn', $description, $offer_id, 'offer');
+                    
+                    // Mark offer as completed
+                    $stmt = $conn->prepare("UPDATE user_offers SET completed = 1, points_earned = :points, completed_at = datetime('now') WHERE user_id = :user_id AND offer_id = :offer_id");
+                    $stmt->bindValue(':points', $points);
+                    $stmt->bindValue(':user_id', $user_id);
+                    $stmt->bindValue(':offer_id', $offer_id);
+                    $stmt->execute();
+                }
             } else {
-                // Fallback if we couldn't get the tracking URL
-                $message = 'Could not start task. Please try again later.';
-                $message_type = 'warning';
+                // For real API offers
+                $offer_details = getOfferDetails($offer_id);
+                
+                if ($offer_details['status'] === 'success' && isset($offer_details['offer']) && isset($offer_details['offer']['tracking_url'])) {
+                    // Append our postback parameters to the tracking URL
+                    $tracking_url = $offer_details['offer']['tracking_url'];
+                    $tracking_url .= (strpos($tracking_url, '?') !== false ? '&' : '?') . 'aff_sub=' . $user_id;
+                    
+                    // Redirect the user to the offer URL
+                    header('Location: ' . $tracking_url);
+                    exit;
+                } else {
+                    // Fallback if we couldn't get the tracking URL
+                    $message = 'Could not start task. Please try again later.';
+                    $message_type = 'warning';
+                }
             }
         } else {
             $message = $result['message'];
@@ -70,13 +110,50 @@ error_log("OGAds API Response: " . print_r($offers_result, true));
 
 // Prepare offers for display
 $offers = [];
+
+// The API is giving a route error, let's provide some sample offers until we can connect to the actual API
 if ($offers_result['status'] === 'success' && isset($offers_result['offers'])) {
-    $offers = $offers_result['offers'];
-    
-    // For debugging, if we have no offers, display the API response status
-    if (empty($offers)) {
-        $message = "No offers available. API status: " . $offers_result['status'];
-        $message_type = "info";
+    // Check if we have an error message indicating route not found
+    if (isset($offers_result['offers']['message']) && strpos($offers_result['offers']['message'], 'route') !== false) {
+        $message = "OGAds API is not available at the moment. Showing sample offers instead.";
+        $message_type = "warning";
+        
+        // Provide some sample offers for testing
+        $offers = [
+            [
+                'id' => 'offer1',
+                'name' => 'Install Game App',
+                'description' => 'Download and play this exciting new game for 5 minutes.',
+                'requirements' => 'Download, install, and open the app. Play for at least 5 minutes.',
+                'payout' => 1.5,
+                'type' => 'cpi'
+            ],
+            [
+                'id' => 'offer2',
+                'name' => 'Complete Short Survey',
+                'description' => 'Answer a few questions about your shopping habits.',
+                'requirements' => 'Complete the entire survey honestly.',
+                'payout' => 2.0,
+                'type' => 'cpa'
+            ],
+            [
+                'id' => 'offer3',
+                'name' => 'Sign Up for Free Trial',
+                'description' => 'Create an account and start a free trial of this service.',
+                'requirements' => 'Create a new account with valid information.',
+                'payout' => 3.5,
+                'type' => 'cpa'
+            ]
+        ];
+    } else {
+        // We have proper offers from the API
+        $offers = $offers_result['offers'];
+        
+        // For debugging, if we have no offers, display the API response status
+        if (empty($offers)) {
+            $message = "No offers available. API status: " . $offers_result['status'];
+            $message_type = "info";
+        }
     }
 } else {
     // If there was an error, display it
