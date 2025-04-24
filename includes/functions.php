@@ -248,7 +248,7 @@ function getRewardById($reward_id) {
 }
 
 // Function to redeem a reward
-function redeemReward($user_id, $reward_id) {
+function redeemReward($user_id, $reward_id, $redemption_details = null) {
     $db = Database::getInstance();
     $conn = $db->getConnection();
     $auth = new Auth();
@@ -278,10 +278,18 @@ function redeemReward($user_id, $reward_id) {
         $conn->beginTransaction();
         
         // Create redemption record
-        $stmt = $conn->prepare("INSERT INTO redemptions (user_id, reward_id, points_used, status) VALUES (:user_id, :reward_id, :points_used, 'pending')");
-        $stmt->bindValue(':user_id', $user_id);
-        $stmt->bindValue(':reward_id', $reward_id);
-        $stmt->bindValue(':points_used', $reward['points_required']);
+        if ($redemption_details) {
+            $stmt = $conn->prepare("INSERT INTO redemptions (user_id, reward_id, points_used, status, redemption_details) VALUES (:user_id, :reward_id, :points_used, 'pending', :redemption_details)");
+            $stmt->bindValue(':user_id', $user_id);
+            $stmt->bindValue(':reward_id', $reward_id);
+            $stmt->bindValue(':points_used', $reward['points_required']);
+            $stmt->bindValue(':redemption_details', $redemption_details);
+        } else {
+            $stmt = $conn->prepare("INSERT INTO redemptions (user_id, reward_id, points_used, status) VALUES (:user_id, :reward_id, :points_used, 'pending')");
+            $stmt->bindValue(':user_id', $user_id);
+            $stmt->bindValue(':reward_id', $reward_id);
+            $stmt->bindValue(':points_used', $reward['points_required']);
+        }
         $stmt->execute();
         $redemption_id = $conn->lastInsertId();
         

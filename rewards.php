@@ -129,6 +129,13 @@ include 'includes/header.php';
                 
                 <form id="redeemForm" method="post" action="redeem.php">
                     <input type="hidden" name="reward_id" value="">
+                    <div id="gameDetailsFields" style="display: none;">
+                        <div class="mb-3">
+                            <label for="gameUsername" class="form-label">Game Username:</label>
+                            <input type="text" class="form-control" id="gameUsername" name="game_username" placeholder="Enter your game username">
+                            <div class="form-text">Your correct game username is required to receive spins.</div>
+                        </div>
+                    </div>
                     <div class="mb-3">
                         <label for="confirmRedeem" class="form-label">Type "CONFIRM" to proceed:</label>
                         <input type="text" class="form-control" id="confirmRedeem" name="confirm" required>

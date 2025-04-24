@@ -21,6 +21,7 @@ $message_type = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['reward_id'])) {
     $reward_id = (int)$_GET['reward_id'];
     $confirm = isset($_POST['confirm']) ? trim($_POST['confirm']) : '';
+    $game_username = isset($_POST['game_username']) ? trim($_POST['game_username']) : '';
     
     // Validate confirmation
     if ($confirm !== 'CONFIRM') {
@@ -36,9 +37,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['reward_id'])) {
         } else if ($current_user['points'] < $reward['points_required']) {
             $message = 'You do not have enough points to redeem this reward.';
             $message_type = 'danger';
+        } 
+        // Check if this is a game spin reward that requires a username
+        else if (($reward_id == 6 || $reward_id == 7) && empty($game_username)) {
+            $message = 'Please enter your game username to receive your spins.';
+            $message_type = 'danger';
         } else {
+            // Prepare redemption details
+            $redemption_details = null;
+            if ($reward_id == 6 || $reward_id == 7) {
+                $game_type = ($reward_id == 6) ? 'CoinMaster' : 'Monopoly';
+                $redemption_details = json_encode([
+                    'game_type' => $game_type,
+                    'username' => $game_username,
+                    'spins' => 100
+                ]);
+            }
+            
             // Process the redemption
-            $result = redeemReward($user_id, $reward_id);
+            $result = redeemReward($user_id, $reward_id, $redemption_details);
             
             if ($result['status'] === 'success') {
                 $message = 'Redemption successful! Your request is now being processed.';

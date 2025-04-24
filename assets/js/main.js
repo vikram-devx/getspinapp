@@ -80,6 +80,22 @@ $(document).ready(function() {
         $('#rewardPoints').text(rewardPoints + ' points');
         $('#redeemForm').attr('action', 'redeem.php?reward_id=' + rewardId);
         
+        // Check if this is a game spin reward (CoinMaster or Monopoly)
+        if (rewardId == 6 || rewardId == 7) { // IDs for CoinMaster and Monopoly spin rewards
+            $('#gameDetailsFields').show();
+            $('#gameUsername').attr('required', true);
+            
+            // Set the placeholder text based on the game type
+            if (rewardId == 6) {
+                $('#gameUsername').attr('placeholder', 'Enter your CoinMaster username');
+            } else {
+                $('#gameUsername').attr('placeholder', 'Enter your Monopoly username');
+            }
+        } else {
+            $('#gameDetailsFields').hide();
+            $('#gameUsername').attr('required', false);
+        }
+        
         // Show the modal
         var rewardModal = new bootstrap.Modal(document.getElementById('rewardModal'));
         rewardModal.show();
