@@ -91,7 +91,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->execute();
                 
                 error_log("Used environment API key instead of database key");
-            }
             } else {
                 // Test connection to the API
                 error_log("Testing OGAds API connection");
@@ -118,6 +117,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         'Content-Type: application/json',
                         'Accept: application/json'
                     ],
+                    CURLOPT_SSL_VERIFYPEER => true,  // Enable SSL certificate verification
+                    CURLOPT_SSL_VERIFYHOST => 2,     // Verify the certificate's name against host
+                    CURLOPT_TIMEOUT        => 30,    // Set a reasonable timeout
                 ]);
                 
                 error_log("Testing OGAds API with POST method");
@@ -126,9 +128,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 // Execute POST request
                 $response_post = curl_exec($ch);
+                $curl_error = curl_errno($ch) ? curl_error($ch) : null;
                 $http_code_post = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                 
                 error_log("POST Response Code: " . $http_code_post);
+                if ($curl_error) {
+                    error_log("cURL Error: " . $curl_error);
+                }
                 error_log("POST Response: " . $response_post);
                 
                 curl_close($ch);
@@ -150,6 +156,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             'Authorization: Bearer ' . $api_key,
                             'Accept: application/json'
                         ],
+                        CURLOPT_SSL_VERIFYPEER => true,  // Enable SSL certificate verification
+                        CURLOPT_SSL_VERIFYHOST => 2,     // Verify the certificate's name against host
+                        CURLOPT_TIMEOUT        => 30,    // Set a reasonable timeout
                     ]);
                     
                     error_log("Testing OGAds API with GET method");
@@ -157,9 +166,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                     // Execute GET request
                     $response = curl_exec($ch);
+                    $curl_error = curl_errno($ch) ? curl_error($ch) : null;
                     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                     
                     error_log("GET Response Code: " . $http_code);
+                    if ($curl_error) {
+                        error_log("cURL Error: " . $curl_error);
+                    }
                     error_log("GET Response: " . $response);
                     
                     curl_close($ch);
@@ -169,7 +182,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $http_code = $http_code_post;
                 }
                 
-                if ($http_code === 200) {
+                // Check for curl errors first
+                if ($curl_error) {
+                    $message = 'API connection failed due to a cURL error: ' . $curl_error;
+                    
+                    // SSL certificate errors are common, provide specific guidance
+                    if (strpos($curl_error, 'SSL certificate') !== false) {
+                        $message .= '<br><br>This appears to be an SSL certificate issue. You might need to:
+                        <ul>
+                            <li>Check if your server has updated CA certificates</li>
+                            <li>Verify the API endpoint URL is correct and uses HTTPS</li>
+                            <li>Contact OGAds to ensure their SSL certificate is valid</li>
+                        </ul>';
+                    }
+                    
+                    $message_type = 'danger';
+                } else if ($http_code === 200) {
                     $message = 'API connection successful! Received valid response from OGAds API.';
                     $message_type = 'success';
                 } else {
