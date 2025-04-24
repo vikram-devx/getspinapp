@@ -30,11 +30,22 @@ if (isset($_GET['action'])) {
         $result = recordOfferAttempt($user_id, $offer_id, $ip_address);
         
         if ($result['status'] === 'success') {
-            // Redirect to OGAds offer URL
-            // In a real implementation, we would use the offer URL from the API
-            // For simplicity, we'll just show a message
-            $message = 'Task initiated! Complete the requirements to earn points.';
-            $message_type = 'success';
+            // Get the offer details from the API
+            $offer_details = getOfferDetails($offer_id);
+            
+            if ($offer_details['status'] === 'success' && isset($offer_details['offer']) && isset($offer_details['offer']['tracking_url'])) {
+                // Append our postback parameters to the tracking URL
+                $tracking_url = $offer_details['offer']['tracking_url'];
+                $tracking_url .= (strpos($tracking_url, '?') !== false ? '&' : '?') . 'aff_sub=' . $user_id;
+                
+                // Redirect the user to the offer URL
+                header('Location: ' . $tracking_url);
+                exit;
+            } else {
+                // Fallback if we couldn't get the tracking URL
+                $message = 'Could not start task. Please try again later.';
+                $message_type = 'warning';
+            }
         } else {
             $message = $result['message'];
             $message_type = 'danger';
@@ -54,10 +65,23 @@ if (isset($_GET['action'])) {
 // Get available offers from the API
 $offers_result = getOffers();
 
+// For debugging purposes, log the API response
+error_log("OGAds API Response: " . print_r($offers_result, true));
+
 // Prepare offers for display
 $offers = [];
 if ($offers_result['status'] === 'success' && isset($offers_result['offers'])) {
     $offers = $offers_result['offers'];
+    
+    // For debugging, if we have no offers, display the API response status
+    if (empty($offers)) {
+        $message = "No offers available. API status: " . $offers_result['status'];
+        $message_type = "info";
+    }
+} else {
+    // If there was an error, display it
+    $message = "Error fetching offers: " . (isset($offers_result['message']) ? $offers_result['message'] : "Unknown error");
+    $message_type = "danger";
 }
 
 // Generate unique postback URL for this user
@@ -86,73 +110,20 @@ include 'includes/header.php';
                 
                 <div class="row">
                     <?php 
-                    // For demonstration, we'll create some sample offers
-                    // In a real implementation, these would come from the API
-                    $sample_offers = [
-                        [
-                            'id' => 'offer1',
-                            'name' => 'Install Game App',
-                            'description' => 'Download and play this exciting new game for 5 minutes.',
-                            'requirements' => 'Download, install, and open the app. Play for at least 5 minutes.',
-                            'payout' => 1.5,
-                            'countries' => ['US', 'UK', 'CA', 'AU'],
-                            'devices' => ['android', 'ios'],
-                            'type' => 'cpi'
-                        ],
-                        [
-                            'id' => 'offer2',
-                            'name' => 'Complete Short Survey',
-                            'description' => 'Answer a few questions about your shopping habits.',
-                            'requirements' => 'Complete the entire survey honestly.',
-                            'payout' => 2.0,
-                            'countries' => ['US', 'UK', 'CA', 'DE', 'FR'],
-                            'devices' => ['all'],
-                            'type' => 'cpa'
-                        ],
-                        [
-                            'id' => 'offer3',
-                            'name' => 'Sign Up for Free Trial',
-                            'description' => 'Create an account and start a free trial of this service.',
-                            'requirements' => 'Create a new account with valid information. Credit card required but will not be charged.',
-                            'payout' => 3.5,
-                            'countries' => ['US', 'CA'],
-                            'devices' => ['all'],
-                            'type' => 'cpa'
-                        ],
-                        [
-                            'id' => 'offer4',
-                            'name' => 'Watch Video Tutorials',
-                            'description' => 'Watch a series of short educational videos.',
-                            'requirements' => 'Watch all videos in the series completely.',
-                            'payout' => 1.0,
-                            'countries' => ['all'],
-                            'devices' => ['all'],
-                            'type' => 'vid'
-                        ],
-                        [
-                            'id' => 'offer5',
-                            'name' => 'Mobile Game Level 5',
-                            'description' => 'Download this mobile game and reach level 5.',
-                            'requirements' => 'Install the game and play until you reach level 5.',
-                            'payout' => 2.5,
-                            'countries' => ['US', 'UK', 'CA', 'AU', 'DE', 'FR'],
-                            'devices' => ['android', 'ios'],
-                            'type' => 'cpi'
-                        ],
-                        [
-                            'id' => 'offer6',
-                            'name' => 'Complete Registration',
-                            'description' => 'Create an account on this platform.',
-                            'requirements' => 'Create a new account with valid information.',
-                            'payout' => 1.2,
-                            'countries' => ['all'],
-                            'devices' => ['all'],
-                            'type' => 'cpa'
-                        ]
-                    ];
-                    
-                    foreach ($sample_offers as $offer):
-                        $points = (int)($offer['payout'] * POINTS_CONVERSION_RATE);
+                    // Process and display the offers from OGAds API
+                    foreach ($offers as $offer):
+                        // Extract relevant information from the offer
+                        $offer_id = isset($offer['id']) ? $offer['id'] : '';
+                        $offer_name = isset($offer['name']) ? $offer['name'] : 'Unnamed Offer';
+                        $offer_description = isset($offer['description']) ? $offer['description'] : '';
+                        $offer_requirements = isset($offer['requirements']) ? $offer['requirements'] : 'Complete all offer requirements to earn points.';
+                        $offer_payout = isset($offer['payout']) ? (float)$offer['payout'] : 0;
+                        
+                        // Determine offer type (defaulting to CPA if not specified)
+                        $offer_type = isset($offer['type']) ? strtolower($offer['type']) : 'cpa';
+                        
+                        // Calculate points based on payout
+                        $points = (int)($offer_payout * POINTS_CONVERSION_RATE);
                     ?>
                     <div class="col-md-6 mb-4">
                         <div class="card h-100 task-card">

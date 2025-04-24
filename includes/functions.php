@@ -34,7 +34,7 @@ function getOffers($ip = null, $user_agent = null, $offer_type = null, $max = nu
     }
     
     // Create URL with query parameters
-    $url = OGADS_API_URL . '?' . http_build_query($data);
+    $url = OGADS_API_URL . '/offers?' . http_build_query($data);
     
     // Set up cURL
     $ch = curl_init();
@@ -79,6 +79,64 @@ function getOffers($ip = null, $user_agent = null, $offer_type = null, $max = nu
     return [
         'status' => 'success',
         'offers' => $data
+    ];
+}
+
+// Function to get specific offer details from OGAds API
+function getOfferDetails($offer_id) {
+    if (empty($offer_id)) {
+        return [
+            'status' => 'error',
+            'message' => 'Invalid offer ID'
+        ];
+    }
+    
+    // Create URL for specific offer
+    $url = OGADS_API_URL . '/offers/' . $offer_id;
+    
+    // Set up cURL
+    $ch = curl_init();
+    
+    // Set CURL options
+    curl_setopt_array($ch, [
+        CURLOPT_URL            => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER     => [
+            'Authorization: Bearer ' . OGADS_API_KEY,
+            'Accept: application/json'
+        ],
+    ]);
+    
+    // Execute cURL request
+    $response = curl_exec($ch);
+    
+    // Check for errors
+    if (curl_errno($ch)) {
+        $error = curl_error($ch);
+        curl_close($ch);
+        return [
+            'status' => 'error',
+            'message' => 'API Request Error: ' . $error
+        ];
+    }
+    
+    curl_close($ch);
+    
+    // Decode JSON response
+    $data = json_decode($response, true);
+    
+    // Check if response is valid
+    if (!$data || json_last_error() !== JSON_ERROR_NONE) {
+        error_log("Invalid API Response: " . $response);
+        return [
+            'status' => 'error',
+            'message' => 'Invalid API Response'
+        ];
+    }
+    
+    return [
+        'status' => 'success',
+        'offer' => $data
     ];
 }
 
