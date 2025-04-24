@@ -111,6 +111,17 @@ $current_page = basename($_SERVER['PHP_SELF']);
             margin-left: var(--sidebar-width);
             padding: 0 1.5rem;
         }
+        
+        /* Fix for content wrapper to not overlap with sidebar */
+        #content-wrapper {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+        }
+        
+        /* Container padding */
+        .container-fluid {
+            padding: 1.5rem;
+        }
 
         .content-header {
             padding: 1.5rem 0;
@@ -192,6 +203,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
             
             .content {
                 margin-left: 0;
+            }
+            
+            #content-wrapper {
+                margin-left: 0;
+                width: 100%;
             }
             
             .topbar .navbar-search {
