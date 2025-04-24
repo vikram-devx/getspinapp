@@ -154,10 +154,16 @@ if ($offers_result['status'] === 'success') {
         
         // Use sample offers for demonstration
         $use_sample_offers = true;
-    } elseif (isset($offers_result['offers']) && is_array($offers_result['offers']) && !empty($offers_result['offers'])) {
-        // API returned valid offers
-        $offers = $offers_result['offers'];
+    } elseif (isset($offers_result['offers']['response']) && isset($offers_result['offers']['response']['offers']) && 
+              is_array($offers_result['offers']['response']['offers']) && !empty($offers_result['offers']['response']['offers'])) {
+        // API returned valid offers - this matches the actual OGAds API structure
+        $offers = $offers_result['offers']['response']['offers'];
         $use_sample_offers = false;
+        
+        // For debugging, log the first offer to see its structure
+        if (isset($offers[0])) {
+            error_log("First OGAds Offer Structure: " . print_r($offers[0], true));
+        }
     } else {
         // API returned success but no offers (empty array or null)
         $message = "No offers available for your region at this time.";
@@ -244,15 +250,21 @@ include 'includes/header.php';
                     <?php 
                     // Process and display the offers from OGAds API
                     foreach ($offers as $offer):
-                        // Extract relevant information from the offer
-                        $offer_id = isset($offer['id']) ? $offer['id'] : '';
-                        $offer_name = isset($offer['name']) ? $offer['name'] : 'Unnamed Offer';
+                        // Extract relevant information from the offer based on OGAds API structure
+                        $offer_id = isset($offer['offerid']) ? $offer['offerid'] : '';
+                        $offer_name = isset($offer['name']) ? $offer['name'] : '';
+                        if (empty($offer_name) && isset($offer['name_short'])) {
+                            $offer_name = $offer['name_short'];
+                        }
                         $offer_description = isset($offer['description']) ? $offer['description'] : '';
-                        $offer_requirements = isset($offer['requirements']) ? $offer['requirements'] : 'Complete all offer requirements to earn points.';
+                        if (empty($offer_description) && isset($offer['adcopy'])) {
+                            $offer_description = $offer['adcopy'];
+                        }
+                        $offer_requirements = 'Complete all offer requirements to earn points.';
                         $offer_payout = isset($offer['payout']) ? (float)$offer['payout'] : 0;
                         
                         // Determine offer type (defaulting to CPA if not specified)
-                        $offer_type = isset($offer['type']) ? strtolower($offer['type']) : 'cpa';
+                        $offer_type = isset($offer['ctype']) ? strtolower($offer['ctype']) : 'cpa';
                         
                         // Calculate points based on payout
                         $points = (int)($offer_payout * POINTS_CONVERSION_RATE);
@@ -261,20 +273,20 @@ include 'includes/header.php';
                         <div class="card h-100 task-card">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-start mb-3">
-                                    <h5 class="card-title mb-0"><?php echo isset($offer['name']) ? htmlspecialchars($offer['name']) : 'No title'; ?></h5>
+                                    <h5 class="card-title mb-0"><?php echo !empty($offer_name) ? htmlspecialchars($offer_name) : 'No title'; ?></h5>
                                     <span class="offer-type offer-type-<?php echo $offer_type; ?>"><?php echo strtoupper($offer_type); ?></span>
                                 </div>
-                                <p class="card-text"><?php echo isset($offer['description']) ? htmlspecialchars($offer['description']) : 'No description'; ?></p>
+                                <p class="card-text"><?php echo !empty($offer_description) ? htmlspecialchars($offer_description) : 'No description'; ?></p>
                                 <div class="d-flex justify-content-between align-items-center mt-3">
                                     <div class="task-payout">
                                         <strong><?php echo formatPoints($points); ?></strong> points
                                     </div>
                                     <button type="button" class="btn btn-sm btn-primary view-task" 
-                                        data-id="<?php echo isset($offer['id']) ? $offer['id'] : ''; ?>"
-                                        data-title="<?php echo isset($offer['name']) ? htmlspecialchars($offer['name']) : 'No title'; ?>"
-                                        data-description="<?php echo isset($offer['description']) ? htmlspecialchars($offer['description']) : 'No description'; ?>"
-                                        data-requirements="<?php echo isset($offer['requirements']) ? htmlspecialchars($offer['requirements']) : 'No requirements'; ?>"
-                                        data-payout="<?php echo formatCurrency($offer_payout); ?>"
+                                        data-id="<?php echo $offer_id; ?>"
+                                        data-title="<?php echo !empty($offer_name) ? htmlspecialchars($offer_name) : 'No title'; ?>"
+                                        data-description="<?php echo !empty($offer_description) ? htmlspecialchars($offer_description) : 'No description'; ?>"
+                                        data-requirements="<?php echo htmlspecialchars($offer_requirements); ?>"
+                                        data-payout="$<?php echo number_format($offer_payout, 2); ?>"
                                         data-points="<?php echo formatPoints($points); ?>">
                                         View Details
                                     </button>
