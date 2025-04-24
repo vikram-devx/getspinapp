@@ -111,55 +111,39 @@ error_log("OGAds API Response: " . print_r($offers_result, true));
 // Prepare offers for display
 $offers = [];
 
-// The API is giving a route error, let's provide some sample offers until we can connect to the actual API
-if ($offers_result['status'] === 'success' && isset($offers_result['offers'])) {
-    // Check if we have an error message indicating route not found
-    if (isset($offers_result['offers']['message']) && strpos($offers_result['offers']['message'], 'route') !== false) {
-        $message = "OGAds API is not available at the moment. Showing sample offers instead.";
-        $message_type = "warning";
-        
-        // Provide some sample offers for testing
-        $offers = [
-            [
-                'id' => 'offer1',
-                'name' => 'Install Game App',
-                'description' => 'Download and play this exciting new game for 5 minutes.',
-                'requirements' => 'Download, install, and open the app. Play for at least 5 minutes.',
-                'payout' => 1.5,
-                'type' => 'cpi'
-            ],
-            [
-                'id' => 'offer2',
-                'name' => 'Complete Short Survey',
-                'description' => 'Answer a few questions about your shopping habits.',
-                'requirements' => 'Complete the entire survey honestly.',
-                'payout' => 2.0,
-                'type' => 'cpa'
-            ],
-            [
-                'id' => 'offer3',
-                'name' => 'Sign Up for Free Trial',
-                'description' => 'Create an account and start a free trial of this service.',
-                'requirements' => 'Create a new account with valid information.',
-                'payout' => 3.5,
-                'type' => 'cpa'
-            ]
-        ];
-    } else {
-        // We have proper offers from the API
-        $offers = $offers_result['offers'];
-        
-        // For debugging, if we have no offers, display the API response status
-        if (empty($offers)) {
-            $message = "No offers available. API status: " . $offers_result['status'];
-            $message_type = "info";
-        }
-    }
-} else {
-    // If there was an error, display it
-    $message = "Error fetching offers: " . (isset($offers_result['message']) ? $offers_result['message'] : "Unknown error");
-    $message_type = "danger";
-}
+// Use sample offers for testing, as the OGAds API is not responding as expected
+// The API returned an error about not being able to find geo data for the IP address
+$message = "Using sample offers for demonstration. The OGAds API reported: " . 
+    (isset($offers_result['offers']['error']) ? $offers_result['offers']['error'] : "Connection issue");
+$message_type = "info";
+
+// Provide sample offers for testing
+$offers = [
+    [
+        'id' => 'offer1',
+        'name' => 'Install Game App',
+        'description' => 'Download and play this exciting new game for 5 minutes.',
+        'requirements' => 'Download, install, and open the app. Play for at least 5 minutes.',
+        'payout' => 1.5,
+        'type' => 'cpi'
+    ],
+    [
+        'id' => 'offer2',
+        'name' => 'Complete Short Survey',
+        'description' => 'Answer a few questions about your shopping habits.',
+        'requirements' => 'Complete the entire survey honestly.',
+        'payout' => 2.0,
+        'type' => 'cpa'
+    ],
+    [
+        'id' => 'offer3',
+        'name' => 'Sign Up for Free Trial',
+        'description' => 'Create an account and start a free trial of this service.',
+        'requirements' => 'Create a new account with valid information.',
+        'payout' => 3.5,
+        'type' => 'cpa'
+    ]
+];
 
 // Generate unique postback URL for this user
 $postback_url = generatePostbackUrl($user_id);
@@ -206,20 +190,20 @@ include 'includes/header.php';
                         <div class="card h-100 task-card">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-start mb-3">
-                                    <h5 class="card-title mb-0"><?php echo htmlspecialchars($offer['name']); ?></h5>
-                                    <span class="offer-type offer-type-<?php echo $offer['type']; ?>"><?php echo strtoupper($offer['type']); ?></span>
+                                    <h5 class="card-title mb-0"><?php echo isset($offer['name']) ? htmlspecialchars($offer['name']) : 'No title'; ?></h5>
+                                    <span class="offer-type offer-type-<?php echo $offer_type; ?>"><?php echo strtoupper($offer_type); ?></span>
                                 </div>
-                                <p class="card-text"><?php echo htmlspecialchars($offer['description']); ?></p>
+                                <p class="card-text"><?php echo isset($offer['description']) ? htmlspecialchars($offer['description']) : 'No description'; ?></p>
                                 <div class="d-flex justify-content-between align-items-center mt-3">
                                     <div class="task-payout">
                                         <strong><?php echo formatPoints($points); ?></strong> points
                                     </div>
                                     <button type="button" class="btn btn-sm btn-primary view-task" 
-                                        data-id="<?php echo $offer['id']; ?>"
-                                        data-title="<?php echo htmlspecialchars($offer['name']); ?>"
-                                        data-description="<?php echo htmlspecialchars($offer['description']); ?>"
-                                        data-requirements="<?php echo htmlspecialchars($offer['requirements']); ?>"
-                                        data-payout="<?php echo formatCurrency($offer['payout']); ?>"
+                                        data-id="<?php echo isset($offer['id']) ? $offer['id'] : ''; ?>"
+                                        data-title="<?php echo isset($offer['name']) ? htmlspecialchars($offer['name']) : 'No title'; ?>"
+                                        data-description="<?php echo isset($offer['description']) ? htmlspecialchars($offer['description']) : 'No description'; ?>"
+                                        data-requirements="<?php echo isset($offer['requirements']) ? htmlspecialchars($offer['requirements']) : 'No requirements'; ?>"
+                                        data-payout="<?php echo formatCurrency($offer_payout); ?>"
                                         data-points="<?php echo formatPoints($points); ?>">
                                         View Details
                                     </button>
