@@ -109,8 +109,33 @@ if (isset($_GET['action'])) {
     }
 }
 
+// Get database connection to check for API key
+$db = Database::getInstance();
+$conn = $db->getConnection();
+
+// Get API settings
+$settings = [];
+try {
+    $stmt = $conn->query("SELECT setting_key, setting_value FROM settings WHERE setting_key LIKE 'ogads_%'");
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $settings[$row['setting_key']] = $row['setting_value'];
+    }
+} catch (PDOException $e) {
+    error_log("Error retrieving API settings: " . $e->getMessage());
+}
+
+// Check if API key is configured
+$api_key = isset($settings['ogads_api_key']) && !empty($settings['ogads_api_key']) 
+    ? $settings['ogads_api_key'] 
+    : OGADS_API_KEY;
+
+// Get additional settings
+$max_offers = isset($settings['ogads_max_offers']) ? (int)$settings['ogads_max_offers'] : 10;
+$min_offers = isset($settings['ogads_min_offers']) ? (int)$settings['ogads_min_offers'] : 3;
+$ctype = isset($settings['ogads_ctype']) ? (int)$settings['ogads_ctype'] : null;
+
 // Get available offers from the API
-$offers_result = getOffers();
+$offers_result = getOffers(null, null, $ctype, $max_offers, $min_offers);
 
 // For debugging purposes, log the API response
 error_log("OGAds API Response: " . print_r($offers_result, true));
@@ -118,39 +143,57 @@ error_log("OGAds API Response: " . print_r($offers_result, true));
 // Prepare offers for display
 $offers = [];
 
-// Use sample offers for testing, as the OGAds API is not responding as expected
-// The API returned an error about not being able to find geo data for the IP address
-$message = "Using sample offers for demonstration. The OGAds API reported: " . 
-    (isset($offers_result['offers']['error']) ? $offers_result['offers']['error'] : "Connection issue");
-$message_type = "info";
-
-// Provide sample offers for testing
-$offers = [
-    [
-        'id' => 'offer1',
-        'name' => 'Install Game App',
-        'description' => 'Download and play this exciting new game for 5 minutes.',
-        'requirements' => 'Download, install, and open the app. Play for at least 5 minutes.',
-        'payout' => 1.5,
-        'type' => 'cpi'
-    ],
-    [
-        'id' => 'offer2',
-        'name' => 'Complete Short Survey',
-        'description' => 'Answer a few questions about your shopping habits.',
-        'requirements' => 'Complete the entire survey honestly.',
-        'payout' => 2.0,
-        'type' => 'cpa'
-    ],
-    [
-        'id' => 'offer3',
-        'name' => 'Sign Up for Free Trial',
-        'description' => 'Create an account and start a free trial of this service.',
-        'requirements' => 'Create a new account with valid information.',
-        'payout' => 3.5,
-        'type' => 'cpa'
-    ]
-];
+// Check if we got a valid response
+if ($offers_result['status'] === 'success' && isset($offers_result['offers']) && is_array($offers_result['offers']) && !isset($offers_result['offers']['error'])) {
+    // API returned valid offers
+    $offers = $offers_result['offers'];
+    
+    // Format offers for display if needed
+    // This would depend on the exact structure of the API response
+    
+    if (count($offers) === 0) {
+        $message = "No offers available for your region at this time.";
+        $message_type = "info";
+    }
+} else {
+    // Use sample offers for testing when the API is not responding as expected
+    $error_message = isset($offers_result['offers']['error']) ? $offers_result['offers']['error'] : "Connection issue";
+    
+    if (empty($api_key) || $api_key === OGADS_API_KEY) {
+        $message = "API Key not configured. Please set up your OGAds API Key in the admin panel.";
+    } else {
+        $message = "Using sample offers for demonstration. The OGAds API reported: " . $error_message;
+    }
+    $message_type = "info";
+    
+    // Provide sample offers for testing
+    $offers = [
+        [
+            'id' => 'offer1',
+            'name' => 'Install Game App',
+            'description' => 'Download and play this exciting new game for 5 minutes.',
+            'requirements' => 'Download, install, and open the app. Play for at least 5 minutes.',
+            'payout' => 1.5,
+            'type' => 'cpi'
+        ],
+        [
+            'id' => 'offer2',
+            'name' => 'Complete Short Survey',
+            'description' => 'Answer a few questions about your shopping habits.',
+            'requirements' => 'Complete the entire survey honestly.',
+            'payout' => 2.0,
+            'type' => 'cpa'
+        ],
+        [
+            'id' => 'offer3',
+            'name' => 'Sign Up for Free Trial',
+            'description' => 'Create an account and start a free trial of this service.',
+            'requirements' => 'Create a new account with valid information.',
+            'payout' => 3.5,
+            'type' => 'cpa'
+        ]
+    ];
+}
 
 // Generate unique postback URL for this user
 $postback_url = generatePostbackUrl($user_id);

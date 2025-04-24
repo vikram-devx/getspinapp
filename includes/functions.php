@@ -4,6 +4,28 @@ require_once 'config.php';
 
 // Function to get available offers from OGAds API
 function getOffers($ip = null, $user_agent = null, $offer_type = null, $max = null, $min = null) {
+    // Get database connection
+    $db = Database::getInstance();
+    $conn = $db->getConnection();
+    
+    // Get API settings from database
+    $settings = [];
+    try {
+        $stmt = $conn->query("SELECT setting_key, setting_value FROM settings WHERE setting_key LIKE 'ogads_%'");
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $settings[$row['setting_key']] = $row['setting_value'];
+        }
+    } catch (PDOException $e) {
+        error_log("Error retrieving API settings: " . $e->getMessage());
+    }
+    
+    // Use settings from database or fallback to constants
+    $api_key = isset($settings['ogads_api_key']) && !empty($settings['ogads_api_key']) 
+        ? $settings['ogads_api_key'] 
+        : OGADS_API_KEY;
+    
+    $api_url = OGADS_API_URL; // Always use the URL from constants
+    
     // If IP is not provided, get the user's IP
     if (!$ip) {
         $ip = $_SERVER['REMOTE_ADDR'];
@@ -20,32 +42,40 @@ function getOffers($ip = null, $user_agent = null, $offer_type = null, $max = nu
         'user_agent' => $user_agent,   // Client User Agent (REQUIRED)
     ];
     
-    // Add optional parameters if provided
-    if ($offer_type) {
+    // Use settings from database if available
+    if (!$offer_type && isset($settings['ogads_ctype']) && !empty($settings['ogads_ctype'])) {
+        $data['ctype'] = (int)$settings['ogads_ctype'];
+    } elseif ($offer_type) {
         $data['ctype'] = $offer_type;
     }
     
-    if ($max) {
+    if (!$max && isset($settings['ogads_max_offers']) && !empty($settings['ogads_max_offers'])) {
+        $data['max'] = (int)$settings['ogads_max_offers'];
+    } elseif ($max) {
         $data['max'] = $max;
     }
     
-    if ($min) {
+    if (!$min && isset($settings['ogads_min_offers']) && !empty($settings['ogads_min_offers'])) {
+        $data['min'] = (int)$settings['ogads_min_offers'];
+    } elseif ($min) {
         $data['min'] = $min;
     }
     
-    // Create URL with query parameters
-    // The API URL might not include the 'offers' endpoint, so we'll try the base URL
-    $url = OGADS_API_URL . '?' . http_build_query($data);
+    // Log the API request parameters for debugging
+    error_log("OGAds API Request Parameters: " . print_r($data, true));
     
-    // Set up cURL
+    // Set up cURL with POST method as required by OGAds API v2
     $ch = curl_init();
     
-    // Set CURL options
+    // Set CURL options for POST request
     curl_setopt_array($ch, [
-        CURLOPT_URL            => $url,
+        CURLOPT_URL            => $api_url,
         CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST           => true,
+        CURLOPT_POSTFIELDS     => json_encode($data),
         CURLOPT_HTTPHEADER     => [
-            'Authorization: Bearer ' . OGADS_API_KEY,
+            'Authorization: Bearer ' . $api_key,
+            'Content-Type: application/json',
             'Accept: application/json'
         ],
     ]);
@@ -92,18 +122,47 @@ function getOfferDetails($offer_id) {
         ];
     }
     
-    // Create URL for specific offer - just use the base URL with the offer_id as a parameter
-    $url = OGADS_API_URL . '?offer_id=' . $offer_id;
+    // Get database connection
+    $db = Database::getInstance();
+    $conn = $db->getConnection();
     
-    // Set up cURL
+    // Get API settings from database
+    $settings = [];
+    try {
+        $stmt = $conn->query("SELECT setting_key, setting_value FROM settings WHERE setting_key LIKE 'ogads_%'");
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $settings[$row['setting_key']] = $row['setting_value'];
+        }
+    } catch (PDOException $e) {
+        error_log("Error retrieving API settings: " . $e->getMessage());
+    }
+    
+    // Use settings from database or fallback to constants
+    $api_key = isset($settings['ogads_api_key']) && !empty($settings['ogads_api_key']) 
+        ? $settings['ogads_api_key'] 
+        : OGADS_API_KEY;
+    
+    $api_url = OGADS_API_URL; // Always use the URL from constants
+    
+    // For v2 API, we need to use POST method with offer_id in the request body
+    $data = [
+        'offer_id' => $offer_id,
+        'ip' => $_SERVER['REMOTE_ADDR'],
+        'user_agent' => $_SERVER['HTTP_USER_AGENT']
+    ];
+    
+    // Set up cURL with POST method
     $ch = curl_init();
     
-    // Set CURL options
+    // Set CURL options for POST request
     curl_setopt_array($ch, [
-        CURLOPT_URL            => $url,
+        CURLOPT_URL            => $api_url,
         CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST           => true,
+        CURLOPT_POSTFIELDS     => json_encode($data),
         CURLOPT_HTTPHEADER     => [
-            'Authorization: Bearer ' . OGADS_API_KEY,
+            'Authorization: Bearer ' . $api_key,
+            'Content-Type: application/json',
             'Accept: application/json'
         ],
     ]);
