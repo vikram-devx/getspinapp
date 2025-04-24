@@ -146,18 +146,25 @@ $offers = [];
 // Check if we got a valid response
 if ($offers_result['status'] === 'success') {
     // API returned a response (might have offers or an error message)
-    if (isset($offers_result['offers']['error'])) {
-        // API returned an error, but it's still a valid API connection
+    // Based on the documentation, we need to check for:
+    // { "success": true, "error": null, "offers": [ ... array of offers ... ] }
+    
+    // Debug log the full response structure
+    error_log("Full API Response Structure in tasks.php: " . print_r($offers_result, true));
+    
+    if (isset($offers_result['offers']['error']) && !empty($offers_result['offers']['error'])) {
+        // API returned an error
         $error_message = $offers_result['offers']['error'];
         $message = "No offers available: " . $error_message;
         $message_type = "info";
         
         // Use sample offers for demonstration
         $use_sample_offers = true;
-    } elseif (isset($offers_result['offers']['response']) && isset($offers_result['offers']['response']['offers']) && 
-              is_array($offers_result['offers']['response']['offers']) && !empty($offers_result['offers']['response']['offers'])) {
-        // API returned valid offers - this matches the actual OGAds API structure
-        $offers = $offers_result['offers']['response']['offers'];
+    } elseif (isset($offers_result['offers']['success']) && $offers_result['offers']['success'] === true && 
+              isset($offers_result['offers']['offers']) && is_array($offers_result['offers']['offers']) && 
+              !empty($offers_result['offers']['offers'])) {
+        // API returned valid offers as per documentation { "success": true, "error": null, "offers": [ ... array of offers ... ] }
+        $offers = $offers_result['offers']['offers'];
         $use_sample_offers = false;
         
         // For debugging, log the first offer to see its structure
@@ -165,10 +172,23 @@ if ($offers_result['status'] === 'success') {
             error_log("First OGAds Offer Structure: " . print_r($offers[0], true));
         }
     } else {
-        // API returned success but no offers (empty array or null)
-        $message = "No offers available for your region at this time.";
-        $message_type = "info";
-        $use_sample_offers = true;
+        // Check if we have a direct array of offers (without the success/error wrapper)
+        if (isset($offers_result['offers']) && is_array($offers_result['offers']) && 
+            !isset($offers_result['offers']['success']) && !isset($offers_result['offers']['error'])) {
+            
+            $offers = $offers_result['offers'];
+            $use_sample_offers = false;
+            
+            // For debugging, log the first offer
+            if (isset($offers[0])) {
+                error_log("First OGAds Direct Offer Structure: " . print_r($offers[0], true));
+            }
+        } else {
+            // API returned success but no offers (empty array or null)
+            $message = "No offers available for your region at this time.";
+            $message_type = "info";
+            $use_sample_offers = true;
+        }
     }
 } else {
     // API request failed completely

@@ -119,10 +119,26 @@ function getOffers($ip = null, $user_agent = null, $offer_type = null, $max = nu
         ];
     }
     
-    return [
-        'status' => 'success',
-        'offers' => $data
-    ];
+    // Log the full API response structure for debugging
+    error_log("Full API Response Structure: " . print_r($data, true));
+    
+    // Check if the API response indicates success
+    if (isset($data['success']) && $data['success'] === true) {
+        return [
+            'status' => 'success',
+            'offers' => $data
+        ];
+    } else if (isset($data['error']) && !empty($data['error'])) {
+        return [
+            'status' => 'error',
+            'message' => 'API Error: ' . $data['error']
+        ];
+    } else {
+        return [
+            'status' => 'success',
+            'offers' => $data
+        ];
+    }
 }
 
 // Function to get specific offer details from OGAds API
