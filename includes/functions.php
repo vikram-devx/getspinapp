@@ -64,20 +64,24 @@ function getOffers($ip = null, $user_agent = null, $offer_type = null, $max = nu
     // Log the API request parameters for debugging
     error_log("OGAds API Request Parameters: " . print_r($data, true));
     
-    // Set up cURL with POST method as required by OGAds API v2
+    // Set up cURL with GET method as required by OGAds API v2
     $ch = curl_init();
     
-    // Set CURL options for POST request
+    // Create query string for GET request
+    $query_params = http_build_query($data);
+    $get_url = $api_url . '?' . $query_params;
+    
+    // Set CURL options for GET request
     curl_setopt_array($ch, [
-        CURLOPT_URL            => $api_url,
+        CURLOPT_URL            => $get_url,
         CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST           => true,
-        CURLOPT_POSTFIELDS     => json_encode($data),
         CURLOPT_HTTPHEADER     => [
             'Authorization: Bearer ' . $api_key,
-            'Content-Type: application/json',
             'Accept: application/json'
         ],
+        CURLOPT_SSL_VERIFYPEER => true,  // Enable SSL certificate verification
+        CURLOPT_SSL_VERIFYHOST => 2,     // Verify the certificate's name against host
+        CURLOPT_TIMEOUT        => 30,    // Set a reasonable timeout
     ]);
     
     // Execute cURL request
@@ -144,27 +148,31 @@ function getOfferDetails($offer_id) {
     
     $api_url = OGADS_API_URL; // Always use the URL from constants
     
-    // For v2 API, we need to use POST method with offer_id in the request body
+    // For v2 API, we need to use GET method as POST is not supported
     $data = [
         'offer_id' => $offer_id,
         'ip' => $_SERVER['REMOTE_ADDR'],
         'user_agent' => $_SERVER['HTTP_USER_AGENT']
     ];
     
-    // Set up cURL with POST method
+    // Set up cURL with GET method
     $ch = curl_init();
     
-    // Set CURL options for POST request
+    // Create query string for GET request
+    $query_params = http_build_query($data);
+    $get_url = $api_url . '?' . $query_params;
+    
+    // Set CURL options for GET request
     curl_setopt_array($ch, [
-        CURLOPT_URL            => $api_url,
+        CURLOPT_URL            => $get_url,
         CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST           => true,
-        CURLOPT_POSTFIELDS     => json_encode($data),
         CURLOPT_HTTPHEADER     => [
             'Authorization: Bearer ' . $api_key,
-            'Content-Type: application/json',
             'Accept: application/json'
         ],
+        CURLOPT_SSL_VERIFYPEER => true,  // Enable SSL certificate verification
+        CURLOPT_SSL_VERIFYHOST => 2,     // Verify the certificate's name against host
+        CURLOPT_TIMEOUT        => 30,    // Set a reasonable timeout
     ]);
     
     // Execute cURL request
