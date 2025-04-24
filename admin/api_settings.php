@@ -2,6 +2,7 @@
 require_once '../includes/config.php';
 require_once '../includes/auth.php';
 require_once '../includes/functions.php';
+require_once '../includes/db.php';
 
 $auth = new Auth();
 
@@ -10,6 +11,10 @@ if (!$auth->isLoggedIn() || !$auth->isAdmin()) {
     header('Location: ../login.php');
     exit;
 }
+
+// Get database connection
+$db = Database::getInstance();
+$conn = $db->getConnection();
 
 $message = '';
 $message_type = '';
