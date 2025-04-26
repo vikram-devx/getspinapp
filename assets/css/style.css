@@ -19,10 +19,21 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    padding: 0;
+    margin: 0;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .container {
     flex: 1;
+}
+
+/* Make hero section full width */
+.hero-section .container {
+    max-width: 100%;
+    width: 100%;
+    padding: 0 5%;
+    margin: 0; /* Remove any margin */
 }
 
 /* Navbar Styles */
@@ -268,8 +279,15 @@ body {
     padding: 3rem 0;
     background: var(--dark-bg);
     color: #fff;
-    border-radius: 0.5rem;
     margin-bottom: 2rem;
+    margin-top: -24px; /* Adjusted to remove gap completely */
+    width: 100%; /* Full width */
+    max-width: 100%; /* Prevent overflow */
+    border-radius: 0; /* Remove rounded corners */
+    position: relative; /* For proper positioning */
+    left: 0; /* Ensure alignment */
+    right: 0; /* Ensure alignment */
+    box-sizing: border-box; /* Include padding in width calculation */
 }
 
 .how-it-works {
