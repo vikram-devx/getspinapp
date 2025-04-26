@@ -17,7 +17,103 @@ $conn = $db->getConnection();
 $success_message = '';
 $error_message = '';
 
-// Handle form submission for notification settings
+// Get current settings
+$settings = [];
+try {
+    $stmt = $conn->query("SELECT setting_key, setting_value FROM settings");
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $settings[$row['setting_key']] = $row['setting_value'];
+    }
+} catch (PDOException $e) {
+    $error_message = 'Error retrieving settings: ' . $e->getMessage();
+}
+
+// Handle app settings form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_app_settings'])) {
+    $app_name = filter_input(INPUT_POST, 'app_name', FILTER_SANITIZE_STRING);
+    $point_name = filter_input(INPUT_POST, 'point_name', FILTER_SANITIZE_STRING);
+    $point_name_plural = filter_input(INPUT_POST, 'point_name_plural', FILTER_SANITIZE_STRING);
+    $app_color = filter_input(INPUT_POST, 'app_color', FILTER_SANITIZE_STRING);
+    
+    try {
+        // Begin transaction
+        $conn->beginTransaction();
+        
+        // Update settings
+        saveSetting('app_name', $app_name);
+        saveSetting('point_name', $point_name);
+        saveSetting('point_name_plural', $point_name_plural);
+        saveSetting('app_color', $app_color);
+        
+        // Handle logo upload
+        if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
+            $file_tmp = $_FILES['logo']['tmp_name'];
+            $file_name = $_FILES['logo']['name'];
+            $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+            
+            // Validate file extension
+            $allowed_exts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+            if (in_array($file_ext, $allowed_exts)) {
+                $new_file_name = 'logo_' . time() . '_' . $file_name;
+                $upload_path = '../uploads/' . $new_file_name;
+                
+                if (move_uploaded_file($file_tmp, $upload_path)) {
+                    saveSetting('logo', $new_file_name);
+                } else {
+                    $error_message = 'Failed to upload logo';
+                    $conn->rollBack();
+                    goto end_of_processing;
+                }
+            } else {
+                $error_message = 'Invalid file type. Allowed types: ' . implode(', ', $allowed_exts);
+                $conn->rollBack();
+                goto end_of_processing;
+            }
+        }
+        
+        // Handle auth logo upload
+        if (isset($_FILES['auth_logo']) && $_FILES['auth_logo']['error'] === UPLOAD_ERR_OK) {
+            $file_tmp = $_FILES['auth_logo']['tmp_name'];
+            $file_name = $_FILES['auth_logo']['name'];
+            $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+            
+            // Validate file extension
+            $allowed_exts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+            if (in_array($file_ext, $allowed_exts)) {
+                $new_file_name = 'auth_logo_' . time() . '_' . $file_name;
+                $upload_path = '../uploads/' . $new_file_name;
+                
+                if (move_uploaded_file($file_tmp, $upload_path)) {
+                    saveSetting('auth_logo', $new_file_name);
+                } else {
+                    $error_message = 'Failed to upload authentication logo';
+                    $conn->rollBack();
+                    goto end_of_processing;
+                }
+            } else {
+                $error_message = 'Invalid file type. Allowed types: ' . implode(', ', $allowed_exts);
+                $conn->rollBack();
+                goto end_of_processing;
+            }
+        }
+        
+        // Commit transaction
+        $conn->commit();
+        $success_message = 'App settings updated successfully';
+        
+        // Refresh settings after save
+        $settings = [];
+        $stmt = $conn->query("SELECT setting_key, setting_value FROM settings");
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $settings[$row['setting_key']] = $row['setting_value'];
+        }
+    } catch (PDOException $e) {
+        $conn->rollBack();
+        $error_message = 'Error saving settings: ' . $e->getMessage();
+    }
+}
+
+// Handle notification settings form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_notification_settings'])) {
     $notification_email = filter_input(INPUT_POST, 'notification_email', FILTER_VALIDATE_EMAIL);
     $notification_email_enabled = isset($_POST['notification_email_enabled']) ? 1 : 0;
@@ -52,6 +148,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_notification_set
     }
 }
 
+// Label for processing end
+end_of_processing:
+
 // Get current notification settings
 try {
     $notification_settings = [];
@@ -60,18 +159,20 @@ try {
         $notification_settings[$row['setting_key']] = $row['setting_value'];
     }
 } catch (PDOException $e) {
-    $error_message = 'Error retrieving notification settings: ' . $e->getMessage();
+    if (empty($error_message)) {
+        $error_message = 'Error retrieving notification settings: ' . $e->getMessage();
+    }
 }
 
 // Include header
-$page_title = 'Admin Settings';
+$page_title = 'App Settings';
 include 'header.php';
 ?>
 
 <div class="container-fluid">
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Admin Settings</h1>
+        <h1 class="h3 mb-0 text-gray-800">App Settings</h1>
     </div>
 
     <?php if ($success_message): ?>
@@ -88,6 +189,91 @@ include 'header.php';
     </div>
     <?php endif; ?>
 
+    <!-- App Settings Card -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">App Settings</h6>
+        </div>
+        <div class="card-body">
+            <form method="post" action="" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="app_name" class="form-label">App Name</label>
+                            <input type="text" class="form-control" id="app_name" name="app_name" 
+                                value="<?php echo htmlspecialchars($settings['app_name'] ?? APP_NAME); ?>"
+                                placeholder="GetSpins">
+                            <div class="form-text text-muted">
+                                The name of your application, displayed in headers and titles.
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="point_name" class="form-label">Point Name (Singular)</label>
+                            <input type="text" class="form-control" id="point_name" name="point_name" 
+                                value="<?php echo htmlspecialchars($settings['point_name'] ?? 'Spin'); ?>"
+                                placeholder="Spin">
+                            <div class="form-text text-muted">
+                                The name of a single point (e.g., Spin, Point, Coin).
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="point_name_plural" class="form-label">Point Name (Plural)</label>
+                            <input type="text" class="form-control" id="point_name_plural" name="point_name_plural" 
+                                value="<?php echo htmlspecialchars($settings['point_name_plural'] ?? 'Spins'); ?>"
+                                placeholder="Spins">
+                            <div class="form-text text-muted">
+                                The plural name of points (e.g., Spins, Points, Coins).
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="app_color" class="form-label">App Theme Color</label>
+                            <input type="color" class="form-control" id="app_color" name="app_color" 
+                                value="<?php echo htmlspecialchars($settings['app_color'] ?? '#4e73df'); ?>">
+                            <div class="form-text text-muted">
+                                The main color theme for your application.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="logo" class="form-label">Logo</label>
+                            <?php if (!empty($settings['logo'])): ?>
+                            <div class="mb-2">
+                                <img src="../uploads/<?php echo htmlspecialchars($settings['logo']); ?>" alt="Current Logo" class="img-thumbnail" style="max-height: 100px;">
+                            </div>
+                            <?php endif; ?>
+                            <input type="file" class="form-control" id="logo" name="logo">
+                            <div class="form-text text-muted">
+                                Upload your application logo. Recommended size: 200x60 px.
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="auth_logo" class="form-label">Authentication Page Logo</label>
+                            <?php if (!empty($settings['auth_logo'])): ?>
+                            <div class="mb-2">
+                                <img src="../uploads/<?php echo htmlspecialchars($settings['auth_logo']); ?>" alt="Authentication Logo" class="img-thumbnail" style="max-height: 100px;">
+                            </div>
+                            <?php endif; ?>
+                            <input type="file" class="form-control" id="auth_logo" name="auth_logo">
+                            <div class="form-text text-muted">
+                                Upload the logo displayed on login and register pages. Recommended size: 150x150 px.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" name="save_app_settings" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Save App Settings
+                </button>
+            </form>
+        </div>
+    </div>
+    
     <!-- Notification Settings Card -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
@@ -117,7 +303,7 @@ include 'header.php';
                 </div>
                 
                 <button type="submit" name="save_notification_settings" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Save Settings
+                    <i class="fas fa-save"></i> Save Notification Settings
                 </button>
             </form>
         </div>
