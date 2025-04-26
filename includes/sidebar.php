@@ -27,7 +27,7 @@ $stats = getUserStats($current_user['id']);
         </div>
         <div class="d-grid gap-2">
             <a href="rewards.php" class="btn btn-primary"><i class="fas fa-gift me-2"></i>Redeem Points</a>
-            <a href="tasks.php" class="btn btn-outline-primary"><i class="fas fa-tasks me-2"></i>Available Tasks</a>
+            <a href="tasks.php" class="btn btn-outline-primary"><i class="fas fa-tasks me-2"></i>Available Tasks <span class="badge bg-warning text-dark ms-1" style="font-size: 0.7rem;">Earn Free Spins</span></a>
         </div>
     </div>
 </div>
@@ -74,7 +74,7 @@ $stats = getUserStats($current_user['id']);
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
                 <a href="tasks.php" class="text-decoration-none">
-                    <i class="fas fa-tasks me-2"></i> Available Tasks
+                    <i class="fas fa-tasks me-2"></i> Available Tasks <span class="badge bg-warning text-dark" style="font-size: 0.7rem;">Earn Free Spins</span>
                 </a>
             </li>
             <li class="list-group-item">
