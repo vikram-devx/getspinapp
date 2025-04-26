@@ -314,7 +314,14 @@ echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-a
                     <div class="mb-3">
                         <label for="image" class="form-label">Slide Image <span class="text-danger">*</span></label>
                         <input type="file" class="form-control" name="image" id="image" accept="image/*" required>
-                        <small class="form-text text-muted">Recommended size: 1920px × 500px (or 1920px × 600px). Full width, high quality images work best.</small>
+                        <small class="form-text text-muted">
+                            <strong>Recommended size: 1920px × 500px</strong> with 4:1 aspect ratio.<br>
+                            <ul class="mt-1 mb-0">
+                                <li>Use high-quality, horizontally-centered images</li>
+                                <li>Place important content in the center of the image</li>
+                                <li>Images will scale down and be fully visible on mobile devices</li>
+                            </ul>
+                        </small>
                         <div id="image_preview_container" class="mt-2 d-none">
                             <p>Current Image:</p>
                             <img id="image_preview" src="" alt="Current Slide Image" class="img-thumbnail" style="max-height: 150px;">
