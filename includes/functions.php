@@ -411,8 +411,10 @@ function redeemReward($user_id, $reward_id, $redemption_details = null) {
             'redemption_id' => $redemption_id
         ];
     } catch (Exception $e) {
-        // Roll back transaction on error
-        $conn->rollBack();
+        // Roll back transaction on error if it's active
+        if ($conn->inTransaction()) {
+            $conn->rollBack();
+        }
         
         return [
             'status' => 'error',

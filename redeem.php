@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['reward_id'])) {
     $reward_id = (int)$_GET['reward_id'];
     $confirm = isset($_POST['confirm']) ? trim($_POST['confirm']) : '';
     $game_username = isset($_POST['game_username']) ? trim($_POST['game_username']) : '';
+    $game_invite_link = isset($_POST['game_invite_link']) ? trim($_POST['game_invite_link']) : '';
     
     // Validate confirmation
     if ($confirm !== 'CONFIRM') {
@@ -50,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['reward_id'])) {
                 $redemption_details = json_encode([
                     'game_type' => $game_type,
                     'username' => $game_username,
+                    'invite_link' => $game_invite_link,
                     'spins' => 100
                 ]);
             }

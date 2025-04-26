@@ -135,6 +135,11 @@ include 'includes/header.php';
                             <input type="text" class="form-control" id="gameUsername" name="game_username" placeholder="Enter your game username">
                             <div class="form-text">Your correct game username is required to receive spins.</div>
                         </div>
+                        <div class="mb-3">
+                            <label for="gameInviteLink" class="form-label">Invite Link (Optional):</label>
+                            <input type="text" class="form-control" id="gameInviteLink" name="game_invite_link" placeholder="Paste invite link here">
+                            <div class="form-text">Add your invite link to receive additional bonuses.</div>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="confirmRedeem" class="form-label">Type "CONFIRM" to proceed:</label>

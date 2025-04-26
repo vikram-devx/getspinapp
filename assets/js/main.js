@@ -354,15 +354,102 @@ $(document).ready(function() {
         
         if (userPoints < requiredPoints) {
             e.preventDefault();
-            alert('You do not have enough points to redeem this reward.');
+            showNotification('error', 'Insufficient Points', 'You do not have enough points to redeem this reward.');
             return false;
         }
         
-        if (!confirm('Are you sure you want to redeem this reward?')) {
+        var gameUsername = $('#gameUsername').val();
+        var gameRequired = $('#gameUsername').prop('required');
+        
+        if (gameRequired && (!gameUsername || gameUsername.trim() === '')) {
             e.preventDefault();
+            showNotification('error', 'Missing Information', 'Please enter your game username.');
+            $('#gameUsername').focus();
+            return false;
+        }
+        
+        var confirmText = $('#confirmRedeem').val();
+        if (confirmText !== 'CONFIRM') {
+            e.preventDefault();
+            showNotification('error', 'Confirmation Required', 'Please type "CONFIRM" to proceed with redemption.');
+            $('#confirmRedeem').focus();
             return false;
         }
         
         return true;
     });
+    
+    // Custom notification system
+    function showNotification(type, title, message) {
+        // Remove any existing notifications
+        $('.custom-notification').remove();
+        
+        // Set icon and color based on type
+        var icon, bgColor, borderColor;
+        switch(type) {
+            case 'success':
+                icon = 'fa-check-circle';
+                bgColor = '#d4edda';
+                borderColor = '#c3e6cb';
+                break;
+            case 'error':
+                icon = 'fa-times-circle';
+                bgColor = '#f8d7da';
+                borderColor = '#f5c6cb';
+                break;
+            case 'warning':
+                icon = 'fa-exclamation-triangle';
+                bgColor = '#fff3cd';
+                borderColor = '#ffeeba';
+                break;
+            case 'info':
+            default:
+                icon = 'fa-info-circle';
+                bgColor = '#d1ecf1';
+                borderColor = '#bee5eb';
+                break;
+        }
+        
+        // Create notification HTML
+        var notificationHtml = `
+            <div class="custom-notification" style="display: none;">
+                <div class="notification-icon">
+                    <i class="fas ${icon}"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">${title}</div>
+                    <div class="notification-message">${message}</div>
+                </div>
+                <div class="notification-close">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+        `;
+        
+        // Append notification to body
+        $('body').append(notificationHtml);
+        
+        // Set colors
+        $('.custom-notification').css({
+            'background-color': bgColor,
+            'border-color': borderColor
+        });
+        
+        // Show notification with animation
+        $('.custom-notification').slideDown(300);
+        
+        // Auto-hide after 5 seconds
+        setTimeout(function() {
+            $('.custom-notification').slideUp(300, function() {
+                $(this).remove();
+            });
+        }, 5000);
+        
+        // Close on click
+        $('.notification-close').on('click', function() {
+            $(this).parent().slideUp(300, function() {
+                $(this).remove();
+            });
+        });
+    }
 });
