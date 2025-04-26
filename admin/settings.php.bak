@@ -210,6 +210,8 @@ include 'header.php';
                             </div>
                         </div>
                         
+
+                        
                         <div class="mb-3">
                             <label for="app_color" class="form-label">App Theme Color</label>
                             <input type="color" class="form-control" id="app_color" name="app_color" 
@@ -236,7 +238,7 @@ include 'header.php';
                         <div class="mb-3">
                             <label for="point_spin_ratio" class="form-label">Point to Spin Ratio</label>
                             <div class="input-group">
-                                <span class="input-group-text">1 Spin =</span>
+                                <span class="input-group-text">1 <?php echo htmlspecialchars($settings['point_name'] ?? 'Spin'); ?> =</span>
                                 <input type="number" class="form-control" id="point_spin_ratio" name="point_spin_ratio" 
                                     value="<?php echo htmlspecialchars($settings['point_spin_ratio'] ?? '100'); ?>"
                                     min="1" step="1">
