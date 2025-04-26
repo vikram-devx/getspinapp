@@ -121,9 +121,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_notification_set
     $notification_email_enabled = isset($_POST['notification_email_enabled']) ? 1 : 0;
     
     // Get EmailJS settings
-    $emailjs_user_id = filter_input(INPUT_POST, 'emailjs_user_id', FILTER_SANITIZE_STRING);
-    $emailjs_service_id = filter_input(INPUT_POST, 'emailjs_service_id', FILTER_SANITIZE_STRING);
-    $emailjs_template_id = filter_input(INPUT_POST, 'emailjs_template_id', FILTER_SANITIZE_STRING);
+    $emailjs_user_id = filter_input(INPUT_POST, 'emailjs_user_id', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $emailjs_service_id = filter_input(INPUT_POST, 'emailjs_service_id', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $emailjs_template_id = filter_input(INPUT_POST, 'emailjs_template_id', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     
     try {
         // Begin transaction
