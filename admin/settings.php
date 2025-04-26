@@ -155,7 +155,19 @@ include 'header.php';
                             </div>
                             <?php endif; ?>
                             <input type="file" class="form-control-file" id="app_logo" name="app_logo">
-                            <small class="form-text text-muted">Upload a new logo for your application (JPEG, PNG, or GIF, max 1MB). The logo will only appear on public pages (home, login, and register).</small>
+                            <div class="card mt-2 mb-2 bg-light">
+                                <div class="card-body">
+                                    <h6 class="card-title">Recommended Logo Specifications:</h6>
+                                    <ul class="mb-0">
+                                        <li><strong>Width:</strong> 200px to 250px</li>
+                                        <li><strong>Height:</strong> 40px to 60px</li>
+                                        <li><strong>Aspect ratio:</strong> Approximately 4:1 or 5:1 (rectangular)</li>
+                                        <li><strong>Format:</strong> PNG or SVG with transparent background preferred</li>
+                                        <li><strong>Max file size:</strong> 1MB</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <small class="form-text text-muted">Upload a new logo for your application (JPEG, PNG, or GIF). The logo will only appear on public pages (home, login, and register).</small>
                         </div>
                         
                         <hr>
