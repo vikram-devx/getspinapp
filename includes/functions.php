@@ -541,7 +541,10 @@ function recordOfferAttempt($user_id, $offer_id, $ip_address) {
 // Function to generate a unique postback URL for tracking offer completions
 function generatePostbackUrl($user_id) {
     $token = md5(uniqid($user_id, true));
-    $postback_url = APP_URL . "/postback.php?user_id={$user_id}&offer_id={offer_id}&payout={payout}&ip={session_ip}&token={$token}";
+    
+    // Format the postback URL according to OGAds expectations
+    // We use aff_sub4 to store the user_id as per OGAds best practices
+    $postback_url = APP_URL . "/postback.php?user_id={$user_id}&offer_id={offer_id}&payout={payout}&ip={session_ip}&aff_sub4={$user_id}&token={$token}";
     
     return $postback_url;
 }

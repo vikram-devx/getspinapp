@@ -80,30 +80,38 @@ if (isset($_GET['action'])) {
                 }
             } else {
                 // For real API offers
-                // First, check if we already know the offer link from our cache
                 $offer_link = '';
                 
-                // Try to find the offer in our current offers array
-                foreach ($offers as $offer) {
-                    if (isset($offer['offerid']) && $offer['offerid'] == $offer_id && isset($offer['link'])) {
-                        $offer_link = $offer['link'];
-                        break;
+                // First check if the offer link was passed directly via the form
+                if (isset($_GET['offer_link']) && !empty($_GET['offer_link'])) {
+                    $offer_link = $_GET['offer_link'];
+                    error_log("Using offer link from form: " . $offer_link);
+                } else {
+                    // Try to find the offer in our current offers array
+                    foreach ($offers as $offer) {
+                        if (isset($offer['offerid']) && $offer['offerid'] == $offer_id && isset($offer['link'])) {
+                            $offer_link = $offer['link'];
+                            error_log("Found offer link in offers array: " . $offer_link);
+                            break;
+                        }
                     }
-                }
-                
-                // If we couldn't find the offer in our cache, try to get it from the API
-                if (empty($offer_link)) {
-                    $offer_details = getOfferDetails($offer_id);
                     
-                    // Check for 'link' field which is the correct field name in OGAds API
-                    if ($offer_details['status'] === 'success' && isset($offer_details['offer']) && 
-                        (isset($offer_details['offer']['link']) || isset($offer_details['offer']['tracking_url']))) {
+                    // If we couldn't find the offer in our cache, try to get it from the API
+                    if (empty($offer_link)) {
+                        $offer_details = getOfferDetails($offer_id);
                         
-                        // Use whichever field is available
-                        if (isset($offer_details['offer']['link'])) {
-                            $offer_link = $offer_details['offer']['link'];
-                        } else {
-                            $offer_link = $offer_details['offer']['tracking_url'];
+                        // Check for 'link' field which is the correct field name in OGAds API
+                        if ($offer_details['status'] === 'success' && isset($offer_details['offer']) && 
+                            (isset($offer_details['offer']['link']) || isset($offer_details['offer']['tracking_url']))) {
+                            
+                            // Use whichever field is available
+                            if (isset($offer_details['offer']['link'])) {
+                                $offer_link = $offer_details['offer']['link'];
+                                error_log("Got offer link from API (link field): " . $offer_link);
+                            } else {
+                                $offer_link = $offer_details['offer']['tracking_url'];
+                                error_log("Got offer link from API (tracking_url field): " . $offer_link);
+                            }
                         }
                     }
                 }
@@ -111,7 +119,20 @@ if (isset($_GET['action'])) {
                 if (!empty($offer_link)) {
                     // Append our postback parameters to the tracking URL
                     $tracking_url = $offer_link;
-                    $tracking_url .= (strpos($tracking_url, '?') !== false ? '&' : '?') . 'aff_sub=' . $user_id;
+                    
+                    // Add affiliate sub parameter for tracking which user completed the offer
+                    // This will be passed back via the postback URL from OGAds
+                    // We use aff_sub4 as recommended in OGAds documentation
+                    if (strpos($tracking_url, 'aff_sub4=') === false) {
+                        $tracking_url .= (strpos($tracking_url, '?') !== false ? '&' : '?') . 'aff_sub4=' . $user_id;
+                    }
+                    
+                    // Also include as aff_sub in case the API uses that parameter instead
+                    if (strpos($tracking_url, 'aff_sub=') === false) {
+                        $tracking_url .= '&aff_sub=' . $user_id;
+                    }
+                    
+                    error_log("Redirecting to tracking URL: " . $tracking_url);
                     
                     // Redirect the user to the offer URL
                     header('Location: ' . $tracking_url);
@@ -120,6 +141,7 @@ if (isset($_GET['action'])) {
                     // Fallback if we couldn't get the tracking URL
                     $message = 'Could not start task. Please try again later.';
                     $message_type = 'warning';
+                    error_log("No offer link found for offer ID: " . $offer_id);
                 }
             }
         } else {

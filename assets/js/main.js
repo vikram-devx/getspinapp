@@ -63,10 +63,18 @@ $(document).ready(function() {
         // Set the offer ID in the form's hidden input
         $('#taskForm').find('input[name="offer_id"]').val(taskId);
         
-        // If we have a direct offer link from OGAds, use it
+        // Store the offer link if available (for tracking purposes)
         if (taskLink) {
-            // Set the form's action to tasks.php for proper tracking
+            // Set the form to post to tasks.php for proper tracking
             $('#taskForm').attr('action', 'tasks.php');
+            
+            // Add hidden field for the offer link if it doesn't exist
+            if ($('#taskForm').find('input[name="offer_link"]').length === 0) {
+                $('#taskForm').append('<input type="hidden" name="offer_link" value="">');
+            }
+            
+            // Set the offer link value
+            $('#taskForm').find('input[name="offer_link"]').val(taskLink);
         }
         
         // Show the modal
