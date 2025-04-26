@@ -313,8 +313,7 @@ if ($use_sample_offers) {
     ];
 }
 
-// Generate unique postback URL for this user
-$postback_url = generatePostbackUrl($user_id);
+// Postback URL generation removed as per requirements
 
 include 'includes/header.php';
 ?>
@@ -407,24 +406,6 @@ include 'includes/header.php';
     </div>
     
     <div class="col-lg-4">
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0">Your Postback URL</h5>
-            </div>
-            <div class="card-body">
-                <p class="small text-muted mb-2">Use this URL to track your offer completions:</p>
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control form-control-sm" value="<?php echo $postback_url; ?>" readonly>
-                    <button class="btn btn-outline-secondary copy-btn" type="button" data-copy="<?php echo $postback_url; ?>">
-                        <i class="fas fa-copy"></i>
-                    </button>
-                </div>
-                <div class="alert alert-info small">
-                    <i class="fas fa-info-circle me-2"></i>
-                    This URL is for offer tracking. You'll need to provide it to OGAds to track your completed offers.
-                </div>
-            </div>
-        </div>
         
         <div class="card">
             <div class="card-header">
