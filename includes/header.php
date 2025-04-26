@@ -37,9 +37,10 @@ $app_logo = getSetting('app_logo', '');
         <div class="container">
             <a class="navbar-brand" href="index.php">
                 <?php if ($is_public_page && !empty($app_logo)): ?>
-                <img src="<?php echo $app_logo; ?>" alt="<?php echo htmlspecialchars($app_name); ?>" height="30" class="d-inline-block align-text-top me-2">
-                <?php endif; ?>
+                <img src="<?php echo $app_logo; ?>" alt="<?php echo htmlspecialchars($app_name); ?>" height="30" class="d-inline-block align-text-top">
+                <?php else: ?>
                 <?php echo htmlspecialchars($app_name); ?>
+                <?php endif; ?>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>

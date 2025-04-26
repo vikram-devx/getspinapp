@@ -34,6 +34,8 @@ include 'includes/header.php';
         <div class="mb-4">
             <img src="<?php echo htmlspecialchars($app_logo); ?>" alt="<?php echo htmlspecialchars($app_name); ?>" class="img-fluid" style="max-height: 80px;">
         </div>
+        <?php else: ?>
+        <h1 class="display-4 mb-4"><?php echo htmlspecialchars($app_name); ?></h1>
         <?php endif; ?>
         <h1 class="display-4">Earn Rewards for Completing Simple Tasks</h1>
         <p class="lead">Install apps, take surveys, and earn points that you can redeem for gift cards and other rewards.</p>

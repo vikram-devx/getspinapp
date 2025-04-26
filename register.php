@@ -64,6 +64,8 @@ include 'includes/header.php';
                     <div class="mb-3">
                         <img src="<?php echo htmlspecialchars($app_logo); ?>" alt="<?php echo htmlspecialchars($app_name); ?>" class="img-fluid" style="max-height: 60px;">
                     </div>
+                    <?php else: ?>
+                    <h2><?php echo htmlspecialchars($app_name); ?></h2>
                     <?php endif; ?>
                     <h2>Create an Account</h2>
                     <p class="text-muted">Fill out the form below to register</p>
