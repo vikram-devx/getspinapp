@@ -17,7 +17,7 @@ if ($action === 'get_admin_email') {
     $db = Database::getInstance();
     $conn = $db->getConnection();
     
-    $stmt = $conn->prepare("SELECT setting_value FROM admin_settings WHERE setting_key = 'admin_email'");
+    $stmt = $conn->prepare("SELECT setting_value FROM admin_settings WHERE setting_key = 'notification_email'");
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     
