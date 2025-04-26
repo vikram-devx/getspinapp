@@ -40,7 +40,7 @@ if ($auth->isLoggedIn() && !$auth->isAdmin()) {
 
 // Include header
 include 'includes/header.php';
-include 'includes/sidebar.php';
+// Skip including sidebar.php to avoid showing User Profile, Stats, and Quick Links cards
 ?>
 
 <div class="container py-4">
