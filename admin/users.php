@@ -21,6 +21,16 @@ $conn = $db->getConnection();
 $message = '';
 $message_type = '';
 
+// Check for session messages
+if (isset($_SESSION['message']) && !empty($_SESSION['message'])) {
+    $message = $_SESSION['message'];
+    $message_type = isset($_SESSION['message_type']) ? $_SESSION['message_type'] : 'info';
+    
+    // Clear the session message after displaying it
+    unset($_SESSION['message']);
+    unset($_SESSION['message_type']);
+}
+
 // Handle user actions
 if (isset($_GET['action'])) {
     $action = $_GET['action'];
@@ -172,6 +182,10 @@ if (isset($_GET['action'])) {
             $message = 'User not found';
             $message_type = 'danger';
         }
+        
+        // Set a session message to display after redirect
+        $_SESSION['message'] = $message;
+        $_SESSION['message_type'] = $message_type;
         
         // Redirect back to the user view
         header("Location: users.php?action=view&id={$user_id}");
