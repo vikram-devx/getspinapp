@@ -9,7 +9,13 @@ $current_user = $auth->getUser();
 
 // Determine if this is a public page (no logged-in user required)
 $current_page = basename($_SERVER['PHP_SELF']);
-$is_public_page = !$auth->isLoggedIn() || in_array($current_page, ['index.php', 'login.php', 'register.php']);
+// Also check for pretty URLs (without .php extension)
+$request_uri = $_SERVER['REQUEST_URI'];
+$request_path = parse_url($request_uri, PHP_URL_PATH);
+$request_path = trim($request_path, '/');
+$is_public_page = !$auth->isLoggedIn() || 
+                  in_array($current_page, ['index.php', 'login.php', 'register.php']) || 
+                  in_array($request_path, ['', 'index', 'login', 'register']);
 
 // Get app name and logo from settings
 $app_name = getSetting('app_name', APP_NAME);
@@ -116,6 +122,6 @@ $app_logo = getSetting('app_logo', '');
     </nav>
     
     <!-- Main Content Container -->
-    <div class="<?php echo $current_page === 'index.php' && !$auth->isLoggedIn() ? 'full-width-container' : 'container py-4'; ?>"><?php 
+    <div class="<?php echo ($current_page === 'index.php' || $request_path === '' || $request_path === 'index') && !$auth->isLoggedIn() ? 'full-width-container' : 'container py-4'; ?>"><?php 
     /* Use full width for homepage when not logged in, otherwise use regular container */
     ?>
