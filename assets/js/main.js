@@ -65,16 +65,39 @@ $(document).ready(function() {
         
         // Store the offer link if available (for tracking purposes)
         if (taskLink) {
-            // Make sure the form goes to tasks.php
+            // Make sure the form goes to tasks.php for tracking
             $('#taskForm').attr('action', 'tasks.php');
             
             // Set the offer link value in the hidden input
             $('#taskForm').find('input[name="offer_link"]').val(taskLink);
             
+            // Set up direct link button as a fallback
+            $('#directTaskLink').attr('href', taskLink);
+            $('#directLinkContainer').show();
+            
             // Log to console for debugging
             console.log("Set offer link:", taskLink);
+            
+            // Add event listener to the Start Task button as a fallback
+            $('.start-task-btn').on('click', function(e) {
+                // If form submission is problematic, use direct link as fallback
+                var directLinkFollowed = false;
+                
+                // Add user tracking parameters
+                var trackedLink = taskLink;
+                var userId = $(this).data('user-id') || '';
+                
+                // Append user ID to the link if not already present
+                if (userId && trackedLink.indexOf('aff_sub4=') === -1) {
+                    trackedLink += (trackedLink.indexOf('?') !== -1 ? '&' : '?') + 'aff_sub4=' + userId;
+                }
+                
+                // Let the form submission happen by default
+            });
+            
         } else {
             console.log("No offer link available for this task");
+            $('#directLinkContainer').hide();
         }
         
         // Show the modal
@@ -153,10 +176,26 @@ $(document).ready(function() {
         $('.nav-tabs a[href="' + hash + '"]').tab('show');
     }
     
-    // Loading indicator for task start
-    $('.start-task-btn').on('click', function() {
-        $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
-        $(this).prop('disabled', true);
+    // Handle task start action
+    $('.start-task-btn').on('click', function(e) {
+        var offerLink = $('#taskForm').find('input[name="offer_link"]').val();
+        
+        if (offerLink) {
+            // Show loading state
+            $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+            $(this).prop('disabled', true);
+            
+            // Log the link we're trying to open
+            console.log("Opening offer link:", offerLink);
+            
+            // Try to directly open the link
+            setTimeout(function() {
+                // Directly open the link in a new tab if form submission doesn't work
+                window.open(offerLink, '_blank');
+            }, 500);
+        } else {
+            console.log("No offer link found in form");
+        }
     });
     
     // Redemption confirmation

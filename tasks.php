@@ -84,8 +84,11 @@ if (isset($_GET['action'])) {
                 
                 // First check if the offer link was passed directly via the form
                 if (isset($_GET['offer_link']) && !empty($_GET['offer_link'])) {
-                    $offer_link = $_GET['offer_link'];
+                    $offer_link = $_GET['offer_link']; 
                     error_log("Using offer link from form: " . $offer_link);
+                } else if (isset($_POST['offer_link']) && !empty($_POST['offer_link'])) {
+                    $offer_link = $_POST['offer_link'];
+                    error_log("Using offer link from POST form: " . $offer_link);
                 } else {
                     // Try to find the offer in our current offers array
                     foreach ($offers as $offer) {
@@ -133,6 +136,9 @@ if (isset($_GET['action'])) {
                     }
                     
                     error_log("Redirecting to tracking URL: " . $tracking_url);
+                    
+                    // Make sure there are no previous output before redirect
+                    ob_clean();
                     
                     // Redirect the user to the offer URL
                     header('Location: ' . $tracking_url);
@@ -453,6 +459,10 @@ include 'includes/header.php';
                         <button type="submit" class="btn btn-primary start-task-btn">Start Task</button>
                     </div>
                 </form>
+                <!-- Direct link button as fallback -->
+                <div class="d-grid mt-2" id="directLinkContainer" style="display:none;">
+                    <a href="#" id="directTaskLink" class="btn btn-success" target="_blank">Open Task Directly</a>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
