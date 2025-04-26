@@ -72,6 +72,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
             Configuration
         </div>
 
+        <!-- Nav Item - App Settings -->
+        <li class="nav-item">
+            <a class="nav-link <?php echo $current_page === 'settings.php' ? 'active' : ''; ?>" href="settings.php">
+                <i class="fas fa-fw fa-sliders-h"></i>
+                App Settings
+            </a>
+        </li>
+        
         <!-- Nav Item - API Settings -->
         <li class="nav-item">
             <a class="nav-link <?php echo $current_page === 'api_settings.php' ? 'active' : ''; ?>" href="api_settings.php">

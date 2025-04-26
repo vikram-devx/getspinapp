@@ -1008,6 +1008,60 @@ function formatPoints($points) {
     return number_format($points);
 }
 
+// Function to get a setting value
+function getSetting($key, $default = null) {
+    $db = Database::getInstance();
+    $conn = $db->getConnection();
+    
+    try {
+        $stmt = $conn->prepare("SELECT setting_value FROM settings WHERE setting_key = :key");
+        $stmt->bindValue(':key', $key);
+        $stmt->execute();
+        
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($result) {
+            return $result['setting_value'];
+        } else {
+            return $default;
+        }
+    } catch (PDOException $e) {
+        error_log("Error getting setting: " . $e->getMessage());
+        return $default;
+    }
+}
+
+// Function to save a setting
+function saveSetting($key, $value) {
+    $db = Database::getInstance();
+    $conn = $db->getConnection();
+    
+    try {
+        // Check if the setting already exists
+        $stmt = $conn->prepare("SELECT setting_key FROM settings WHERE setting_key = :key");
+        $stmt->bindValue(':key', $key);
+        $stmt->execute();
+        $exists = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($exists) {
+            // Update existing setting
+            $stmt = $conn->prepare("UPDATE settings SET setting_value = :value WHERE setting_key = :key");
+        } else {
+            // Insert new setting
+            $stmt = $conn->prepare("INSERT INTO settings (setting_key, setting_value) VALUES (:key, :value)");
+        }
+        
+        $stmt->bindValue(':key', $key);
+        $stmt->bindValue(':value', $value);
+        $stmt->execute();
+        
+        return true;
+    } catch (PDOException $e) {
+        error_log("Error saving setting: " . $e->getMessage());
+        return false;
+    }
+}
+
 // Format currency
 function formatCurrency($amount) {
     return '$' . number_format($amount, 2);
