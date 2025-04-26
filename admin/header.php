@@ -561,3 +561,50 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
+<!-- Generic Confirmation Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmationModalLabel">Confirmation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p id="confirmationMessage">Are you sure you want to proceed?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <a href="#" class="btn btn-primary" id="confirmActionButton">Confirm</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/**
+ * Show a custom confirmation dialog instead of the browser's default confirm()
+ * @param {string} message - The confirmation message to display
+ * @param {string} confirmUrl - The URL to navigate to when confirmed
+ * @param {string} confirmBtnClass - Optional CSS class for the confirm button (default: btn-primary)
+ */
+function showConfirmationModal(message, confirmUrl, confirmBtnClass = 'btn-primary') {
+  // Set the message
+  document.getElementById('confirmationMessage').textContent = message;
+  
+  // Set the confirmation button URL and class
+  const confirmBtn = document.getElementById('confirmActionButton');
+  confirmBtn.href = confirmUrl;
+  
+  // Reset and set the button class
+  confirmBtn.className = 'btn ' + confirmBtnClass;
+  
+  // Show the modal
+  const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+  modal.show();
+  
+  return false; // Prevent the default link behavior
+}
+</script>

@@ -210,9 +210,13 @@ include 'header.php';
                 $block_btn_text = $is_blocked ? 'Unblock User' : 'Block User';
                 $block_btn_icon = $is_blocked ? 'fa-unlock' : 'fa-user-slash';
                 ?>
-                <a href="users.php?action=toggle_block&id=<?php echo $user['id']; ?>" 
+                <a href="javascript:void(0);" 
                    class="btn btn-sm <?php echo $block_btn_class; ?> me-2" 
-                   onclick="return confirm('Are you sure you want to <?php echo $is_blocked ? 'unblock' : 'block'; ?> this user?');">
+                   onclick="return showConfirmationModal(
+                       'Are you sure you want to <?php echo $is_blocked ? 'unblock' : 'block'; ?> this user?', 
+                       'users.php?action=toggle_block&id=<?php echo $user['id']; ?>', 
+                       '<?php echo $block_btn_class; ?>'
+                   );">
                     <i class="fas <?php echo $block_btn_icon; ?> me-1"></i> <?php echo $block_btn_text; ?>
                 </a>
                 <a href="users.php" class="btn btn-sm btn-secondary">Back to Users</a>
