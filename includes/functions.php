@@ -1532,4 +1532,29 @@ function formatCurrency($amount) {
     return '$' . number_format($amount, 2);
 }
 
+/**
+ * Generate URL with proper format (with or without .php extension)
+ * @param string $page The page name (with or without .php)
+ * @param array $params Optional query parameters
+ * @param bool $absolute Whether to return an absolute URL
+ * @return string The formatted URL
+ */
+function url($page, $params = [], $absolute = false) {
+    // Remove .php extension if present
+    $page = preg_replace('/\.php$/', '', $page);
+    
+    // Build the query string
+    $query = !empty($params) ? '?' . http_build_query($params) : '';
+    
+    // For absolute URLs (if needed)
+    if ($absolute) {
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https://' : 'http://';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        return $protocol . $host . '/' . $page . $query;
+    }
+    
+    // For relative URLs
+    return '/' . $page . $query;
+}
+
 ?>
