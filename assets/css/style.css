@@ -11,6 +11,7 @@
     --logo-red: #d62020;      /* Logo red color */
     --logo-gold: #ffd700;     /* Logo gold color */
     --dark-bg: #222222;       /* Dark background for good logo contrast */
+    --hero-bg: #333333;       /* Lighter background for hero section */
 }
 
 body {
@@ -30,10 +31,10 @@ body {
 
 /* Make hero section full width */
 .hero-section .container {
-    max-width: 100%;
+    max-width: 1400px;
     width: 100%;
     padding: 0 5%;
-    margin: 0; /* Remove any margin */
+    margin: 0 auto; /* Center content */
 }
 
 /* Navbar Styles */
@@ -277,10 +278,10 @@ body {
 /* Landing Page */
 .hero-section {
     padding: 3rem 0;
-    background: var(--dark-bg);
+    background: var(--hero-bg); /* Lighter background */
     color: #fff;
     margin-bottom: 2rem;
-    margin-top: -24px; /* Adjusted to remove gap completely */
+    margin-top: 0; /* Fix overlapping */
     width: 100%; /* Full width */
     max-width: 100%; /* Prevent overflow */
     border-radius: 0; /* Remove rounded corners */
