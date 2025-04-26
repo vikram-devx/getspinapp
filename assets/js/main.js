@@ -171,9 +171,22 @@ $(document).ready(function() {
         if (offerLink && offerLink !== '#') {
             console.log("Opening offer link:", offerLink);
             
-            // Submit the hidden form for tracking
+            // Submit the hidden form for tracking via AJAX
             setTimeout(function() {
-                $('#hiddenSubmitButton').click();
+                var formData = $('#taskForm').serialize();
+                
+                // Use AJAX to submit the form in the background
+                $.ajax({
+                    url: 'tasks.php',
+                    data: formData,
+                    type: 'GET',
+                    success: function(response) {
+                        console.log('Task tracking recorded');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error recording task tracking:', error);
+                    }
+                });
             }, 100);
         } else {
             console.log("No valid offer link found");

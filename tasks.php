@@ -137,12 +137,16 @@ if (isset($_GET['action'])) {
                     
                     error_log("Redirecting to tracking URL: " . $tracking_url);
                     
-                    // Make sure there are no previous output before redirect
-                    ob_clean();
-                    
-                    // Redirect the user to the offer URL
-                    header('Location: ' . $tracking_url);
-                    exit;
+                    // Only redirect if we're not handling an AJAX request or hidden form submission
+                    if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) && empty($_POST['hidden_form_submission']) && empty($_GET['hidden_form_submission'])) {
+                        // Redirect the user to the offer URL
+                        header('Location: ' . $tracking_url);
+                        exit;
+                    } else {
+                        // Just return success for hidden form submissions
+                        echo json_encode(['success' => true, 'message' => 'Offer tracking recorded']);
+                        exit;
+                    }
                 } else {
                     // Fallback if we couldn't get the tracking URL
                     $message = 'Could not start task. Please try again later.';
@@ -460,6 +464,7 @@ include 'includes/header.php';
                     <input type="hidden" name="action" value="start">
                     <input type="hidden" name="offer_id" value="">
                     <input type="hidden" name="offer_link" value="">
+                    <input type="hidden" name="hidden_form_submission" value="1">
                     <button type="submit" id="hiddenSubmitButton">Submit</button>
                 </form>
             </div>
