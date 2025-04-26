@@ -272,25 +272,25 @@ echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-a
                     <input type="hidden" name="slide_id" id="slide_id">
                     
                     <div class="mb-3">
-                        <label for="title" class="form-label">Title</label>
-                        <input type="text" class="form-control" name="title" id="title" required>
+                        <label for="title" class="form-label">Title (Optional)</label>
+                        <input type="text" class="form-control" name="title" id="title">
                     </div>
                     
                     <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
+                        <label for="description" class="form-label">Description (Optional)</label>
                         <textarea class="form-control" name="description" id="description" rows="3"></textarea>
                     </div>
                     
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="button_text" class="form-label">Button Text</label>
+                                <label for="button_text" class="form-label">Button Text (Optional)</label>
                                 <input type="text" class="form-control" name="button_text" id="button_text">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="button_url" class="form-label">Button URL</label>
+                                <label for="button_url" class="form-label">Button URL (Optional)</label>
                                 <input type="text" class="form-control" name="button_url" id="button_url">
                             </div>
                         </div>
@@ -312,8 +312,9 @@ echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-a
                     </div>
                     
                     <div class="mb-3">
-                        <label for="image" class="form-label">Slide Image</label>
-                        <input type="file" class="form-control" name="image" id="image" accept="image/*">
+                        <label for="image" class="form-label">Slide Image <span class="text-danger">*</span></label>
+                        <input type="file" class="form-control" name="image" id="image" accept="image/*" required>
+                        <small class="form-text text-muted">Recommended size: 1920px × 500px (or 1920px × 600px). Full width, high quality images work best.</small>
                         <div id="image_preview_container" class="mt-2 d-none">
                             <p>Current Image:</p>
                             <img id="image_preview" src="" alt="Current Slide Image" class="img-thumbnail" style="max-height: 150px;">
@@ -353,6 +354,8 @@ echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-a
             if (image) {
                 $('#image_preview').attr('src', '../' + image);
                 $('#image_preview_container').removeClass('d-none');
+                // Remove required attribute when editing an existing slide that already has an image
+                $('#image').removeAttr('required');
             } else {
                 $('#image_preview_container').addClass('d-none');
             }
@@ -367,6 +370,8 @@ echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-a
             $('#slide_id').val('');
             $('#image_preview_container').addClass('d-none');
             $('#slideModalLabel').text('Add New Promo Slide');
+            // Restore the required attribute for new slides
+            $('#image').prop('required', true);
         });
         
         // Show image preview when a new file is selected
