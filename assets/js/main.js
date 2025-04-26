@@ -1,4 +1,69 @@
 $(document).ready(function() {
+    // Promo Slider Functionality
+    if ($('.promo-slider').length) {
+        var currentSlide = 0;
+        var slides = $('.promo-slide');
+        var totalSlides = slides.length;
+        var slideWidth = 100; // percentage
+        var autoSlideInterval;
+        
+        // Initialize slider if multiple slides exist
+        if (totalSlides > 1) {
+            // Start auto-sliding
+            startAutoSlide();
+            
+            // Handle dot click
+            $(document).on('click', '.slider-dot', function() {
+                var index = $(this).data('index');
+                goToSlide(index);
+                resetAutoSlide();
+            });
+            
+            // Handle arrow clicks
+            $('.slider-arrow-left').on('click', function() {
+                goToSlide(currentSlide - 1);
+                resetAutoSlide();
+            });
+            
+            $('.slider-arrow-right').on('click', function() {
+                goToSlide(currentSlide + 1);
+                resetAutoSlide();
+            });
+        }
+        
+        // Function to go to a specific slide
+        function goToSlide(slideIndex) {
+            // Handle circular navigation
+            if (slideIndex < 0) {
+                slideIndex = totalSlides - 1;
+            } else if (slideIndex >= totalSlides) {
+                slideIndex = 0;
+            }
+            
+            // Update currentSlide
+            currentSlide = slideIndex;
+            
+            // Move to the correct slide
+            $('.promo-slides').css('transform', 'translateX(-' + (slideIndex * slideWidth) + '%)');
+            
+            // Update active dot
+            $('.slider-dot').removeClass('active');
+            $('.slider-dot[data-index="' + slideIndex + '"]').addClass('active');
+        }
+        
+        // Auto-slide functionality
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(function() {
+                goToSlide(currentSlide + 1);
+            }, 5000); // Change slide every 5 seconds
+        }
+        
+        function resetAutoSlide() {
+            clearInterval(autoSlideInterval);
+            startAutoSlide();
+        }
+    }
+    
     
     // Initialize Bootstrap tooltips
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));

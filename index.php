@@ -27,22 +27,77 @@ if ($result) {
 include 'includes/header.php';
 ?>
 
-<!-- Hero Section -->
-<div class="hero-section text-center">
-    <div class="container">
-        <?php if (!empty($app_logo)): ?>
-        <div class="mb-4">
-            <img src="<?php echo htmlspecialchars($app_logo); ?>" alt="<?php echo htmlspecialchars($app_name); ?>" class="img-fluid" style="max-height: 80px;">
+<!-- Promo Slider Section -->
+<div class="hero-section">
+    <div class="promo-slider">
+        <div class="promo-slides">
+            <?php
+            // Get all active promo slides
+            $stmt = $db->prepare("SELECT * FROM promo_slides WHERE active = 1 ORDER BY display_order ASC");
+            $stmt->execute();
+            $promoSlides = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            // If no slides exist, create a default one
+            if (empty($promoSlides)) {
+                $promoSlides = [
+                    [
+                        'id' => 1,
+                        'title' => 'Welcome to ' . htmlspecialchars($app_name),
+                        'description' => 'Earn Rewards for Completing Simple Tasks. Install apps, take surveys, and earn points that you can redeem for gift cards and other rewards.',
+                        'button_text' => 'Get Started',
+                        'button_url' => 'register.php',
+                        'image_path' => 'assets/img/promo-default.jpg'
+                    ]
+                ];
+            }
+            
+            // Display all slides
+            foreach ($promoSlides as $index => $slide):
+                $bgImage = !empty($slide['image_path']) ? $slide['image_path'] : 'assets/img/promo-default.jpg';
+            ?>
+            <div class="promo-slide" style="background-image: url('<?php echo htmlspecialchars($bgImage); ?>');">
+                <div class="slide-content">
+                    <?php if (!empty($app_logo) && $index === 0): ?>
+                    <div class="mb-4">
+                        <img src="<?php echo htmlspecialchars($app_logo); ?>" alt="<?php echo htmlspecialchars($app_name); ?>" class="img-fluid" style="max-height: 80px;">
+                    </div>
+                    <?php elseif ($index === 0): ?>
+                    <h1 class="display-4 mb-4"><?php echo htmlspecialchars($app_name); ?></h1>
+                    <?php endif; ?>
+                    
+                    <h1 class="display-4"><?php echo htmlspecialchars($slide['title']); ?></h1>
+                    <?php if (!empty($slide['description'])): ?>
+                    <p class="lead"><?php echo htmlspecialchars($slide['description']); ?></p>
+                    <?php endif; ?>
+                    
+                    <?php if (!empty($slide['button_text']) && !empty($slide['button_url'])): ?>
+                    <div class="mt-4">
+                        <a href="<?php echo htmlspecialchars($slide['button_url']); ?>" class="btn btn-light btn-lg"><?php echo htmlspecialchars($slide['button_text']); ?></a>
+                        <?php if ($index === 0): ?>
+                        <a href="login.php" class="btn btn-outline-light btn-lg ms-2">Login</a>
+                        <?php endif; ?>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endforeach; ?>
         </div>
-        <?php else: ?>
-        <h1 class="display-4 mb-4"><?php echo htmlspecialchars($app_name); ?></h1>
+        
+        <!-- Slider controls -->
+        <?php if (count($promoSlides) > 1): ?>
+        <div class="slider-controls">
+            <?php for ($i = 0; $i < count($promoSlides); $i++): ?>
+            <div class="slider-dot <?php echo ($i === 0) ? 'active' : ''; ?>" data-index="<?php echo $i; ?>"></div>
+            <?php endfor; ?>
+        </div>
+        
+        <div class="slider-arrow slider-arrow-left">
+            <i class="fas fa-chevron-left"></i>
+        </div>
+        <div class="slider-arrow slider-arrow-right">
+            <i class="fas fa-chevron-right"></i>
+        </div>
         <?php endif; ?>
-        <h1 class="display-4">Earn Rewards for Completing Simple Tasks</h1>
-        <p class="lead">Install apps, take surveys, and earn points that you can redeem for gift cards and other rewards.</p>
-        <div class="mt-4">
-            <a href="register.php" class="btn btn-light btn-lg me-2">Create an Account</a>
-            <a href="login.php" class="btn btn-outline-light btn-lg">Login</a>
-        </div>
     </div>
 </div>
 

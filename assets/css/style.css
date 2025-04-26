@@ -280,8 +280,7 @@ body {
     padding: 3rem 0;
     background: var(--hero-bg); /* Lighter background */
     color: #fff;
-    margin-bottom: 2rem;
-    margin-top: 0; /* Fix overlapping */
+    margin: 0; /* Remove all margins */
     width: 100%; /* Full width */
     max-width: 100%; /* Prevent overflow */
     border-radius: 0; /* Remove rounded corners */
@@ -364,6 +363,87 @@ body {
 
 .badge.bg-info {
     margin-left: 5px;
+}
+
+/* Promo Slider */
+.promo-slider {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    height: 400px; /* Adjust as needed */
+}
+
+.promo-slides {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    height: 100%;
+}
+
+.promo-slide {
+    min-width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.slide-content {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 2rem;
+    border-radius: 5px;
+    max-width: 600px;
+    text-align: center;
+}
+
+.slider-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.slider-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.slider-dot.active {
+    background-color: white;
+}
+
+.slider-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    z-index: 10;
+}
+
+.slider-arrow-left {
+    left: 20px;
+}
+
+.slider-arrow-right {
+    right: 20px;
 }
 
 /* Custom Notification System */
