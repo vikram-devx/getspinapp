@@ -45,7 +45,7 @@ include 'includes/sidebar.php';
 
 <div class="container py-4">
     <div class="row">
-        <div class="col-12">
+        <div class="col-lg-9">
             <div class="card shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">User Leaderboard</h5>
@@ -114,6 +114,83 @@ include 'includes/sidebar.php';
                             </table>
                         </div>
                     <?php endif; ?>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 mt-4 mt-lg-0">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Leaderboard Stats</h5>
+                </div>
+                <div class="card-body">
+                    <div class="stats-item mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Total Users</span>
+                            <span class="fw-bold">
+                                <?php 
+                                $total_query = "SELECT COUNT(*) as count FROM users WHERE is_admin = 0";
+                                $total_result = $conn->query($total_query);
+                                $total_users = $total_result->fetch(PDO::FETCH_ASSOC)['count'];
+                                echo $total_users;
+                                ?>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-item mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Top Score</span>
+                            <span class="fw-bold">
+                                <?php 
+                                $top_query = "SELECT MAX(points) as top_points FROM users WHERE is_admin = 0";
+                                $top_result = $conn->query($top_query);
+                                $top_points = $top_result->fetch(PDO::FETCH_ASSOC)['top_points'];
+                                echo formatPoints($top_points ?? 0);
+                                ?>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-item">
+                        <div class="d-flex justify-content-between">
+                            <span>Average Points</span>
+                            <span class="fw-bold">
+                                <?php 
+                                $avg_query = "SELECT AVG(points) as avg_points FROM users WHERE is_admin = 0";
+                                $avg_result = $conn->query($avg_query);
+                                $avg_points = $avg_result->fetch(PDO::FETCH_ASSOC)['avg_points'];
+                                echo formatPoints($avg_points ?? 0);
+                                ?>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">How to Earn Points</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Complete available tasks
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Refer new users (100 points per referral)
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Stay active daily for bonuses
+                        </li>
+                    </ul>
+                    
+                    <div class="mt-3">
+                        <a href="tasks.php" class="btn btn-primary w-100">Earn More Points</a>
+                    </div>
                 </div>
             </div>
         </div>
