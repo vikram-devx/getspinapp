@@ -327,11 +327,11 @@ $app_name = getSetting('app_name', APP_NAME);
                             $unread_count = getUnreadNotificationsCount();
                             $notifications = getAdminNotifications(5);
                             ?>
-                            <a class="nav-link position-relative d-inline-flex align-items-center justify-content-center" href="#" id="alertsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 40px; height: 40px; padding: 0; margin-top: 3px;">
+                            <a class="nav-link position-relative d-inline-flex align-items-center justify-content-center" href="#" id="alertsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0.75rem 1rem;">
                                 <i class="fas fa-bell text-primary" style="font-size: 1.25rem;"></i>
                                 <!-- Counter - Notifications -->
                                 <?php if ($unread_count > 0): ?>
-                                <span class="position-absolute badge rounded-pill bg-danger" style="font-size: 0.65rem; top: -3px; right: -3px; padding: 0.25em 0.5em;">
+                                <span class="position-absolute badge rounded-pill bg-danger" style="font-size: 0.65rem; top: 0.5rem; right: 0.5rem;">
                                     <?php echo $unread_count < 100 ? $unread_count : '99+'; ?>
                                     <span class="visually-hidden">unread notifications</span>
                                 </span>
@@ -368,13 +368,13 @@ $app_name = getSetting('app_name', APP_NAME);
                             </div>
                         </li>
 
-                        <div class="topbar-divider d-none d-sm-block"></div>
+                        <div class="topbar-divider d-none d-sm-block" style="margin: 0 0.5rem; height: 60%;"></div>
                         
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0.75rem 1rem;">
                                 <span class="me-2 text-dark" style="font-size: 0.9rem;"><?php echo htmlspecialchars($current_user['username']); ?></span>
-                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><?php echo strtoupper(substr($current_user['username'], 0, 1)); ?></div>
+                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;"><?php echo strtoupper(substr($current_user['username'], 0, 1)); ?></div>
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="userDropdown">
