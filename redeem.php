@@ -84,12 +84,6 @@ include 'includes/header.php';
                 <h5 class="mb-0">Redemption Status</h5>
             </div>
             <div class="card-body text-center py-5">
-                <?php if ($message): ?>
-                <div class="alert alert-<?php echo $message_type; ?> mb-4">
-                    <?php echo $message; ?>
-                </div>
-                <?php endif; ?>
-                
                 <?php if ($message_type === 'success'): ?>
                 <div class="mb-4">
                     <i class="fas fa-check-circle fa-5x text-success"></i>
@@ -103,6 +97,19 @@ include 'includes/header.php';
                 <h3 class="mb-3">Redemption Failed</h3>
                 <p class="lead mb-4">Please try again or contact support if the issue persists.</p>
                 <?php endif; ?>
+                
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        <?php if ($message): ?>
+                        // Show notification based on message type
+                        showNotification(
+                            '<?php echo $message_type === "success" ? "success" : "error"; ?>', 
+                            '<?php echo $message_type === "success" ? "Success" : "Error"; ?>', 
+                            '<?php echo addslashes($message); ?>'
+                        );
+                        <?php endif; ?>
+                    });
+                </script>
                 
                 <div class="d-grid gap-2 col-lg-6 mx-auto">
                     <a href="rewards.php" class="btn btn-primary">Back to Rewards</a>
