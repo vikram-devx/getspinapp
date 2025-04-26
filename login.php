@@ -47,7 +47,12 @@ include 'includes/header.php';
     <div class="col-lg-6 offset-lg-3">
         <div class="card auth-form">
             <div class="card-body p-4">
-                <div class="auth-header">
+                <div class="auth-header text-center mb-4">
+                    <?php if (!empty($app_logo)): ?>
+                    <div class="mb-3">
+                        <img src="<?php echo htmlspecialchars($app_logo); ?>" alt="<?php echo htmlspecialchars($app_name); ?>" class="img-fluid" style="max-height: 60px;">
+                    </div>
+                    <?php endif; ?>
                     <h2>Welcome Back</h2>
                     <p class="text-muted">Login to access your account</p>
                 </div>

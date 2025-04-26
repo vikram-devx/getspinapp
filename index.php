@@ -30,6 +30,11 @@ include 'includes/header.php';
 <!-- Hero Section -->
 <div class="hero-section text-center">
     <div class="container">
+        <?php if (!empty($app_logo)): ?>
+        <div class="mb-4">
+            <img src="<?php echo htmlspecialchars($app_logo); ?>" alt="<?php echo htmlspecialchars($app_name); ?>" class="img-fluid" style="max-height: 80px;">
+        </div>
+        <?php endif; ?>
         <h1 class="display-4">Earn Rewards for Completing Simple Tasks</h1>
         <p class="lead">Install apps, take surveys, and earn points that you can redeem for gift cards and other rewards.</p>
         <div class="mt-4">
