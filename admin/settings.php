@@ -461,6 +461,12 @@ include 'header.php';
         
         if (testEmailBtn) {
             testEmailBtn.addEventListener('click', function() {
+                console.log('EmailJS credentials:', {
+                    user_id: window.EMAILJS_USER_ID || 'Not set',
+                    service_id: window.EMAILJS_SERVICE_ID || 'Not set',
+                    template_id: window.EMAILJS_TEMPLATE_ID || 'Not set'
+                });
+                
                 // Check if EmailJS is configured
                 if (!window.EMAILJS_USER_ID || !window.EMAILJS_SERVICE_ID || !window.EMAILJS_TEMPLATE_ID) {
                     emailResultDiv.innerHTML = '<div class="alert alert-warning">EmailJS is not properly configured. Please fill in the EmailJS settings above and save them first.</div>';
@@ -472,6 +478,8 @@ include 'header.php';
                 fetch('../includes/ajax_handlers.php?action=get_admin_email')
                 .then(response => response.json())
                 .then(data => {
+                    console.log('Admin email response:', data);
+                    
                     if (!data.success || !data.email) {
                         emailResultDiv.innerHTML = '<div class="alert alert-warning">Please set a notification email above and save before testing.</div>';
                         emailResultDiv.style.display = 'block';
@@ -480,6 +488,20 @@ include 'header.php';
                     
                     emailResultDiv.innerHTML = '<div class="spinner-border spinner-border-sm text-primary" role="status"><span class="visually-hidden">Loading...</span></div> Sending test email...';
                     emailResultDiv.style.display = 'block';
+                    
+                    // Initialize EmailJS if not already initialized
+                    if (!window.emailjs) {
+                        emailResultDiv.innerHTML = '<div class="alert alert-danger">EmailJS library is not loaded properly. Please reload the page and try again.</div>';
+                        emailResultDiv.style.display = 'block';
+                        return;
+                    }
+                    
+                    // Ensure EmailJS is initialized
+                    try {
+                        emailjs.init(window.EMAILJS_USER_ID);
+                    } catch (e) {
+                        console.warn('EmailJS already initialized or error:', e);
+                    }
                     
                     // Prepare test data
                     const testData = {
@@ -492,29 +514,36 @@ include 'header.php';
                         redemptionDetails: 'This is a test email from the admin settings panel.'
                     };
                     
+                    const templateParams = {
+                        to_email: testData.adminEmail,
+                        user_name: testData.username,
+                        user_id: testData.userId,
+                        reward_name: testData.rewardName,
+                        points_used: testData.pointsUsed,
+                        redemption_id: testData.redemptionId,
+                        redemption_details: testData.redemptionDetails,
+                        date_time: new Date().toLocaleString()
+                    };
+                    
+                    console.log('Sending email with params:', templateParams);
+                    
                     // Send test email
                     emailjs.send(
                         window.EMAILJS_SERVICE_ID,
                         window.EMAILJS_TEMPLATE_ID,
-                        {
-                            to_email: testData.adminEmail,
-                            user_name: testData.username,
-                            user_id: testData.userId,
-                            reward_name: testData.rewardName,
-                            points_used: testData.pointsUsed,
-                            redemption_id: testData.redemptionId,
-                            redemption_details: testData.redemptionDetails,
-                            date_time: new Date().toLocaleString()
-                        }
+                        templateParams
                     )
                     .then(function(response) {
+                        console.log('EmailJS response:', response);
                         emailResultDiv.innerHTML = '<div class="alert alert-success">Test email sent successfully to ' + testData.adminEmail + '!</div>';
                     })
                     .catch(function(error) {
-                        emailResultDiv.innerHTML = '<div class="alert alert-danger">Error sending test email: ' + error.message + '</div>';
+                        console.error('EmailJS error:', error);
+                        emailResultDiv.innerHTML = '<div class="alert alert-danger">Error sending test email: ' + (error.text || error.message || JSON.stringify(error)) + '</div>';
                     });
                 })
                 .catch(error => {
+                    console.error('Fetch error:', error);
                     emailResultDiv.innerHTML = '<div class="alert alert-danger">Error: ' + error.message + '</div>';
                 });
             });
