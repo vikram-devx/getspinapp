@@ -343,7 +343,7 @@ include 'header.php';
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="mb-4">
                                 <h5>Application</h5>
                                 <p><strong>Name:</strong> <?php echo APP_NAME; ?></p>
@@ -351,7 +351,7 @@ include 'header.php';
                                 <p><strong>Points Conversion:</strong> <?php echo POINTS_CONVERSION_RATE; ?> points = $1.00</p>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="mb-4">
                                 <h5>Database</h5>
                                 <p><strong>Type:</strong> SQLite</p>
@@ -359,7 +359,7 @@ include 'header.php';
                                 <p><strong>Total Tables:</strong> 7</p>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="mb-4">
                                 <h5>PHP Information</h5>
                                 <p><strong>Version:</strong> <?php echo phpversion(); ?></p>
@@ -367,7 +367,41 @@ include 'header.php';
                                 <p><strong>Timezone:</strong> <?php echo date_default_timezone_get(); ?></p>
                             </div>
                         </div>
+                        <div class="col-md-3">
+                            <div class="mb-4">
+                                <h5>OGAds Integration</h5>
+                                <?php 
+                                // Generate a generic postback URL for the admin dashboard
+                                $admin_postback_url = generatePostbackUrl('USER_ID'); 
+                                ?>
+                                <p><strong>Postback URL Template:</strong></p>
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control form-control-sm" value="<?php echo $admin_postback_url; ?>" id="postbackUrl" readonly>
+                                    <button class="btn btn-outline-secondary copy-btn" type="button" onclick="copyPostbackUrl()">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                                <div class="alert alert-info small p-2">
+                                    <p class="mb-1"><strong>Instructions for OGAds:</strong></p>
+                                    <ol class="ps-3 mb-1">
+                                        <li>Copy this URL and add it to your OGAds account in Affiliate Settings</li>
+                                        <li>Replace "USER_ID" with <code>{aff_sub4}</code> in the URL</li>
+                                        <li>Make sure all needed parameters are included: <code>{offer_id}</code>, <code>{payout}</code>, <code>{session_ip}</code></li>
+                                    </ol>
+                                    <p class="mb-0">This ensures proper tracking and reward points distribution when users complete offers.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    
+                    <script>
+                    function copyPostbackUrl() {
+                        var copyText = document.getElementById("postbackUrl");
+                        copyText.select();
+                        document.execCommand("copy");
+                        alert("Postback URL copied to clipboard!");
+                    }
+                    </script>
                 </div>
             </div>
         </div>
