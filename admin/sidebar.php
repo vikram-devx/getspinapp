@@ -97,7 +97,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 $unread_count = getUnreadNotificationsCount();
                 if ($unread_count > 0): 
                 ?>
-                <span class="badge bg-danger rounded-pill ms-1"><?php echo $unread_count; ?></span>
+                <span class="badge bg-danger rounded-pill ms-1" style="font-size: 0.7rem; margin-top: -2px;"><?php echo $unread_count < 100 ? $unread_count : '99+'; ?></span>
                 <?php endif; ?>
             </a>
         </li>

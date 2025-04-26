@@ -328,11 +328,11 @@ $app_name = getSetting('app_name', APP_NAME);
                             $notifications = getAdminNotifications(5);
                             ?>
                             <a class="nav-link dropdown-toggle position-relative" href="#" id="alertsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-bell fa-fw"></i>
+                                <i class="fas fa-bell fa-fw text-primary"></i>
                                 <!-- Counter - Notifications -->
                                 <?php if ($unread_count > 0): ?>
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.75rem; display: inline-block;">
-                                    <?php echo $unread_count; ?>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.75rem; display: inline-block; transform: translate(-40%, -30%);">
+                                    <?php echo $unread_count < 100 ? $unread_count : '99+'; ?>
                                     <span class="visually-hidden">unread notifications</span>
                                 </span>
                                 <?php endif; ?>
@@ -442,7 +442,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const badge = document.querySelector('#alertsDropdown .badge');
                 if (badge) {
                     if (data.count > 0) {
-                        badge.textContent = data.count;
+                        badge.textContent = data.count < 100 ? data.count : '99+';
                         badge.style.display = 'inline-block';
                     } else {
                         badge.style.display = 'none';

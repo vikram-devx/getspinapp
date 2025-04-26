@@ -34,6 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_app_settings']))
     $point_name = filter_input(INPUT_POST, 'point_name', FILTER_SANITIZE_STRING);
     $point_name_plural = filter_input(INPUT_POST, 'point_name_plural', FILTER_SANITIZE_STRING);
     $app_color = filter_input(INPUT_POST, 'app_color', FILTER_SANITIZE_STRING);
+    $payout_point_ratio = filter_input(INPUT_POST, 'payout_point_ratio', FILTER_VALIDATE_INT);
+    $point_spin_ratio = filter_input(INPUT_POST, 'point_spin_ratio', FILTER_VALIDATE_INT);
     
     try {
         // Begin transaction
@@ -44,6 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_app_settings']))
         saveSetting('point_name', $point_name);
         saveSetting('point_name_plural', $point_name_plural);
         saveSetting('app_color', $app_color);
+        saveSetting('payout_point_ratio', $payout_point_ratio > 0 ? $payout_point_ratio : 1000);
+        saveSetting('point_spin_ratio', $point_spin_ratio > 0 ? $point_spin_ratio : 100);
         
         // Handle logo upload
         if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
@@ -236,6 +240,34 @@ include 'header.php';
                                 The main color theme for your application.
                             </div>
                         </div>
+
+                        <div class="mb-3">
+                            <label for="payout_point_ratio" class="form-label">Payout to Point Ratio</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$1 =</span>
+                                <input type="number" class="form-control" id="payout_point_ratio" name="payout_point_ratio" 
+                                    value="<?php echo htmlspecialchars($settings['payout_point_ratio'] ?? '1000'); ?>"
+                                    min="1" step="1">
+                                <span class="input-group-text">points</span>
+                            </div>
+                            <div class="form-text text-muted">
+                                How many points equal $1 in payout value (e.g., 1000 points = $1).
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="point_spin_ratio" class="form-label">Point to Spin Ratio</label>
+                            <div class="input-group">
+                                <span class="input-group-text">1 <?php echo htmlspecialchars($settings['point_name'] ?? 'Spin'); ?> =</span>
+                                <input type="number" class="form-control" id="point_spin_ratio" name="point_spin_ratio" 
+                                    value="<?php echo htmlspecialchars($settings['point_spin_ratio'] ?? '100'); ?>"
+                                    min="1" step="1">
+                                <span class="input-group-text">points</span>
+                            </div>
+                            <div class="form-text text-muted">
+                                How many points are needed to earn one spin (e.g., 100 points = 1 spin).
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="col-md-6">
@@ -360,7 +392,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     const notificationBadge = document.querySelector('#alertsDropdown .badge');
                     if (notificationBadge) {
                         const currentCount = parseInt(notificationBadge.textContent) || 0;
-                        notificationBadge.textContent = currentCount + 1;
+                        const newCount = currentCount + 1;
+                        notificationBadge.textContent = newCount < 100 ? newCount : '99+';
                         notificationBadge.style.display = 'inline-block';
                     }
                 } else {
