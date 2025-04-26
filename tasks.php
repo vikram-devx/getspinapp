@@ -445,9 +445,10 @@ include 'includes/header.php';
                     <p id="taskPoints" class="mb-0 fw-bold"></p>
                 </div>
                 
-                <form id="taskForm" method="get" action="">
+                <form id="taskForm" method="get" action="tasks.php">
                     <input type="hidden" name="action" value="start">
                     <input type="hidden" name="offer_id" value="">
+                    <input type="hidden" name="offer_link" value="">
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary start-task-btn">Start Task</button>
                     </div>

@@ -65,16 +65,16 @@ $(document).ready(function() {
         
         // Store the offer link if available (for tracking purposes)
         if (taskLink) {
-            // Set the form to post to tasks.php for proper tracking
+            // Make sure the form goes to tasks.php
             $('#taskForm').attr('action', 'tasks.php');
             
-            // Add hidden field for the offer link if it doesn't exist
-            if ($('#taskForm').find('input[name="offer_link"]').length === 0) {
-                $('#taskForm').append('<input type="hidden" name="offer_link" value="">');
-            }
-            
-            // Set the offer link value
+            // Set the offer link value in the hidden input
             $('#taskForm').find('input[name="offer_link"]').val(taskLink);
+            
+            // Log to console for debugging
+            console.log("Set offer link:", taskLink);
+        } else {
+            console.log("No offer link available for this task");
         }
         
         // Show the modal
