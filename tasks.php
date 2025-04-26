@@ -451,18 +451,17 @@ include 'includes/header.php';
                     <p id="taskPoints" class="mb-0 fw-bold"></p>
                 </div>
                 
-                <form id="taskForm" method="get" action="tasks.php">
+                <div class="d-grid">
+                    <a href="#" id="directTaskLink" class="btn btn-primary start-task-btn" target="_blank">Start Task</a>
+                </div>
+                
+                <!-- Hidden form that records the task start in our database -->
+                <form id="taskForm" method="get" action="tasks.php" style="display:none;">
                     <input type="hidden" name="action" value="start">
                     <input type="hidden" name="offer_id" value="">
                     <input type="hidden" name="offer_link" value="">
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary start-task-btn">Start Task</button>
-                    </div>
+                    <button type="submit" id="hiddenSubmitButton">Submit</button>
                 </form>
-                <!-- Direct link button as fallback -->
-                <div class="d-grid mt-2" id="directLinkContainer" style="display:none;">
-                    <a href="#" id="directTaskLink" class="btn btn-success" target="_blank">Open Task Directly</a>
-                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

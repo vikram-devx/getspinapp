@@ -25,5 +25,17 @@
     
     <!-- Custom JS -->
     <script src="assets/js/main.js"></script>
+    
+    <!-- Error handling script to prevent errors from non-existent scripts -->
+    <script>
+    // Protect against errors from missing scripts or elements
+    window.addEventListener('error', function(e) {
+        // Only log the error, don't display it to users
+        console.warn('Captured error:', e.message);
+        // Prevent the error from propagating
+        e.preventDefault();
+        return true;
+    }, true);
+    </script>
 </body>
 </html>

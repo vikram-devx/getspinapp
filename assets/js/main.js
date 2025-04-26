@@ -71,33 +71,14 @@ $(document).ready(function() {
             // Set the offer link value in the hidden input
             $('#taskForm').find('input[name="offer_link"]').val(taskLink);
             
-            // Set up direct link button as a fallback
+            // Set up direct link
             $('#directTaskLink').attr('href', taskLink);
-            $('#directLinkContainer').show();
             
             // Log to console for debugging
             console.log("Set offer link:", taskLink);
-            
-            // Add event listener to the Start Task button as a fallback
-            $('.start-task-btn').on('click', function(e) {
-                // If form submission is problematic, use direct link as fallback
-                var directLinkFollowed = false;
-                
-                // Add user tracking parameters
-                var trackedLink = taskLink;
-                var userId = $(this).data('user-id') || '';
-                
-                // Append user ID to the link if not already present
-                if (userId && trackedLink.indexOf('aff_sub4=') === -1) {
-                    trackedLink += (trackedLink.indexOf('?') !== -1 ? '&' : '?') + 'aff_sub4=' + userId;
-                }
-                
-                // Let the form submission happen by default
-            });
-            
         } else {
             console.log("No offer link available for this task");
-            $('#directLinkContainer').hide();
+            $('#directTaskLink').attr('href', '#').text('No Task Link Available').addClass('disabled');
         }
         
         // Show the modal
@@ -176,25 +157,27 @@ $(document).ready(function() {
         $('.nav-tabs a[href="' + hash + '"]').tab('show');
     }
     
-    // Handle task start action
-    $('.start-task-btn').on('click', function(e) {
-        var offerLink = $('#taskForm').find('input[name="offer_link"]').val();
+    // Handle task start action - using the direct link approach
+    $('#directTaskLink').on('click', function(e) {
+        // Don't prevent default behavior - let the link naturally open in a new tab
         
-        if (offerLink) {
-            // Show loading state
-            $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
-            $(this).prop('disabled', true);
-            
-            // Log the link we're trying to open
+        // Show loading state
+        $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+        $(this).addClass('disabled');
+        
+        // Get the offer link
+        var offerLink = $(this).attr('href');
+        
+        if (offerLink && offerLink !== '#') {
             console.log("Opening offer link:", offerLink);
             
-            // Try to directly open the link
+            // Submit the hidden form for tracking
             setTimeout(function() {
-                // Directly open the link in a new tab if form submission doesn't work
-                window.open(offerLink, '_blank');
-            }, 500);
+                $('#hiddenSubmitButton').click();
+            }, 100);
         } else {
-            console.log("No offer link found in form");
+            console.log("No valid offer link found");
+            e.preventDefault(); // Prevent navigation for disabled links
         }
     });
     
