@@ -1,12 +1,11 @@
 <?php
 // Start session and include necessary files
 session_start();
-require_once '../includes/auth.php';
-require_once '../includes/functions.php';
 require_once '../includes/config.php';
+require_once '../includes/db.php';
 
 // Check if user is logged in and is an admin
-if (!isLoggedIn() || !isAdmin()) {
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
     header('Location: ../login.php');
     exit;
 }
@@ -163,7 +162,7 @@ $stmt->execute();
 $slides = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Include header
-include '../includes/admin/header.php';
+include 'header.php';
 ?>
 
 <div class="container-fluid">
@@ -384,4 +383,4 @@ include '../includes/admin/header.php';
     });
 </script>
 
-<?php include '../includes/admin/footer.php'; ?>
+<?php include 'footer.php'; ?>
