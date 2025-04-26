@@ -283,6 +283,39 @@ $app_name = getSetting('app_name', APP_NAME);
             font-weight: 700;
             background-color: #f8f9fc;
         }
+        
+        /* Mobile Responsive Fixes */
+        @media (max-width: 768px) {
+            /* Full width dropdowns for mobile */
+            .dropdown-list.dropdown-menu {
+                position: fixed !important;
+                top: 60px !important;
+                left: 0 !important;
+                right: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                transform: none !important;
+                border-radius: 0 !important;
+                border-top: 1px solid rgba(0,0,0,.15) !important;
+                margin: 0 !important;
+                height: auto !important;
+                max-height: calc(100vh - 60px) !important;
+                overflow-y: auto !important;
+                z-index: 1030 !important;
+            }
+            
+            /* Make notification items more readable on mobile */
+            .dropdown-item {
+                padding: 0.75rem 1rem !important;
+                white-space: normal !important;
+            }
+            
+            /* Better mobile experience for dropdowns */
+            .dropdown-menu {
+                width: 100% !important;
+                min-width: 100% !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -399,6 +432,24 @@ $app_name = getSetting('app_name', APP_NAME);
                 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Handle mobile dropdown positioning
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) {
+        document.querySelector('#alertsDropdown').addEventListener('click', function(e) {
+            // Add a small delay to ensure the dropdown is shown
+            setTimeout(function() {
+                const dropdown = document.querySelector('.dropdown-list.dropdown-menu');
+                if (dropdown) {
+                    // Ensure it's full width on mobile
+                    dropdown.style.width = '100%';
+                    dropdown.style.maxWidth = '100%';
+                    dropdown.style.left = '0';
+                    dropdown.style.right = '0';
+                }
+            }, 10);
+        });
+    }
+    
     // Add event listeners for dropdown notifications
     document.querySelectorAll('.notification-item').forEach(function(notification) {
         notification.addEventListener('click', function(e) {
