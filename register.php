@@ -121,7 +121,7 @@ include 'includes/header.php';
                 </form>
                 
                 <div class="auth-footer">
-                    <p>Already have an account? <a href="login.php">Login</a></p>
+                    <p>Already have an account? <a href="<?php echo url('login'); ?>">Login</a></p>
                 </div>
                 <?php endif; ?>
             </div>
