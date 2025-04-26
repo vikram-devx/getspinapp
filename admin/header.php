@@ -327,11 +327,11 @@ $app_name = getSetting('app_name', APP_NAME);
                             $unread_count = getUnreadNotificationsCount();
                             $notifications = getAdminNotifications(5);
                             ?>
-                            <a class="nav-link dropdown-toggle position-relative d-flex align-items-center justify-content-center" href="#" id="alertsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 40px; height: 40px;">
-                                <i class="fas fa-bell fa-fw text-primary" style="font-size: 1.2rem;"></i>
+                            <a class="nav-link position-relative d-inline-flex align-items-center justify-content-center" href="#" id="alertsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 40px; height: 40px; padding: 0;">
+                                <i class="fas fa-bell text-primary" style="font-size: 1.3rem;"></i>
                                 <!-- Counter - Notifications -->
                                 <?php if ($unread_count > 0): ?>
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem; display: inline-block; transform: translate(-25%, -25%);">
+                                <span class="position-absolute badge rounded-pill bg-danger" style="font-size: 0.65rem; top: 0; right: 0; transform: translate(25%, -25%);">
                                     <?php echo $unread_count < 100 ? $unread_count : '99+'; ?>
                                     <span class="visually-hidden">unread notifications</span>
                                 </span>
@@ -443,7 +443,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (badge) {
                     if (data.count > 0) {
                         badge.textContent = data.count < 100 ? data.count : '99+';
-                        badge.style.display = 'inline-block';
+                        badge.style.display = 'block';
                     } else {
                         badge.style.display = 'none';
                     }
