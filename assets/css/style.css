@@ -7,9 +7,10 @@
     --warning-color: #ffd700; /* Gold/yellow to match logo */
     --danger-color: #e74a3b;
     --light-color: #f8f9fc;
-    --dark-color: #5a5c69;
+    --dark-color: #222222;
     --logo-red: #d62020;      /* Logo red color */
     --logo-gold: #ffd700;     /* Logo gold color */
+    --dark-bg: #222222;       /* Dark background for good logo contrast */
 }
 
 body {
@@ -31,7 +32,7 @@ body {
 
 /* Override Bootstrap's default navbar colors */
 .navbar-dark.bg-primary {
-    background-color: var(--logo-red) !important;
+    background-color: var(--dark-bg) !important;
 }
 
 .navbar-brand {
@@ -235,7 +236,7 @@ body {
 }
 
 .stat-card-primary {
-    background: linear-gradient(45deg, var(--logo-red), #8B0000);
+    background: var(--dark-bg);
 }
 
 .stat-card-success {
@@ -265,7 +266,7 @@ body {
 /* Landing Page */
 .hero-section {
     padding: 3rem 0;
-    background: linear-gradient(45deg, var(--logo-red), #8B0000);
+    background: var(--dark-bg);
     color: #fff;
     border-radius: 0.5rem;
     margin-bottom: 2rem;
