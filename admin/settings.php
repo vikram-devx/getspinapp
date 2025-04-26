@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'app_name' => isset($_POST['app_name']) ? trim($_POST['app_name']) : 'GetSpins App'
     ];
     
-    // Handle logo upload if a file was submitted
+    // Handle main logo upload if a file was submitted
     if (isset($_FILES['app_logo']) && $_FILES['app_logo']['error'] === UPLOAD_ERR_OK) {
         $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
         $max_size = 1024 * 1024; // 1MB
@@ -54,7 +54,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Set the logo path in settings
                 $settings['app_logo'] = 'uploads/' . $filename;
             } else {
-                $error_message = 'Failed to upload logo. Please try again.';
+                $error_message = 'Failed to upload main logo. Please try again.';
+            }
+        }
+    }
+    
+    // Handle auth card logo upload if a file was submitted
+    if (isset($_FILES['auth_card_logo']) && $_FILES['auth_card_logo']['error'] === UPLOAD_ERR_OK) {
+        $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
+        $max_size = 1024 * 1024; // 1MB
+        
+        // Verify file type and size
+        if (!in_array($_FILES['auth_card_logo']['type'], $allowed_types)) {
+            $error_message = 'Invalid file type for auth card logo. Please upload a JPEG, PNG, or GIF image.';
+        } elseif ($_FILES['auth_card_logo']['size'] > $max_size) {
+            $error_message = 'Auth card logo file size exceeds the maximum limit (1MB).';
+        } else {
+            // Create uploads directory if it doesn't exist
+            $uploads_dir = '../uploads';
+            if (!file_exists($uploads_dir)) {
+                mkdir($uploads_dir, 0777, true);
+            }
+            
+            // Generate a unique filename
+            $filename = 'auth_logo_' . time() . '_' . strtolower(str_replace(' ', '_', $_FILES['auth_card_logo']['name']));
+            $target_path = $uploads_dir . '/' . $filename;
+            
+            // Move the uploaded file to the uploads directory
+            if (move_uploaded_file($_FILES['auth_card_logo']['tmp_name'], $target_path)) {
+                // Set the auth logo path in settings
+                $settings['auth_card_logo'] = 'uploads/' . $filename;
+            } else {
+                $error_message = 'Failed to upload auth card logo. Please try again.';
             }
         }
     }
@@ -111,6 +142,7 @@ $points_conversion_rate = isset($settings['points_conversion_rate']) ? $settings
 $points_to_spin_ratio = isset($settings['points_to_spin_ratio']) ? $settings['points_to_spin_ratio'] : 100;
 $app_name = isset($settings['app_name']) ? $settings['app_name'] : APP_NAME;
 $app_logo = isset($settings['app_logo']) ? $settings['app_logo'] : '';
+$auth_card_logo = isset($settings['auth_card_logo']) ? $settings['auth_card_logo'] : '';
 
 include 'header.php';
 ?>
@@ -167,7 +199,31 @@ include 'header.php';
                                     </ul>
                                 </div>
                             </div>
-                            <small class="form-text text-muted">Upload a new logo for your application (JPEG, PNG, or GIF). The logo will only appear on public pages (home, login, and register).</small>
+                            <small class="form-text text-muted">Upload a new logo for your application (JPEG, PNG, or GIF). The logo will appear in the header of public pages.</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="auth_card_logo">Auth Card Logo</label>
+                            <?php if (!empty($auth_card_logo)): ?>
+                            <div class="mb-2">
+                                <img src="<?php echo htmlspecialchars('../' . $auth_card_logo); ?>" alt="Current Auth Logo" class="img-thumbnail" style="max-height: 100px;">
+                                <p class="text-muted small">Current auth logo: <?php echo htmlspecialchars($auth_card_logo); ?></p>
+                            </div>
+                            <?php endif; ?>
+                            <input type="file" class="form-control-file" id="auth_card_logo" name="auth_card_logo">
+                            <div class="card mt-2 mb-2 bg-light">
+                                <div class="card-body">
+                                    <h6 class="card-title">Recommended Auth Logo Specifications:</h6>
+                                    <ul class="mb-0">
+                                        <li><strong>Width:</strong> 150px to 200px</li>
+                                        <li><strong>Height:</strong> 150px to 200px</li>
+                                        <li><strong>Aspect ratio:</strong> 1:1 (square) preferred</li>
+                                        <li><strong>Format:</strong> PNG with transparent background preferred</li>
+                                        <li><strong>Max file size:</strong> 1MB</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <small class="form-text text-muted">Upload a special logo for login and register cards (JPEG, PNG, or GIF). This logo will ONLY appear in the login and register forms.</small>
                         </div>
                         
                         <hr>
