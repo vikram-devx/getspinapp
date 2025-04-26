@@ -300,7 +300,7 @@ $app_name = getSetting('app_name', APP_NAME);
             <div id="content">
                 
                 <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow" style="height: 60px;">
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
@@ -327,11 +327,11 @@ $app_name = getSetting('app_name', APP_NAME);
                             $unread_count = getUnreadNotificationsCount();
                             $notifications = getAdminNotifications(5);
                             ?>
-                            <a class="nav-link position-relative d-inline-flex align-items-center justify-content-center" href="#" id="alertsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 40px; height: 40px; padding: 0;">
-                                <i class="fas fa-bell text-primary" style="font-size: 1.3rem;"></i>
+                            <a class="nav-link position-relative d-inline-flex align-items-center justify-content-center" href="#" id="alertsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 40px; height: 40px; padding: 0; margin-top: 3px;">
+                                <i class="fas fa-bell text-primary" style="font-size: 1.25rem;"></i>
                                 <!-- Counter - Notifications -->
                                 <?php if ($unread_count > 0): ?>
-                                <span class="position-absolute badge rounded-pill bg-danger" style="font-size: 0.65rem; top: 0; right: 0; transform: translate(25%, -25%);">
+                                <span class="position-absolute badge rounded-pill bg-danger" style="font-size: 0.65rem; top: -3px; right: -3px; padding: 0.25em 0.5em;">
                                     <?php echo $unread_count < 100 ? $unread_count : '99+'; ?>
                                     <span class="visually-hidden">unread notifications</span>
                                 </span>
