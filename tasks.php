@@ -205,6 +205,19 @@ $max_offers = isset($settings['ogads_max_offers']) ? (int)$settings['ogads_max_o
 $min_offers = isset($settings['ogads_min_offers']) ? (int)$settings['ogads_min_offers'] : 3;
 $ctype = isset($settings['ogads_ctype']) ? (int)$settings['ogads_ctype'] : null;
 
+// Detect the user's device type
+$device_info = detectDeviceType();
+$device_type = $device_info['device_type'];
+
+// Log device type detection for debugging
+error_log("Device detected as: " . $device_type);
+
+// For mobile devices, prioritize CPI offers (if the setting doesn't force a specific type)
+if ($device_info['is_mobile'] && !isset($settings['ogads_ctype'])) {
+    $ctype = 'cpi'; // Force CPI offers for mobile devices
+    error_log("Mobile device detected - prioritizing CPI offers");
+}
+
 // Get available offers from the API
 $offers_result = getOffers(null, null, $ctype, $max_offers, $min_offers);
 
@@ -285,7 +298,7 @@ if (!isset($offers)) {
 if ($use_sample_offers) {
     
     // Provide sample offers for testing
-    $offers = [
+    $sample_offers = [
         [
             'id' => 'offer1',
             'name' => 'Install Game App',
@@ -311,6 +324,23 @@ if ($use_sample_offers) {
             'type' => 'cpa'
         ]
     ];
+    
+    // Rearrange sample offers based on device type
+    if ($device_info['is_mobile']) {
+        // For mobile, put CPI offers first
+        $offers = sortOffersByDeviceType($sample_offers, 'mobile');
+        error_log("Using sample offers, sorted for mobile device");
+    } else {
+        // For desktop/tablet, mix CPA and CPI
+        $offers = sortOffersByDeviceType($sample_offers, $device_type);
+        error_log("Using sample offers, sorted for " . $device_type);
+    }
+} else {
+    // Sort real offers based on device type if we have offers
+    if (!empty($offers)) {
+        $offers = sortOffersByDeviceType($offers, $device_type);
+        error_log("Sorted " . count($offers) . " offers for " . $device_type);
+    }
 }
 
 // Postback URL generation removed as per requirements
@@ -377,7 +407,13 @@ include 'includes/header.php';
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-start mb-3">
                                     <h5 class="card-title mb-0"><?php echo !empty($offer_name) ? htmlspecialchars($offer_name) : 'No title'; ?></h5>
-                                    <span class="offer-type offer-type-<?php echo $offer_type; ?>"><?php echo strtoupper($offer_type); ?></span>
+                                    <span class="offer-type offer-type-<?php echo $offer_type; ?>">
+                                        <?php if ($offer_type === 'cpi'): ?>
+                                            <i class="fas fa-mobile-alt me-1"></i> APP INSTALL
+                                        <?php else: ?>
+                                            <?php echo strtoupper($offer_type); ?>
+                                        <?php endif; ?>
+                                    </span>
                                 </div>
                                 <p class="card-text"><?php echo !empty($offer_description) ? htmlspecialchars($offer_description) : 'No description'; ?></p>
                                 <div class="d-flex justify-content-between align-items-center mt-3">
@@ -406,6 +442,22 @@ include 'includes/header.php';
     </div>
     
     <div class="col-lg-4">
+        <?php if ($device_info['is_mobile']): ?>
+        <div class="card mb-4 bg-primary text-white">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-mobile-alt me-2"></i> Mobile User Benefits</h5>
+            </div>
+            <div class="card-body">
+                <p>As a mobile user, you can earn points faster by installing apps! Mobile app install tasks typically offer:</p>
+                <ul>
+                    <li>Higher point rewards</li>
+                    <li>Faster completion times</li>
+                    <li>Simple requirements</li>
+                </ul>
+                <p class="mb-0">Look for the <i class="fas fa-mobile-alt"></i> APP INSTALL tag to find the best tasks for your device.</p>
+            </div>
+        </div>
+        <?php endif; ?>
         
         <div class="card">
             <div class="card-header">
@@ -433,6 +485,12 @@ include 'includes/header.php';
                         <i class="fas fa-check-circle text-success me-2"></i>
                         Points are credited after verification
                     </li>
+                    <?php if ($device_info['is_mobile']): ?>
+                    <li class="list-group-item bg-light">
+                        <i class="fas fa-mobile-alt text-primary me-2"></i>
+                        <strong>App installs earn more spins!</strong>
+                    </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>

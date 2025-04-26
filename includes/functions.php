@@ -642,6 +642,142 @@ function trackTaskProgress($user_id, $offer_id, $status, $progress_percent = 0, 
     }
 }
 
+/**
+ * Detect if the current device is a mobile device
+ * 
+ * @return array Information about the device type
+ */
+function detectDeviceType() {
+    $user_agent = $_SERVER['HTTP_USER_AGENT'];
+    
+    // Initialize result array
+    $result = [
+        'is_mobile' => false,
+        'is_tablet' => false,
+        'is_desktop' => true,
+        'device_type' => 'desktop'
+    ];
+    
+    // Check for mobile devices
+    $mobile_patterns = [
+        '/Mobile/i',
+        '/Android/i',
+        '/iPhone/i',
+        '/iPod/i',
+        '/BlackBerry/i',
+        '/webOS/i'
+    ];
+    
+    // Check for tablets
+    $tablet_patterns = [
+        '/iPad/i',
+        '/tablet/i',
+        '/RIM Tablet/i',
+        '/Kindle/i'
+    ];
+    
+    // Check if device matches mobile patterns
+    $is_mobile = false;
+    foreach ($mobile_patterns as $pattern) {
+        if (preg_match($pattern, $user_agent)) {
+            $is_mobile = true;
+            break;
+        }
+    }
+    
+    // Check if device matches tablet patterns
+    $is_tablet = false;
+    foreach ($tablet_patterns as $pattern) {
+        if (preg_match($pattern, $user_agent)) {
+            $is_tablet = true;
+            break;
+        }
+    }
+    
+    // If it's a tablet, it's not considered a mobile phone
+    if ($is_tablet) {
+        $is_mobile = false;
+    }
+    
+    // Update result based on detection
+    if ($is_mobile) {
+        $result = [
+            'is_mobile' => true,
+            'is_tablet' => false,
+            'is_desktop' => false,
+            'device_type' => 'mobile'
+        ];
+    } elseif ($is_tablet) {
+        $result = [
+            'is_mobile' => false,
+            'is_tablet' => true,
+            'is_desktop' => false,
+            'device_type' => 'tablet'
+        ];
+    }
+    
+    return $result;
+}
+
+/**
+ * Sort offers based on device type
+ * 
+ * @param array $offers Array of offers to sort
+ * @param string $device_type Type of device (mobile, tablet, desktop)
+ * @return array Sorted offers array
+ */
+function sortOffersByDeviceType($offers, $device_type) {
+    if (empty($offers)) {
+        return $offers;
+    }
+    
+    $cpi_offers = [];
+    $cpa_offers = [];
+    $other_offers = [];
+    
+    // Categorize offers by type
+    foreach ($offers as $offer) {
+        $offer_type = isset($offer['ctype']) ? strtolower($offer['ctype']) : 
+                    (isset($offer['type']) ? strtolower($offer['type']) : 'cpa');
+        
+        if ($offer_type === 'cpi') {
+            $cpi_offers[] = $offer;
+        } elseif ($offer_type === 'cpa') {
+            $cpa_offers[] = $offer;
+        } else {
+            $other_offers[] = $offer;
+        }
+    }
+    
+    // Sort based on device type
+    if ($device_type === 'mobile') {
+        // Mobile devices: prioritize CPI offers, then CPA offers, then others
+        return array_merge($cpi_offers, $cpa_offers, $other_offers);
+    } else {
+        // Desktop and tablets: mix CPI and CPA offers, with a slight preference for CPA
+        $result = [];
+        $cpi_count = count($cpi_offers);
+        $cpa_count = count($cpa_offers);
+        $max_count = max($cpi_count, $cpa_count);
+        
+        // Intersperse CPA and CPI offers
+        for ($i = 0; $i < $max_count; $i++) {
+            // Add CPA offer first (if available)
+            if ($i < $cpa_count) {
+                $result[] = $cpa_offers[$i];
+            }
+            
+            // Add CPI offer next (if available)
+            if ($i < $cpi_count) {
+                $result[] = $cpi_offers[$i];
+            }
+        }
+        
+        // Add any other offers at the end
+        return array_merge($result, $other_offers);
+    }
+}
+
 // Function to get task progress for a user
 function getTaskProgress($user_id, $offer_id = null) {
     $db = Database::getInstance();
