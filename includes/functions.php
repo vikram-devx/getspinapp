@@ -556,6 +556,110 @@ function validatePostbackToken($user_id, $token) {
     return true;
 }
 
+// Function to create or update task progress
+function trackTaskProgress($user_id, $offer_id, $status, $progress_percent = 0, $message = '', $estimated_time = null) {
+    $db = Database::getInstance();
+    $conn = $db->getConnection();
+    
+    try {
+        // Check if a record already exists for this user and offer
+        $stmt = $conn->prepare("SELECT id, status FROM task_progress WHERE user_id = :user_id AND offer_id = :offer_id");
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->bindValue(':offer_id', $offer_id);
+        $stmt->execute();
+        
+        $existing = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($existing) {
+            // Update existing record
+            $sql = "UPDATE task_progress SET 
+                    status = :status, 
+                    progress_percent = :progress_percent, 
+                    progress_message = :message,
+                    estimated_completion_time = :est_time,
+                    last_updated = CURRENT_TIMESTAMP";
+            
+            // If the status is 'completed', set the completion time
+            if ($status === 'completed') {
+                $sql .= ", completion_time = CURRENT_TIMESTAMP";
+            }
+            
+            $sql .= " WHERE id = :id";
+            
+            $stmt = $conn->prepare($sql);
+            $stmt->bindValue(':id', $existing['id']);
+            $stmt->bindValue(':status', $status);
+            $stmt->bindValue(':progress_percent', $progress_percent);
+            $stmt->bindValue(':message', $message);
+            $stmt->bindValue(':est_time', $estimated_time);
+            $stmt->execute();
+            
+            return $existing['id'];
+        } else {
+            // Create new record
+            $stmt = $conn->prepare("INSERT INTO task_progress 
+                (user_id, offer_id, status, progress_percent, progress_message, estimated_completion_time) 
+                VALUES 
+                (:user_id, :offer_id, :status, :progress_percent, :message, :est_time)");
+            
+            $stmt->bindValue(':user_id', $user_id);
+            $stmt->bindValue(':offer_id', $offer_id);
+            $stmt->bindValue(':status', $status);
+            $stmt->bindValue(':progress_percent', $progress_percent);
+            $stmt->bindValue(':message', $message);
+            $stmt->bindValue(':est_time', $estimated_time);
+            $stmt->execute();
+            
+            return $conn->lastInsertId();
+        }
+    } catch (PDOException $e) {
+        error_log("Error tracking task progress: " . $e->getMessage());
+        return false;
+    }
+}
+
+// Function to get task progress for a user
+function getTaskProgress($user_id, $offer_id = null) {
+    $db = Database::getInstance();
+    $conn = $db->getConnection();
+    
+    try {
+        $sql = "SELECT tp.*, 
+                uo.completed as task_completed,
+                CASE 
+                    WHEN uo.completed = 1 THEN 100 
+                    ELSE tp.progress_percent 
+                END as current_progress
+                FROM task_progress tp
+                LEFT JOIN user_offers uo ON tp.user_id = uo.user_id AND tp.offer_id = uo.offer_id
+                WHERE tp.user_id = :user_id";
+        
+        $params = [':user_id' => $user_id];
+        
+        if ($offer_id) {
+            $sql .= " AND tp.offer_id = :offer_id";
+            $params[':offer_id'] = $offer_id;
+        }
+        
+        $sql .= " ORDER BY tp.last_updated DESC";
+        
+        $stmt = $conn->prepare($sql);
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
+        $stmt->execute();
+        
+        if ($offer_id) {
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } else {
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+    } catch (PDOException $e) {
+        error_log("Error getting task progress: " . $e->getMessage());
+        return false;
+    }
+}
+
 // Function to complete user offer
 function completeUserOffer($user_id, $offer_id, $payout) {
     $db = Database::getInstance();

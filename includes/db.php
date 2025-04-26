@@ -143,6 +143,21 @@ class Database {
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         )");
         
+        // Task Progress table (to track task completion status)
+        $this->query("CREATE TABLE IF NOT EXISTS task_progress (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            offer_id TEXT NOT NULL,
+            status TEXT NOT NULL CHECK(status IN ('started', 'in_progress', 'completed', 'failed')),
+            progress_percent INTEGER NOT NULL DEFAULT 0,
+            progress_message TEXT,
+            estimated_completion_time INTEGER, /* Estimated time to completion in seconds */
+            start_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            completion_time TIMESTAMP NULL,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        )");
+        
         // Check if admin user exists
         $stmt = $this->prepare("SELECT COUNT(*) FROM users WHERE username = 'admin'");
         $stmt->execute();
