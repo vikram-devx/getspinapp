@@ -26,8 +26,8 @@ $stats = getUserStats($current_user['id']);
             <small class="text-muted">Available Points</small>
         </div>
         <div class="d-grid gap-2">
-            <a href="rewards.php" class="btn btn-primary">Redeem Points</a>
-            <a href="tasks.php" class="btn btn-outline-primary">Available Tasks</a>
+            <a href="rewards.php" class="btn btn-primary"><i class="fas fa-gift me-2"></i>Redeem Points</a>
+            <a href="tasks.php" class="btn btn-outline-primary"><i class="fas fa-tasks me-2"></i>Available Tasks</a>
         </div>
     </div>
 </div>
