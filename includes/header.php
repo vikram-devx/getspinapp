@@ -33,7 +33,7 @@ $app_logo = getSetting('app_logo', '');
 </head>
 <body>
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #222222;">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="index.php">
                 <?php if ($is_public_page && !empty($app_logo)): ?>
