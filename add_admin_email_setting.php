@@ -6,6 +6,9 @@
 require_once 'includes/config.php';
 require_once 'includes/db.php';
 
+// Make sure we're using the correct database
+define('DB_PATH', __DIR__ . '/data/rewards_app.sqlite');
+
 try {
     $db = Database::getInstance();
     $conn = $db->getConnection();
