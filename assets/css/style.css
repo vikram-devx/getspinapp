@@ -36,6 +36,11 @@ body {
     max-width: 100%;
 }
 
+/* Remove any unwanted margins */
+body .navbar + .full-width-container {
+    margin-top: 0; /* Ensure no gap between navbar and content */
+}
+
 /* Make hero section full width */
 .hero-section .container {
     max-width: 1400px;
@@ -551,13 +556,28 @@ body {
 }
 
 @media (max-width: 576px) {
+    /* Remove gaps in mobile view */
+    .navbar {
+        margin-bottom: 0 !important;
+    }
+    
+    .full-width-container {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+    
+    .how-it-works {
+        padding-top: 0 !important;
+    }
+    
     .promo-slider {
-        height: 300px; /* Even smaller height on small devices */
+        height: 280px; /* Adjusted height for small devices */
     }
     
     .promo-slide {
         align-items: flex-end;
-        background-position: center 40%; /* Position image slightly higher */
+        background-position: center center; /* Center the image */
+        background-color: #f5f5f5; /* Light background */
     }
     
     .slide-content {
@@ -598,21 +618,59 @@ body {
 
 /* Extra small devices */
 @media (max-width: 400px) {
+    .navbar {
+        margin: 0 !important;
+        padding: 0.5rem 1rem !important;
+    }
+    
+    .navbar + .full-width-container {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .how-it-works {
+        margin: 0 !important;
+        padding-top: 1rem !important;
+    }
+    
     .promo-slider {
-        height: 250px;
+        height: 220px;
+        margin: 0 !important;
+    }
+    
+    .promo-slide {
+        background-size: contain; /* Ensure the image fits fully */
+        background-color: #f5f5f5; /* Light background */
     }
     
     .slide-content {
-        max-width: 200px;
+        max-width: 180px;
         margin: 0 0 10px 10px;
         padding: 0.5rem;
     }
     
     .slide-content h1 {
-        font-size: 1.1rem;
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
     }
     
     .slide-content .lead {
         font-size: 0.8rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .slide-content .btn {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.75rem;
+    }
+    
+    /* Make slider controls smaller on tiny screens */
+    .slider-controls {
+        bottom: 10px;
+    }
+    
+    .slider-dot {
+        width: 8px;
+        height: 8px;
     }
 }

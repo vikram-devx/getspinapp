@@ -104,7 +104,7 @@ include 'includes/header.php';
 </div> <!-- Close full-width-container -->
 
 <!-- How It Works Section -->
-<section class="how-it-works">
+<section class="how-it-works" style="margin-top: 0; padding-top: 2rem;">
     <div class="container">
         <h2 class="text-center mb-5">How It Works</h2>
         <div class="row">
