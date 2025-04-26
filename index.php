@@ -108,7 +108,7 @@ include 'includes/header.php';
             <div class="col-md-4 mb-4">
                 <div class="card h-100 step-card">
                     <div class="step-icon">
-                        <i class="fas fa-user-plus"></i>
+                        <i class="fas fa-user-plus text-primary"></i>
                     </div>
                     <h3>1. Create an Account</h3>
                     <p>Sign up for free and set up your profile to get started.</p>
@@ -117,7 +117,7 @@ include 'includes/header.php';
             <div class="col-md-4 mb-4">
                 <div class="card h-100 step-card">
                     <div class="step-icon">
-                        <i class="fas fa-tasks"></i>
+                        <i class="fas fa-tasks text-primary"></i>
                     </div>
                     <h3>2. Complete Tasks</h3>
                     <p>Browse available tasks like app installs and surveys, complete them to earn points.</p>
@@ -126,7 +126,7 @@ include 'includes/header.php';
             <div class="col-md-4 mb-4">
                 <div class="card h-100 step-card">
                     <div class="step-icon">
-                        <i class="fas fa-gift"></i>
+                        <i class="fas fa-gift text-primary"></i>
                     </div>
                     <h3>3. Redeem Rewards</h3>
                     <p>Use your points to claim gift cards, PayPal cash, and other rewards.</p>
