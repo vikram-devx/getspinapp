@@ -152,64 +152,16 @@ $(document).ready(function() {
             
             container.append(progressHtml);
             
-            // For testing - add a simulate progress button if task is not completed or failed
-            if (task.status !== 'completed' && task.status !== 'failed') {
-                var simulateButton = `
-                    <div class="simulate-controls mt-2 mb-3">
-                        <div class="d-flex justify-content-between">
-                            <button class="btn btn-sm btn-outline-primary simulate-progress" 
-                                data-offer-id="${task.offer_id}" 
-                                data-progress="${Math.min(progressPercent + 20, 100)}">
-                                Simulate Progress
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger simulate-fail" 
-                                data-offer-id="${task.offer_id}">
-                                Simulate Fail
-                            </button>
-                        </div>
-                    </div>
-                `;
-                container.find(`.task-progress-item[data-offer-id="${task.offer_id}"]`).append(simulateButton);
-            }
+            // Simulate functionality has been removed
         });
         
         // Hide no tasks message
         $('#no-tasks-message').hide();
         
-        // Add event listeners for simulation buttons
-        $('.simulate-progress').on('click', function() {
-            var offerId = $(this).data('offer-id');
-            var progress = $(this).data('progress');
-            simulateTaskProgress(offerId, progress, 'in_progress');
-        });
-        
-        $('.simulate-fail').on('click', function() {
-            var offerId = $(this).data('offer-id');
-            simulateTaskProgress(offerId, 0, 'failed');
-        });
+        // Simulation functionality has been removed
     }
     
-    function simulateTaskProgress(offerId, progress, status) {
-        $.ajax({
-            url: 'simulate_progress.php',
-            type: 'GET',
-            data: {
-                offer_id: offerId,
-                progress: progress,
-                status: status,
-                message: status === 'failed' ? 'Task failed. Please try again.' : 'Processing task...'
-            },
-            dataType: 'json',
-            success: function(response) {
-                if (response.status === 'success') {
-                    loadTaskProgress();
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error simulating progress:', error);
-            }
-        });
-    }
+    // simulateTaskProgress function has been removed
     
     // Load initial task progress if on tasks page
     if ($('#task-progress-container').length) {
