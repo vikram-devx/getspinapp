@@ -1,13 +1,15 @@
 /* Global Styles */
 :root {
-    --primary-color: #4e73df;
+    --primary-color: #d62020; /* Red to match logo */
     --secondary-color: #6c757d;
     --success-color: #1cc88a;
     --info-color: #36b9cc;
-    --warning-color: #f6c23e;
+    --warning-color: #ffd700; /* Gold/yellow to match logo */
     --danger-color: #e74a3b;
     --light-color: #f8f9fc;
     --dark-color: #5a5c69;
+    --logo-red: #d62020;      /* Logo red color */
+    --logo-gold: #ffd700;     /* Logo gold color */
 }
 
 body {
@@ -25,6 +27,11 @@ body {
 /* Navbar Styles */
 .navbar {
     box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+}
+
+/* Override Bootstrap's default navbar colors */
+.navbar-dark.bg-primary {
+    background-color: var(--logo-red) !important;
 }
 
 .navbar-brand {
@@ -175,11 +182,16 @@ body {
 .auth-form {
     max-width: 450px;
     margin: 0 auto;
+    border-top: 4px solid var(--logo-red);
 }
 
 .auth-header {
     text-align: center;
     margin-bottom: 2rem;
+}
+
+.auth-header img {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .auth-footer {
@@ -223,7 +235,7 @@ body {
 }
 
 .stat-card-primary {
-    background: linear-gradient(45deg, #4e73df, #224abe);
+    background: linear-gradient(45deg, var(--logo-red), #8B0000);
 }
 
 .stat-card-success {
@@ -235,7 +247,7 @@ body {
 }
 
 .stat-card-warning {
-    background: linear-gradient(45deg, #f6c23e, #dda20a);
+    background: linear-gradient(45deg, var(--logo-gold), #B8860B);
 }
 
 .stat-card .stat-value {
@@ -253,7 +265,7 @@ body {
 /* Landing Page */
 .hero-section {
     padding: 3rem 0;
-    background: linear-gradient(45deg, #4e73df, #224abe);
+    background: linear-gradient(45deg, var(--logo-red), #8B0000);
     color: #fff;
     border-radius: 0.5rem;
     margin-bottom: 2rem;
