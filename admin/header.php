@@ -327,11 +327,11 @@ $app_name = getSetting('app_name', APP_NAME);
                             $unread_count = getUnreadNotificationsCount();
                             $notifications = getAdminNotifications(5);
                             ?>
-                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle position-relative" href="#" id="alertsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-bell fa-fw"></i>
                                 <!-- Counter - Notifications -->
                                 <?php if ($unread_count > 0): ?>
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.75rem; display: inline-block;">
                                     <?php echo $unread_count; ?>
                                     <span class="visually-hidden">unread notifications</span>
                                 </span>
