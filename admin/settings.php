@@ -30,10 +30,10 @@ try {
 
 // Handle app settings form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_app_settings'])) {
-    $app_name = filter_input(INPUT_POST, 'app_name', FILTER_SANITIZE_STRING);
-    $point_name = filter_input(INPUT_POST, 'point_name', FILTER_SANITIZE_STRING);
-    $point_name_plural = filter_input(INPUT_POST, 'point_name_plural', FILTER_SANITIZE_STRING);
-    $app_color = filter_input(INPUT_POST, 'app_color', FILTER_SANITIZE_STRING);
+    $app_name = filter_input(INPUT_POST, 'app_name');
+    $app_name = $app_name ? htmlspecialchars($app_name, ENT_QUOTES, 'UTF-8') : '';
+    $app_color = filter_input(INPUT_POST, 'app_color');
+    $app_color = $app_color ? htmlspecialchars($app_color, ENT_QUOTES, 'UTF-8') : '#4e73df';
     $payout_point_ratio = filter_input(INPUT_POST, 'payout_point_ratio', FILTER_VALIDATE_INT);
     $point_spin_ratio = filter_input(INPUT_POST, 'point_spin_ratio', FILTER_VALIDATE_INT);
     
@@ -43,8 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_app_settings']))
         
         // Update settings
         saveSetting('app_name', $app_name);
-        saveSetting('point_name', $point_name);
-        saveSetting('point_name_plural', $point_name_plural);
         saveSetting('app_color', $app_color);
         saveSetting('payout_point_ratio', $payout_point_ratio > 0 ? $payout_point_ratio : 1000);
         saveSetting('point_spin_ratio', $point_spin_ratio > 0 ? $point_spin_ratio : 100);
@@ -212,25 +210,7 @@ include 'header.php';
                             </div>
                         </div>
                         
-                        <div class="mb-3">
-                            <label for="point_name" class="form-label">Point Name (Singular)</label>
-                            <input type="text" class="form-control" id="point_name" name="point_name" 
-                                value="<?php echo htmlspecialchars($settings['point_name'] ?? 'Spin'); ?>"
-                                placeholder="Spin">
-                            <div class="form-text text-muted">
-                                The name of a single point (e.g., Spin, Point, Coin).
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="point_name_plural" class="form-label">Point Name (Plural)</label>
-                            <input type="text" class="form-control" id="point_name_plural" name="point_name_plural" 
-                                value="<?php echo htmlspecialchars($settings['point_name_plural'] ?? 'Spins'); ?>"
-                                placeholder="Spins">
-                            <div class="form-text text-muted">
-                                The plural name of points (e.g., Spins, Points, Coins).
-                            </div>
-                        </div>
+
                         
                         <div class="mb-3">
                             <label for="app_color" class="form-label">App Theme Color</label>
