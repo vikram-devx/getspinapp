@@ -80,6 +80,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
             </a>
         </li>
         
+        <!-- Nav Item - Promo Slides -->
+        <li class="nav-item">
+            <a class="nav-link <?php echo $current_page === 'promo_slides.php' ? 'active' : ''; ?>" href="promo_slides.php">
+                <i class="fas fa-fw fa-images"></i>
+                Promo Slides
+            </a>
+        </li>
+        
         <!-- Nav Item - API Settings -->
         <li class="nav-item">
             <a class="nav-link <?php echo $current_page === 'api_settings.php' ? 'active' : ''; ?>" href="api_settings.php">
