@@ -77,6 +77,16 @@ if (!validatePostbackToken($user_id, $token)) {
     exit;
 }
 
+// Update task progress to completed status
+trackTaskProgress(
+    $user_id, 
+    $offer_id, 
+    'completed', 
+    100, 
+    'Task completed successfully! Points credited to your account.',
+    0 // No more time needed
+);
+
 // Complete the offer
 $result = completeUserOffer($user_id, $offer_id, $payout);
 
@@ -89,6 +99,16 @@ if ($result['status'] === 'success') {
         'points_earned' => $result['points_earned']
     ]);
 } else {
+    // If there was an error, update task progress to failed
+    trackTaskProgress(
+        $user_id, 
+        $offer_id, 
+        'failed', 
+        0, 
+        'There was an error processing your task: ' . $result['message'],
+        0
+    );
+
     http_response_code(500);
     echo json_encode([
         'status' => 'error',

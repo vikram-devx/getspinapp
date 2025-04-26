@@ -37,6 +37,16 @@ if (isset($_GET['action'])) {
         $result = recordOfferAttempt($user_id, $offer_id, $ip_address);
         
         if ($result['status'] === 'success') {
+            // Initialize task progress tracking
+            trackTaskProgress(
+                $user_id, 
+                $offer_id, 
+                'started', 
+                5, 
+                'Task started - waiting for offer interaction', 
+                300 // 5 minutes estimated completion time
+            );
+            
             // For sample offers (1, 2, 3) use our built-in sample system
             if (in_array($offer_id, ['offer1', 'offer2', 'offer3'])) {
                 // When using sample offers, just show a message and direct to dashboard
