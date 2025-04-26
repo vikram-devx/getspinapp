@@ -4,6 +4,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 
 <div class="sidebar">
+    <!-- Close button for mobile -->
+    <button id="sidebarClose" class="btn btn-link d-md-none position-absolute text-white" style="top: 10px; right: 10px; font-size: 1.25rem; z-index: 999;">
+        <i class="fas fa-times"></i>
+    </button>
+    
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
         <div class="sidebar-brand-icon">

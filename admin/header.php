@@ -284,8 +284,24 @@ $app_name = getSetting('app_name', APP_NAME);
             background-color: #f8f9fc;
         }
         
-        /* Mobile Responsive Fixes */
+        /* Sidebar Mobile Fixes */
         @media (max-width: 768px) {
+            #wrapper .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 225px;
+                height: 100vh;
+                z-index: 1050;
+            }
+            
+            #wrapper.sidebar-open .sidebar {
+                transform: translateX(0);
+                box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            }
+            
             /* Full width dropdowns for mobile */
             .dropdown-list.dropdown-menu {
                 position: fixed !important;
@@ -321,6 +337,8 @@ $app_name = getSetting('app_name', APP_NAME);
 <body>
     <!-- Page Wrapper -->
     <div id="wrapper">
+        <!-- Mobile sidebar overlay -->
+        <div id="sidebarOverlay" class="d-md-none" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1040; display: none;"></div>
         
         <!-- Sidebar -->
         <?php include 'sidebar.php'; ?>
@@ -432,6 +450,44 @@ $app_name = getSetting('app_name', APP_NAME);
                 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Handle sidebar toggle for mobile
+    const sidebarToggleTop = document.getElementById('sidebarToggleTop');
+    const sidebarClose = document.getElementById('sidebarClose');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const wrapper = document.getElementById('wrapper');
+    
+    function openSidebar() {
+        wrapper.classList.add('sidebar-open');
+        sidebarOverlay.style.display = 'block';
+    }
+    
+    function closeSidebar() {
+        wrapper.classList.remove('sidebar-open');
+        sidebarOverlay.style.display = 'none';
+    }
+    
+    if (sidebarToggleTop) {
+        sidebarToggleTop.addEventListener('click', function() {
+            if (wrapper.classList.contains('sidebar-open')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+    }
+    
+    if (sidebarClose) {
+        sidebarClose.addEventListener('click', function() {
+            closeSidebar();
+        });
+    }
+    
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', function() {
+            closeSidebar();
+        });
+    }
+    
     // Handle mobile dropdown positioning
     const isMobile = window.innerWidth < 768;
     if (isMobile) {
