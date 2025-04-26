@@ -56,16 +56,12 @@ include 'includes/header.php';
                 $bgImage = !empty($slide['image_path']) ? $slide['image_path'] : 'assets/img/promo-default.jpg';
             ?>
             <div class="promo-slide" style="background-image: url('<?php echo htmlspecialchars($bgImage); ?>');">
+                <?php if (!empty($slide['title']) || !empty($slide['description']) || !empty($slide['button_text'])): ?>
                 <div class="slide-content">
-                    <?php if (!empty($app_logo) && $index === 0): ?>
-                    <div class="mb-4">
-                        <img src="<?php echo htmlspecialchars($app_logo); ?>" alt="<?php echo htmlspecialchars($app_name); ?>" class="img-fluid" style="max-height: 80px;">
-                    </div>
-                    <?php elseif ($index === 0): ?>
-                    <h1 class="display-4 mb-4"><?php echo htmlspecialchars($app_name); ?></h1>
+                    <?php if (!empty($slide['title'])): ?>
+                    <h1 class="display-4"><?php echo htmlspecialchars($slide['title']); ?></h1>
                     <?php endif; ?>
                     
-                    <h1 class="display-4"><?php echo htmlspecialchars($slide['title']); ?></h1>
                     <?php if (!empty($slide['description'])): ?>
                     <p class="lead"><?php echo htmlspecialchars($slide['description']); ?></p>
                     <?php endif; ?>
@@ -79,6 +75,7 @@ include 'includes/header.php';
                     </div>
                     <?php endif; ?>
                 </div>
+                <?php endif; ?>
             </div>
             <?php endforeach; ?>
         </div>

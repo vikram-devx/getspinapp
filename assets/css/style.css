@@ -383,7 +383,8 @@ body .navbar + .full-width-container {
     position: relative;
     overflow: hidden;
     height: 500px; /* Desktop height */
-    background-color: #f8f8f8; /* Light background to complement the images */
+    background-color: transparent; /* No background color */
+    margin-top: -1px; /* Remove the gap between navbar and slider */
 }
 
 .promo-slides {
@@ -399,9 +400,10 @@ body .navbar + .full-width-container {
     align-items: flex-end; /* Align content to bottom */
     justify-content: flex-start; /* Align content to left */
     background-position: center;
-    background-size: contain; /* Use contain to ensure full image is visible */
+    background-size: cover; /* Changed to cover to fill the container */
     background-repeat: no-repeat;
     position: relative; /* For positioning overlay content */
+    background-color: transparent; /* No background color */
 }
 
 .slide-content {
@@ -530,14 +532,28 @@ body .navbar + .full-width-container {
 
 /* Responsive adjustments for promo slider */
 @media (max-width: 768px) {
+    /* Target all viewports */
+    .navbar, .full-width-container, .promo-slider {
+        margin: 0 !important;
+    }
+    
+    /* Remove background on all promo slides */
+    .promo-slide, .promo-slider {
+        background-color: transparent;
+    }
+    
+    /* Fix the gap between navbar and slider */
+    body .navbar + .full-width-container {
+        margin-top: -1px !important;
+    }
+    
     .promo-slider {
         height: 400px; /* Smaller height on medium devices */
-        background-color: #f5f5f5; /* Light background to fill empty space */
     }
     
     .promo-slide {
         background-position: center center;
-        background-size: contain; /* Ensure image is fully visible */
+        background-size: cover; /* Fill the container */
     }
     
     .slide-content {
@@ -553,31 +569,22 @@ body .navbar + .full-width-container {
     .slide-content .lead {
         font-size: 1rem;
     }
+    
+    /* No spacing between slider and next section */
+    .how-it-works {
+        padding-top: 1.5rem;
+        margin-top: 0;
+    }
 }
 
 @media (max-width: 576px) {
-    /* Remove gaps in mobile view */
-    .navbar {
-        margin-bottom: 0 !important;
-    }
-    
-    .full-width-container {
-        margin-top: 0 !important;
-        margin-bottom: 0 !important;
-    }
-    
-    .how-it-works {
-        padding-top: 0 !important;
-    }
-    
     .promo-slider {
         height: 280px; /* Adjusted height for small devices */
     }
     
     .promo-slide {
         align-items: flex-end;
-        background-position: center center; /* Center the image */
-        background-color: #f5f5f5; /* Light background */
+        background-position: center center;
     }
     
     .slide-content {
@@ -618,29 +625,12 @@ body .navbar + .full-width-container {
 
 /* Extra small devices */
 @media (max-width: 400px) {
-    .navbar {
-        margin: 0 !important;
-        padding: 0.5rem 1rem !important;
-    }
-    
-    .navbar + .full-width-container {
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-    
-    .how-it-works {
-        margin: 0 !important;
-        padding-top: 1rem !important;
-    }
-    
     .promo-slider {
         height: 220px;
-        margin: 0 !important;
     }
     
     .promo-slide {
-        background-size: contain; /* Ensure the image fits fully */
-        background-color: #f5f5f5; /* Light background */
+        background-size: cover;
     }
     
     .slide-content {
