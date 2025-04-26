@@ -1,6 +1,5 @@
 <?php
-// Start session and include necessary files
-session_start();
+// Include necessary files (session is started in config.php)
 require_once '../includes/config.php';
 require_once '../includes/db.php';
 
@@ -163,6 +162,11 @@ $slides = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Include header
 include 'header.php';
+
+// Make sure jQuery and required libraries are loaded
+echo '<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>';
+echo '<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>';
+echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">';
 ?>
 
 <div class="container-fluid">
@@ -327,9 +331,6 @@ include 'header.php';
 
 <script>
     $(document).ready(function() {
-        // Initialize DataTable
-        $('#slidesTable').DataTable();
-        
         // Handle edit button click
         $('.edit-slide').on('click', function() {
             var id = $(this).data('id');
