@@ -47,10 +47,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Handle slide edit or creation
     else if (isset($_POST['save'])) {
         $slideId = filter_input(INPUT_POST, 'slide_id', FILTER_SANITIZE_NUMBER_INT);
-        $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
-        $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
-        $buttonText = filter_input(INPUT_POST, 'button_text', FILTER_SANITIZE_STRING);
-        $buttonUrl = filter_input(INPUT_POST, 'button_url', FILTER_SANITIZE_STRING);
+        $title = htmlspecialchars(trim($_POST['title'] ?? ''));
+        $description = htmlspecialchars(trim($_POST['description'] ?? ''));
+        $buttonText = htmlspecialchars(trim($_POST['button_text'] ?? ''));
+        $buttonUrl = htmlspecialchars(trim($_POST['button_url'] ?? ''));
         $active = isset($_POST['active']) ? 1 : 0;
         $displayOrder = filter_input(INPUT_POST, 'display_order', FILTER_SANITIZE_NUMBER_INT);
         
