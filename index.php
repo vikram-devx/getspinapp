@@ -11,16 +11,48 @@ if ($auth->isLoggedIn()) {
     exit;
 }
 
-// Get some rewards for showcase
+// Get some rewards for showcase - focusing on CoinMaster and Monopoly only (rewards_id 6 and 7)
 $db = Database::getInstance();
 $conn = $db->getConnection();
-$query = "SELECT * FROM rewards WHERE is_active = 1 ORDER BY points_required ASC LIMIT 3";
+$query = "SELECT * FROM rewards WHERE is_active = 1 AND (id = 6 OR id = 7 OR name LIKE '%Coin Master%' OR name LIKE '%Monopoly%') ORDER BY points_required ASC LIMIT 3";
 $result = $db->query($query);
 
 $showcase_rewards = [];
 if ($result) {
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
         $showcase_rewards[] = $row;
+    }
+}
+
+// Get top users for leaderboard (top 5)
+$leaderboard_query = "SELECT id, username, points, 
+    (SELECT COUNT(*) FROM users u2 WHERE u2.points > u1.points) + 1 AS rank 
+    FROM users u1 
+    WHERE is_admin = 0 
+    ORDER BY points DESC 
+    LIMIT 5";
+$leaderboard_result = $conn->query($leaderboard_query);
+$top_users = [];
+if ($leaderboard_result) {
+    while ($row = $leaderboard_result->fetch(PDO::FETCH_ASSOC)) {
+        $top_users[] = $row;
+    }
+}
+
+// Get recent successful redemptions (focus on game rewards)
+$recent_redemptions_query = "SELECT r.name, rd.created_at, rd.redemption_details, u.username
+                           FROM redemptions rd
+                           JOIN rewards r ON rd.reward_id = r.id
+                           JOIN users u ON rd.user_id = u.id
+                           WHERE rd.status = 'completed' 
+                           AND (r.id = 6 OR r.id = 7 OR r.name LIKE '%Coin Master%' OR r.name LIKE '%Monopoly%')
+                           ORDER BY rd.created_at DESC
+                           LIMIT 5";
+$recent_result = $conn->query($recent_redemptions_query);
+$recent_redemptions = [];
+if ($recent_result) {
+    while ($row = $recent_result->fetch(PDO::FETCH_ASSOC)) {
+        $recent_redemptions[] = $row;
     }
 }
 
@@ -129,7 +161,141 @@ include 'includes/header.php';
                         <i class="fas fa-gift text-primary"></i>
                     </div>
                     <h3>3. Redeem Rewards</h3>
-                    <p>Use your points to claim gift cards, PayPal cash, and other rewards.</p>
+                    <p>Use your points to claim Coin Master spins, Monopoly Go dice rolls, and other rewards.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Leaderboard & Recent Claims Section -->
+<section class="leaderboard-recent-claims py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <!-- Leaderboard Column -->
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0 h5">Top Earners Leaderboard</h3>
+                        <a href="register.php" class="btn btn-sm btn-light">Join Now</a>
+                    </div>
+                    <div class="card-body p-0">
+                        <?php if (count($top_users) > 0): ?>
+                        <div class="top-users-list">
+                            <?php foreach ($top_users as $index => $user): ?>
+                                <div class="leaderboard-item d-flex justify-content-between align-items-center p-3" style="border-bottom: 1px solid #eee;">
+                                    <div class="d-flex align-items-center">
+                                        <div class="rank-number me-3">
+                                            <?php if ($user['rank'] <= 3): ?>
+                                                <?php if ($user['rank'] == 1): ?>
+                                                    <i class="fas fa-trophy text-warning" style="font-size: 1.5rem;"></i>
+                                                <?php elseif ($user['rank'] == 2): ?>
+                                                    <i class="fas fa-medal" style="color: #C0C0C0; font-size: 1.25rem;"></i>
+                                                <?php else: ?>
+                                                    <i class="fas fa-medal" style="color: #CD7F32; font-size: 1.25rem;"></i>
+                                                <?php endif; ?>
+                                            <?php else: ?>
+                                                <span class="fw-bold">#<?php echo $user['rank']; ?></span>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="user-avatar-mini me-3 bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                            <?php echo strtoupper(substr($user['username'], 0, 1)); ?>
+                                        </div>
+                                        <div class="username">
+                                            <span class="fw-bold"><?php echo htmlspecialchars($user['username']); ?></span>
+                                        </div>
+                                    </div>
+                                    <div class="points">
+                                        <strong><?php echo formatPoints($user['points']); ?></strong> points
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <?php else: ?>
+                        <div class="p-4 text-center">
+                            <p class="text-muted mb-0">No users on leaderboard yet</p>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="card-footer text-center">
+                        <p class="mb-0">Want to be on the leaderboard? <a href="register.php" class="fw-bold">Sign up now</a></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Claims Column -->
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0 h5">Recent Rewards Claimed</h3>
+                        <a href="register.php" class="btn btn-sm btn-light">Get Yours</a>
+                    </div>
+                    <div class="card-body p-0">
+                        <?php if (count($recent_redemptions) > 0): ?>
+                        <div class="recent-claims-list">
+                            <?php foreach ($recent_redemptions as $redemption): 
+                                $details = !empty($redemption['redemption_details']) ? json_decode($redemption['redemption_details'], true) : null;
+                                $spins = ($details && isset($details['spins'])) ? $details['spins'] : '';
+                            ?>
+                                <div class="claim-item d-flex justify-content-between align-items-center p-3" style="border-bottom: 1px solid #eee;">
+                                    <div class="d-flex align-items-center">
+                                        <div class="reward-icon me-3">
+                                            <?php if (stripos($redemption['name'], 'coin master') !== false): ?>
+                                                <i class="fas fa-sync-alt text-warning" style="font-size: 1.25rem;"></i>
+                                            <?php elseif (stripos($redemption['name'], 'monopoly') !== false): ?>
+                                                <i class="fas fa-dice text-info" style="font-size: 1.25rem;"></i>
+                                            <?php else: ?>
+                                                <i class="fas fa-gift text-success" style="font-size: 1.25rem;"></i>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="claim-details">
+                                            <div class="fw-bold"><?php echo htmlspecialchars($redemption['name']); ?></div>
+                                            <div class="small text-muted">
+                                                <?php if (!empty($spins)): ?>
+                                                <?php echo htmlspecialchars($spins); ?> spins
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="claim-meta text-end">
+                                        <div class="small text-truncate" style="max-width: 100px;">
+                                            <?php echo htmlspecialchars($redemption['username']); ?>
+                                        </div>
+                                        <div class="small text-muted">
+                                            <?php echo date('M d', strtotime($redemption['created_at'])); ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <?php else: ?>
+                        <div class="p-4 text-center">
+                            <p class="text-muted mb-0">No recent claims yet</p>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="card-footer text-center">
+                        <p class="mb-0">Ready to claim rewards? <a href="register.php" class="fw-bold">Join now</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Referral Bonus CTA -->
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="card bg-primary text-white">
+                    <div class="card-body p-4">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h3>Earn 100 Bonus Points!</h3>
+                                <p class="mb-md-0">Invite your friends and get 100 bonus points for each friend who joins and completes a task. The more friends you invite, the more rewards you can claim!</p>
+                            </div>
+                            <div class="col-md-4 text-md-end">
+                                <a href="register.php" class="btn btn-light btn-lg">Join & Start Inviting</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -169,19 +335,19 @@ include 'includes/header.php';
         <div class="row">
             <div class="col-md-4 mb-4">
                 <div class="testimonial-card h-100">
-                    <p class="testimonial-content">"I've earned enough points to get several Amazon gift cards. The tasks are easy and the rewards come quickly!"</p>
+                    <p class="testimonial-content">"I've earned enough points to get 500 Coin Master spins this month. The tasks are easy and the rewards come quickly!"</p>
                     <p class="testimonial-author">- Sarah J.</p>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
                 <div class="testimonial-card h-100">
-                    <p class="testimonial-content">"This is the best rewards app I've used. The point system is fair and there are always new tasks available."</p>
+                    <p class="testimonial-content">"This is the best app for getting free Monopoly Go dice rolls. The point system is fair and there are always new tasks available."</p>
                     <p class="testimonial-author">- Michael T.</p>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
                 <div class="testimonial-card h-100">
-                    <p class="testimonial-content">"I've been using this app for 3 months and already redeemed over $50 in PayPal cash. Highly recommended!"</p>
+                    <p class="testimonial-content">"I've been using this app for 3 months and already redeemed over 2,000 Coin Master spins and 1,500 Monopoly Go dice rolls. Highly recommended!"</p>
                     <p class="testimonial-author">- Lisa R.</p>
                 </div>
             </div>
@@ -222,8 +388,8 @@ include 'includes/header.php';
                         <i class="fas fa-check-circle fa-2x text-primary"></i>
                     </div>
                     <div>
-                        <h4>Multiple Reward Options</h4>
-                        <p>Choose from various gift cards, PayPal cash, and other rewards.</p>
+                        <h4>Game Rewards</h4>
+                        <p>Get free Coin Master spins and Monopoly Go dice rolls quickly and reliably.</p>
                     </div>
                 </div>
             </div>
