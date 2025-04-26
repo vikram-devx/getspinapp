@@ -1,4 +1,41 @@
     </div>
+    
+    <?php if (isset($auth) && $auth->isLoggedIn()): ?>
+    <!-- Mobile Bottom Navigation -->
+    <div class="mobile-bottom-nav d-lg-none fixed-bottom">
+        <div class="mobile-bottom-nav-item">
+            <a href="dashboard.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : ''; ?>">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+        </div>
+        <div class="mobile-bottom-nav-item">
+            <a href="tasks.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'tasks.php' ? 'active' : ''; ?>">
+                <i class="fas fa-tasks"></i>
+                <span>Tasks</span>
+            </a>
+        </div>
+        <div class="mobile-bottom-nav-item">
+            <a href="rewards.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'rewards.php' ? 'active' : ''; ?>">
+                <i class="fas fa-gift"></i>
+                <span>Rewards</span>
+            </a>
+        </div>
+        <div class="mobile-bottom-nav-item">
+            <a href="leaderboard.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'leaderboard.php' ? 'active' : ''; ?>">
+                <i class="fas fa-trophy"></i>
+                <span>Leaderboard</span>
+            </a>
+        </div>
+        <div class="mobile-bottom-nav-item">
+            <a href="referrals.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'referrals.php' ? 'active' : ''; ?>">
+                <i class="fas fa-user-plus"></i>
+                <span>Invite</span>
+            </a>
+        </div>
+    </div>
+    <?php endif; ?>
+    
     <!-- Footer -->
     <footer class="footer mt-auto py-3 bg-light">
         <div class="container">
