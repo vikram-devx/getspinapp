@@ -18,7 +18,7 @@ try {
         $conn->exec("CREATE TABLE admin_settings (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             setting_key TEXT NOT NULL UNIQUE,
-            value TEXT,
+            setting_value TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )");
@@ -33,7 +33,7 @@ try {
     
     if (!$exists) {
         // Add admin_email setting
-        $stmt = $conn->prepare("INSERT INTO admin_settings (setting_key, value) VALUES ('admin_email', '')");
+        $stmt = $conn->prepare("INSERT INTO admin_settings (setting_key, setting_value) VALUES ('admin_email', '')");
         if ($stmt->execute()) {
             echo "Added admin_email setting.<br>";
         } else {

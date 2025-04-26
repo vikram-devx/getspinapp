@@ -17,15 +17,15 @@ if ($action === 'get_admin_email') {
     $db = Database::getInstance();
     $conn = $db->getConnection();
     
-    $stmt = $conn->prepare("SELECT value FROM admin_settings WHERE setting_key = 'admin_email'");
+    $stmt = $conn->prepare("SELECT setting_value FROM admin_settings WHERE setting_key = 'admin_email'");
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     
     header('Content-Type: application/json');
-    if ($result && !empty($result['value'])) {
+    if ($result && !empty($result['setting_value'])) {
         echo json_encode([
             'success' => true,
-            'email' => $result['value']
+            'email' => $result['setting_value']
         ]);
     } else {
         echo json_encode([
