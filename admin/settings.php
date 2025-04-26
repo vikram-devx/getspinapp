@@ -120,7 +120,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_notification_set
     $notification_email = filter_input(INPUT_POST, 'notification_email', FILTER_VALIDATE_EMAIL);
     $notification_email_enabled = isset($_POST['notification_email_enabled']) ? 1 : 0;
     
+    // Get EmailJS settings
+    $emailjs_user_id = filter_input(INPUT_POST, 'emailjs_user_id', FILTER_SANITIZE_STRING);
+    $emailjs_service_id = filter_input(INPUT_POST, 'emailjs_service_id', FILTER_SANITIZE_STRING);
+    $emailjs_template_id = filter_input(INPUT_POST, 'emailjs_template_id', FILTER_SANITIZE_STRING);
+    
     try {
+        // Begin transaction
+        $conn->beginTransaction();
+        
         // Update notification email setting
         $stmt = $conn->prepare("UPDATE admin_settings SET setting_value = ?, updated_at = CURRENT_TIMESTAMP WHERE setting_key = 'notification_email'");
         $stmt->execute([$notification_email ?: '']);
@@ -129,23 +137,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_notification_set
         $stmt = $conn->prepare("UPDATE admin_settings SET setting_value = ?, updated_at = CURRENT_TIMESTAMP WHERE setting_key = 'notification_email_enabled'");
         $stmt->execute([$notification_email_enabled]);
         
+        // Save EmailJS settings to environment variables
+        if (!empty($emailjs_user_id)) {
+            putenv("EMAILJS_USER_ID=$emailjs_user_id");
+            // Also save to admin_settings table for persistence
+            $stmt = $conn->prepare("INSERT OR REPLACE INTO admin_settings (setting_key, setting_value) VALUES ('emailjs_user_id', ?)");
+            $stmt->execute([$emailjs_user_id]);
+        }
+        
+        if (!empty($emailjs_service_id)) {
+            putenv("EMAILJS_SERVICE_ID=$emailjs_service_id");
+            // Also save to admin_settings table for persistence
+            $stmt = $conn->prepare("INSERT OR REPLACE INTO admin_settings (setting_key, setting_value) VALUES ('emailjs_service_id', ?)");
+            $stmt->execute([$emailjs_service_id]);
+        }
+        
+        if (!empty($emailjs_template_id)) {
+            putenv("EMAILJS_TEMPLATE_ID=$emailjs_template_id");
+            // Also save to admin_settings table for persistence
+            $stmt = $conn->prepare("INSERT OR REPLACE INTO admin_settings (setting_key, setting_value) VALUES ('emailjs_template_id', ?)");
+            $stmt->execute([$emailjs_template_id]);
+        }
+        
+        // Commit transaction
+        $conn->commit();
+        
         $success_message = 'Notification settings updated successfully.';
         
         // Send a test notification if enabled and email is provided
         if ($notification_email_enabled && $notification_email) {
-            $test_sent = sendAdminEmailNotification(
+            // Create a test notification in the admin panel
+            createAdminNotification(
                 'Test Notification', 
-                'This is a test email notification from your GetSpins admin panel.', 
+                'This is a test notification created from your notification settings. EmailJS configuration has been updated.',
                 'system'
             );
             
-            if ($test_sent) {
-                $success_message .= ' A test notification was sent to ' . htmlspecialchars($notification_email) . '.';
-            } else {
-                $error_message = 'Could not send test notification. Please check your server\'s mail configuration.';
+            $success_message .= ' A test notification was created in your notifications panel.';
+            
+            // Note about EmailJS test
+            if (!empty($emailjs_user_id) && !empty($emailjs_service_id) && !empty($emailjs_template_id)) {
+                $success_message .= ' To test EmailJS, make a test redemption or reload the page with your new settings.';
             }
         }
     } catch (PDOException $e) {
+        // Rollback transaction on error
+        $conn->rollBack();
         $error_message = 'Error updating notification settings: ' . $e->getMessage();
     }
 }
@@ -156,9 +193,20 @@ end_of_processing:
 // Get current notification settings
 try {
     $notification_settings = [];
-    $stmt = $conn->query("SELECT setting_key, setting_value FROM admin_settings WHERE setting_key IN ('notification_email', 'notification_email_enabled')");
+    $stmt = $conn->query("SELECT setting_key, setting_value FROM admin_settings WHERE setting_key IN ('notification_email', 'notification_email_enabled', 'emailjs_user_id', 'emailjs_service_id', 'emailjs_template_id')");
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $notification_settings[$row['setting_key']] = $row['setting_value'];
+    }
+    
+    // Set environment variables for EmailJS if they're in the database
+    if (!empty($notification_settings['emailjs_user_id'])) {
+        putenv("EMAILJS_USER_ID=" . $notification_settings['emailjs_user_id']);
+    }
+    if (!empty($notification_settings['emailjs_service_id'])) {
+        putenv("EMAILJS_SERVICE_ID=" . $notification_settings['emailjs_service_id']);
+    }
+    if (!empty($notification_settings['emailjs_template_id'])) {
+        putenv("EMAILJS_TEMPLATE_ID=" . $notification_settings['emailjs_template_id']);
     }
 } catch (PDOException $e) {
     if (empty($error_message)) {
@@ -310,6 +358,49 @@ include 'header.php';
                     <div class="form-text text-muted">
                         Email address that will receive admin notifications.
                     </div>
+                </div>
+                
+                <hr>
+                <h6 class="mb-3">EmailJS Integration</h6>
+                
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> These settings are used to configure EmailJS for sending notification emails. 
+                    You'll need to create an account at <a href="https://www.emailjs.com" target="_blank">EmailJS.com</a> and set up a service and template.
+                </div>
+                
+                <div class="mb-3">
+                    <label for="emailjs_user_id" class="form-label">EmailJS User ID</label>
+                    <input type="text" class="form-control" id="emailjs_user_id" name="emailjs_user_id" 
+                           value="<?php echo htmlspecialchars(getenv('EMAILJS_USER_ID') ?: ''); ?>"
+                           placeholder="Enter your EmailJS User ID">
+                    <div class="form-text text-muted">
+                        Your EmailJS User ID from your EmailJS dashboard.
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="emailjs_service_id" class="form-label">EmailJS Service ID</label>
+                    <input type="text" class="form-control" id="emailjs_service_id" name="emailjs_service_id" 
+                           value="<?php echo htmlspecialchars(getenv('EMAILJS_SERVICE_ID') ?: ''); ?>"
+                           placeholder="Enter your EmailJS Service ID">
+                    <div class="form-text text-muted">
+                        The Service ID from your configured EmailJS service.
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="emailjs_template_id" class="form-label">EmailJS Template ID</label>
+                    <input type="text" class="form-control" id="emailjs_template_id" name="emailjs_template_id" 
+                           value="<?php echo htmlspecialchars(getenv('EMAILJS_TEMPLATE_ID') ?: ''); ?>"
+                           placeholder="Enter your EmailJS Template ID">
+                    <div class="form-text text-muted">
+                        The Template ID from your configured EmailJS email template.
+                    </div>
+                </div>
+                
+                <div class="alert alert-secondary">
+                    <strong>Template variables:</strong> When creating your EmailJS template, use these variables:<br>
+                    <code>{{to_email}}</code>, <code>{{user_name}}</code>, <code>{{user_id}}</code>, <code>{{reward_name}}</code>, <code>{{points_used}}</code>, <code>{{redemption_id}}</code>, <code>{{redemption_details}}</code>, <code>{{date_time}}</code>
                 </div>
                 
                 <button type="submit" name="save_notification_settings" class="btn btn-primary">
