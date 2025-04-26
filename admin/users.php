@@ -1,4 +1,7 @@
 <?php
+// Start output buffering to prevent "headers already sent" errors
+ob_start();
+
 require_once '../includes/config.php';
 require_once '../includes/auth.php';
 require_once '../includes/functions.php';
@@ -158,7 +161,8 @@ if (isset($_GET['action'])) {
                     $notification_title,
                     $notification_message,
                     'user_' . ($new_status ? 'blocked' : 'unblocked'),
-                    ['user_id' => $user_id]
+                    $user_id,
+                    'user'
                 );
             } else {
                 $message = 'Failed to update user status';
@@ -244,6 +248,16 @@ include 'header.php';
                         <tr>
                             <th>Member Since:</th>
                             <td><?php echo formatDate($user['created_at']); ?></td>
+                        </tr>
+                        <tr>
+                            <th>Status:</th>
+                            <td>
+                                <?php if (isset($user['is_blocked']) && $user['is_blocked'] == 1): ?>
+                                <span class="badge bg-danger">Blocked</span>
+                                <?php else: ?>
+                                <span class="badge bg-success">Active</span>
+                                <?php endif; ?>
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -424,6 +438,7 @@ include 'header.php';
                             <th>Email</th>
                             <th>Points</th>
                             <th>Role</th>
+                            <th>Status</th>
                             <th>Joined</th>
                             <th>Actions</th>
                         </tr>
@@ -440,6 +455,13 @@ include 'header.php';
                                 <span class="badge bg-danger">Admin</span>
                                 <?php else: ?>
                                 <span class="badge bg-primary">User</span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <?php if (isset($user['is_blocked']) && $user['is_blocked'] == 1): ?>
+                                <span class="badge bg-danger">Blocked</span>
+                                <?php else: ?>
+                                <span class="badge bg-success">Active</span>
                                 <?php endif; ?>
                             </td>
                             <td><?php echo formatDate($user['created_at']); ?></td>
