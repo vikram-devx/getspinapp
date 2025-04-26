@@ -99,4 +99,6 @@ $app_logo = getSetting('app_logo', '');
     </nav>
     
     <!-- Main Content Container -->
-    <div class="container py-4">
+    <div class="<?php echo $current_page === 'index.php' && !$auth->isLoggedIn() ? 'full-width-container' : 'container py-4'; ?>"><?php 
+    /* Use full width for homepage when not logged in, otherwise use regular container */
+    ?>

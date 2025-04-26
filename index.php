@@ -101,6 +101,8 @@ include 'includes/header.php';
     </div>
 </div>
 
+</div> <!-- Close full-width-container -->
+
 <!-- How It Works Section -->
 <section class="how-it-works">
     <div class="container">

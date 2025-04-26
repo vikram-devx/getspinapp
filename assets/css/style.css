@@ -29,6 +29,13 @@ body {
     flex: 1;
 }
 
+.full-width-container {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    max-width: 100%;
+}
+
 /* Make hero section full width */
 .hero-section .container {
     max-width: 1400px;
@@ -277,8 +284,8 @@ body {
 
 /* Landing Page */
 .hero-section {
-    padding: 3rem 0;
-    background: var(--hero-bg); /* Lighter background */
+    padding: 0; /* Remove padding for full width */
+    background: transparent; /* Remove background */
     color: #fff;
     margin: 0; /* Remove all margins */
     width: 100%; /* Full width */
@@ -370,7 +377,7 @@ body {
     width: 100%;
     position: relative;
     overflow: hidden;
-    height: 400px; /* Adjust as needed */
+    height: 500px; /* Increased height for better visibility */
 }
 
 .promo-slides {
@@ -383,8 +390,8 @@ body {
     min-width: 100%;
     height: 100%;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-end; /* Align content to bottom */
+    justify-content: flex-start; /* Align content to left */
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -392,10 +399,11 @@ body {
 
 .slide-content {
     background-color: rgba(0, 0, 0, 0.6);
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: 5px;
-    max-width: 600px;
-    text-align: center;
+    max-width: 400px;
+    margin: 0 0 40px 40px; /* Position at bottom left with some spacing */
+    text-align: left; /* Left align text */
 }
 
 .slider-controls {
@@ -511,4 +519,54 @@ body {
 
 .notification-close:hover {
     opacity: 1;
+}
+
+/* Responsive adjustments for promo slider */
+@media (max-width: 768px) {
+    .promo-slider {
+        height: 400px; /* Smaller height on medium devices */
+    }
+    
+    .slide-content {
+        max-width: 300px;
+        margin: 0 0 30px 20px;
+        padding: 1rem;
+    }
+    
+    .slide-content h1 {
+        font-size: 1.75rem;
+    }
+    
+    .slide-content .lead {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .promo-slider {
+        height: 350px; /* Even smaller height on small devices */
+    }
+    
+    .slide-content {
+        max-width: 250px;
+        margin: 0 0 20px 15px;
+    }
+    
+    .slide-content h1 {
+        font-size: 1.5rem;
+    }
+    
+    .slider-arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+    
+    .slider-arrow-left {
+        left: 10px;
+    }
+    
+    .slider-arrow-right {
+        right: 10px;
+    }
 }
