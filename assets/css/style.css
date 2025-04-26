@@ -1,6 +1,6 @@
 /* Global Styles */
 :root {
-    --primary-color: #d62020; /* Red to match logo */
+    --primary-color: #0d6efd; /* Bootstrap primary blue */
     --secondary-color: #6c757d;
     --success-color: #1cc88a;
     --info-color: #36b9cc;
@@ -12,6 +12,15 @@
     --logo-gold: #ffd700;     /* Logo gold color */
     --dark-bg: #222222;       /* Dark background for good logo contrast */
     --hero-bg: #333333;       /* Lighter background for hero section */
+}
+
+/* Override Bootstrap primary color */
+.bg-primary {
+    background-color: #0d6efd !important;
+}
+
+.navbar-dark.bg-primary {
+    background-color: #0d6efd !important;
 }
 
 body {
@@ -55,9 +64,7 @@ body .navbar + .full-width-container {
 }
 
 /* Override Bootstrap's default navbar colors */
-.navbar-dark.bg-primary {
-    background-color: var(--dark-bg) !important;
-}
+/* This was removed to use the blue primary color */
 
 .navbar-brand {
     font-weight: 700;
