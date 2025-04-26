@@ -57,6 +57,9 @@ $app_logo = getSetting('app_logo', '');
                         <li class="nav-item">
                             <a class="nav-link" href="rewards.php">Rewards</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="leaderboard.php">Leaderboard</a>
+                        </li>
                     <?php else: ?>
                         <li class="nav-item">
                             <a class="nav-link" href="index.php">Home</a>

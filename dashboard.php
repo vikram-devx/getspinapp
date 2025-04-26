@@ -23,6 +23,30 @@ $transactions = getUserTransactions($user_id, 5);
 // Get user redemptions
 $redemptions = getUserRedemptions($user_id);
 
+// Get top users for mini leaderboard (top 5)
+$db = Database::getInstance();
+$conn = $db->getConnection();
+$leaderboard_query = "SELECT id, username, points, 
+    (SELECT COUNT(*) FROM users u2 WHERE u2.points > u1.points) + 1 AS rank 
+    FROM users u1 
+    WHERE is_admin = 0 
+    ORDER BY points DESC 
+    LIMIT 5";
+$leaderboard_result = $conn->query($leaderboard_query);
+$top_users = [];
+if ($leaderboard_result) {
+    while ($row = $leaderboard_result->fetch(PDO::FETCH_ASSOC)) {
+        $top_users[] = $row;
+    }
+}
+
+// Get current user's rank
+$rank_query = "SELECT (SELECT COUNT(*) FROM users u2 WHERE u2.points > u1.points) + 1 AS rank 
+              FROM users u1 WHERE id = :user_id";
+$stmt = $conn->prepare($rank_query);
+$stmt->execute(['user_id' => $user_id]);
+$user_rank = $stmt->fetch(PDO::FETCH_ASSOC);
+
 // Determine active tab
 $tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
 
@@ -124,7 +148,61 @@ include 'includes/header.php';
                     
                     <!-- Recent Activity -->
                     <div class="row">
-                        <div class="col-lg-6 mb-4">
+                        <div class="col-lg-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Leaderboard</h5>
+                                    <a href="leaderboard.php" class="btn btn-sm btn-outline-primary">Full Leaderboard</a>
+                                </div>
+                                <div class="card-body">
+                                    <?php if (count($top_users) > 0): ?>
+                                    <div class="user-rank-highlight mb-3">
+                                        <div class="alert alert-primary mb-0 d-flex justify-content-between align-items-center">
+                                            <span>Your Rank</span>
+                                            <span class="badge bg-primary">#<?php echo $user_rank['rank']; ?></span>
+                                        </div>
+                                    </div>
+                                    <div class="top-users-list">
+                                        <?php foreach ($top_users as $index => $user): ?>
+                                            <div class="leaderboard-item d-flex justify-content-between align-items-center py-2 <?php echo ($user['id'] == $current_user['id']) ? 'bg-light' : ''; ?>" style="border-bottom: 1px solid #eee;">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="rank-number me-2">
+                                                        <?php if ($user['rank'] <= 3): ?>
+                                                            <?php if ($user['rank'] == 1): ?>
+                                                                <i class="fas fa-trophy text-warning"></i>
+                                                            <?php elseif ($user['rank'] == 2): ?>
+                                                                <i class="fas fa-medal" style="color: #C0C0C0;"></i>
+                                                            <?php else: ?>
+                                                                <i class="fas fa-medal" style="color: #CD7F32;"></i>
+                                                            <?php endif; ?>
+                                                        <?php else: ?>
+                                                            #<?php echo $user['rank']; ?>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                    <div class="user-avatar-mini me-2 bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; font-size: 12px;">
+                                                        <?php echo strtoupper(substr($user['username'], 0, 1)); ?>
+                                                    </div>
+                                                    <div class="username">
+                                                        <?php echo htmlspecialchars($user['username']); ?>
+                                                        <?php if ($user['id'] == $current_user['id']): ?>
+                                                            <span class="badge bg-secondary ms-1">You</span>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </div>
+                                                <div class="points">
+                                                    <strong><?php echo formatPoints($user['points']); ?></strong>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                    <?php else: ?>
+                                    <p class="text-center text-muted my-4">No users on leaderboard yet</p>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-4 mb-4">
                             <div class="card h-100">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h5 class="mb-0">Recent Transactions</h5>
@@ -165,7 +243,7 @@ include 'includes/header.php';
                             </div>
                         </div>
                         
-                        <div class="col-lg-6 mb-4">
+                        <div class="col-lg-4 mb-4">
                             <div class="card h-100">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h5 class="mb-0">Recent Redemptions</h5>
