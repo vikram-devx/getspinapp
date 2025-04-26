@@ -12,7 +12,7 @@ define('OGADS_API_KEY', getenv('OGADS_API_KEY') ? getenv('OGADS_API_KEY') : '316
 define('OGADS_API_URL', 'https://unlockcontent.net/api/v2');
 
 // Application Settings
-define('APP_NAME', 'Rewards App');
+define('APP_NAME', 'GetSpins App');
 define('APP_URL', 'http://' . $_SERVER['HTTP_HOST']);
 define('ADMIN_EMAIL', 'admin@rewardsapp.com');
 

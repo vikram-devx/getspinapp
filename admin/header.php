@@ -320,7 +320,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo htmlspecialchars($current_user['username']); ?></span>
+                                <span class="mr-2 d-none d-lg-inline text-dark small"><?php echo htmlspecialchars($current_user['username']); ?></span>
                                 <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><?php echo strtoupper(substr($current_user['username'], 0, 1)); ?></div>
                             </a>
                             <!-- Dropdown - User Information -->
