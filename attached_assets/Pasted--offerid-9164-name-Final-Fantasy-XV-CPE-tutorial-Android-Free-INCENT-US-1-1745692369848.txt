@@ -1,0 +1,29 @@
+ "offerid": 9164,
+            "name": "Final Fantasy XV - CPE tutorial (Android, Free, INCENT, US, 156MB, 5.0)",
+            "name_short": "Final Fantasy XV",
+            "description": "<\/b>Be the hero of your own Final Fantasy XV adventure in the brand new mobile strategy game Final Fantasy XV: A New Empire! Build your own kingdom, discover powerful magic, and dominate the realm alongside all of your friends!
+            \r\nConversion: <\/b>Install, Open, & Tutorial Complete
+            \r\nTraffic Restrictions:<\/b> Custom Creatives; Incentivized Traffic; Adult Traffic; Push Notification Traffic; Ads Icon Traffic; SMS Traffic; Discovery App Traffic; Instagram\/Twitter Traffic
+            \r\n Targeting: <\/b>OS 5.0+
+            \r\n",
+            "adcopy": "Download, install and complete the tutorial to unlock this content.",
+            "picture": "https:\/\/media.go2speed.org\/brand\/files\/ogmobi\/9164\/thumbnails_100\/Final.Fantasy.Animated.gif",
+            "payout": "0.39",
+            "country": "US",
+            "device": "Android",
+            "link": "http:\/\/jump.ogtrk.net\/aff_c?aff_id=1026&offer_id=9164",
+            "epc": "0.16220"
+        },
+        {
+            "offerid": 2993,
+            "name": "Castle Clash - (Android, Free, INCENT, US, 113M)",
+            "name_short": "Castle Clash",
+            "description": "Build and battle your way to glory in Castle Clash! With over 100 million clashers worldwide, the heat is on in the most addictive game ever! In a brilliant mix of fast-paced strategy and exciting combat, Castle Clash is a game of epic proportions! Hire legions of powerful Heroes and lead an army of mythical creatures, big and small. Fight to the top and become the world\u2019s greatest Warlord. Your empire is as strong as your creativity!",
+            "adcopy": "Download and install this app then run it for 30 seconds to unlock this content.",
+            "picture": "https:\/\/media.go2speed.org\/brand\/files\/ogmobi\/2993\/thumbnails_100\/20171005125303-castleclashbravesquadsnew.png",
+            "payout": "0.34",
+            "country": "US",
+            "device": "Android",
+            "link": "http:\/\/jump.ogtrk.net\/aff_c?aff_id=1026&offer_id=2993",
+            "epc": "0.14296"
+        },

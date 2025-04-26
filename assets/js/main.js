@@ -218,12 +218,28 @@ $(document).ready(function() {
         var taskRequirements = $(this).data('requirements');
         var taskPoints = $(this).data('points');
         var taskLink = $(this).data('link');
+        var taskImage = $(this).data('image');
+        var taskType = $(this).data('type');
         
         // Populate modal with task details
+        $('#taskTitle').text(taskTitle);
         $('#taskModalLabel').text(taskTitle);
         $('#taskDescription').text(taskDescription);
         $('#taskRequirements').html(taskRequirements);
         $('#taskPoints').text(taskPoints);
+        
+        // Handle task image
+        if (taskImage && taskImage !== '') {
+            $('#taskImage').attr('src', taskImage).show();
+            $('#taskImageCol').show();
+            
+            // Set the task type badge
+            var typeLabel = taskType === 'cpi' ? 'APP INSTALL' : taskType.toUpperCase();
+            var typeIcon = taskType === 'cpi' ? '<i class="fas fa-mobile-alt me-1"></i>' : '<i class="fas fa-tasks me-1"></i>';
+            $('#taskTypeTag').html(typeIcon + ' ' + typeLabel).removeClass().addClass('task-type-tag').addClass(taskType);
+        } else {
+            $('#taskImageCol').hide();
+        }
         
         // Set the offer ID in the form's hidden input
         $('#taskForm').find('input[name="offer_id"]').val(taskId);
@@ -237,7 +253,7 @@ $(document).ready(function() {
             $('#taskForm').find('input[name="offer_link"]').val(taskLink);
             
             // Set up direct link
-            $('#directTaskLink').attr('href', taskLink);
+            $('#directTaskLink').attr('href', taskLink).text('Start Task').removeClass('disabled');
             
             // Log to console for debugging
             console.log("Set offer link:", taskLink);

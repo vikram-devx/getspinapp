@@ -301,27 +301,48 @@ if ($use_sample_offers) {
     $sample_offers = [
         [
             'id' => 'offer1',
-            'name' => 'Install Game App',
-            'description' => 'Download and play this exciting new game for 5 minutes.',
-            'requirements' => 'Download, install, and open the app. Play for at least 5 minutes.',
-            'payout' => 1.5,
-            'type' => 'cpi'
+            'offerid' => 'offer1', // API compatibility
+            'name' => 'Final Fantasy XV',
+            'name_short' => 'Final Fantasy XV',
+            'description' => 'Be the hero of your own Final Fantasy XV adventure in the brand new mobile strategy game Final Fantasy XV: A New Empire! Build your own kingdom, discover powerful magic, and dominate the realm alongside all of your friends!',
+            'adcopy' => 'Download, install and complete the tutorial to unlock this content.',
+            'requirements' => 'Download, install, and complete the tutorial of the app.',
+            'payout' => 2.5,
+            'type' => 'cpi',
+            'ctype' => 'cpi', // API compatibility
+            'picture' => 'https://media.go2speed.org/brand/files/ogmobi/9164/thumbnails_100/Final.Fantasy.Animated.gif',
+            'device' => 'Android,iOS',
+            'country' => 'US'
         ],
         [
             'id' => 'offer2',
-            'name' => 'Complete Short Survey',
-            'description' => 'Answer a few questions about your shopping habits.',
+            'offerid' => 'offer2', // API compatibility
+            'name' => '$100 Amazon Gift Card',
+            'name_short' => '$100 Amazon Gift Card',
+            'description' => 'Enter your details to have a chance to WIN a $100 Amazon Gift Card now!',
+            'adcopy' => 'Complete this short survey for a chance to win a Gift Card.',
             'requirements' => 'Complete the entire survey honestly.',
             'payout' => 2.0,
-            'type' => 'cpa'
+            'type' => 'cpa',
+            'ctype' => 'cpa', // API compatibility
+            'picture' => 'https://cdn.unlockcontent.net/img/offer/62613',
+            'device' => 'Desktop',
+            'country' => 'US'
         ],
         [
             'id' => 'offer3',
-            'name' => 'Sign Up for Free Trial',
-            'description' => 'Create an account and start a free trial of this service.',
-            'requirements' => 'Create a new account with valid information.',
-            'payout' => 3.5,
-            'type' => 'cpa'
+            'offerid' => 'offer3', // API compatibility
+            'name' => 'Castle Clash',
+            'name_short' => 'Castle Clash',
+            'description' => 'Build and battle your way to glory in Castle Clash! With over 100 million clashers worldwide, the heat is on in the most addictive game ever!',
+            'adcopy' => 'Download and install this app then run it for 30 seconds to unlock this content.',
+            'requirements' => 'Install the app and play for at least 5 minutes.',
+            'payout' => 3.0,
+            'type' => 'cpi',
+            'ctype' => 'cpi', // API compatibility
+            'picture' => 'https://media.go2speed.org/brand/files/ogmobi/2993/thumbnails_100/20171005125303-castleclashbravesquadsnew.png',
+            'device' => 'Android',
+            'country' => 'US'
         ]
     ];
     
@@ -404,18 +425,40 @@ include 'includes/header.php';
                     ?>
                     <div class="col-md-6 mb-4">
                         <div class="card h-100 task-card">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start mb-3">
-                                    <h5 class="card-title mb-0"><?php echo !empty($offer_name) ? htmlspecialchars($offer_name) : 'No title'; ?></h5>
-                                    <span class="offer-type offer-type-<?php echo $offer_type; ?>">
-                                        <?php if ($offer_type === 'cpi'): ?>
-                                            <i class="fas fa-mobile-alt me-1"></i> APP INSTALL
-                                        <?php else: ?>
-                                            <?php echo strtoupper($offer_type); ?>
-                                        <?php endif; ?>
-                                    </span>
+                            <?php 
+                            // Get offer image if available
+                            $offer_image = isset($offer['picture']) ? $offer['picture'] : '';
+                            if (!empty($offer_image)): 
+                            ?>
+                            <div class="task-image-container">
+                                <img src="<?php echo htmlspecialchars($offer_image); ?>" class="card-img-top task-image" alt="<?php echo htmlspecialchars($offer_name); ?>">
+                                <div class="task-badge <?php echo $offer_type === 'cpi' ? 'badge-app-install' : 'badge-cpa'; ?>">
+                                    <?php if ($offer_type === 'cpi'): ?>
+                                        <i class="fas fa-mobile-alt me-1"></i> APP INSTALL
+                                    <?php else: ?>
+                                        <i class="fas fa-tasks me-1"></i> <?php echo strtoupper($offer_type); ?>
+                                    <?php endif; ?>
                                 </div>
-                                <p class="card-text"><?php echo !empty($offer_description) ? htmlspecialchars($offer_description) : 'No description'; ?></p>
+                            </div>
+                            <?php endif; ?>
+                            <div class="card-body">
+                                <div class="d-flex flex-column">
+                                    <h5 class="card-title"><?php echo !empty($offer_name) ? htmlspecialchars($offer_name) : 'No title'; ?></h5>
+                                    
+                                    <?php if (empty($offer_image)): ?>
+                                    <div class="mb-2">
+                                        <span class="offer-type offer-type-<?php echo $offer_type; ?>">
+                                            <?php if ($offer_type === 'cpi'): ?>
+                                                <i class="fas fa-mobile-alt me-1"></i> APP INSTALL
+                                            <?php else: ?>
+                                                <?php echo strtoupper($offer_type); ?>
+                                            <?php endif; ?>
+                                        </span>
+                                    </div>
+                                    <?php endif; ?>
+                                    
+                                    <p class="card-text task-description"><?php echo !empty($offer_description) ? htmlspecialchars($offer_description) : 'No description'; ?></p>
+                                </div>
                                 <div class="d-flex justify-content-between align-items-center mt-3">
                                     <div class="task-payout">
                                         <strong><?php echo formatPoints($points); ?></strong> points
@@ -427,7 +470,9 @@ include 'includes/header.php';
                                         data-requirements="<?php echo htmlspecialchars($offer_requirements); ?>"
                                         data-payout="$<?php echo number_format($offer_payout, 2); ?>"
                                         data-points="<?php echo formatPoints($points); ?>"
-                                        data-link="<?php echo isset($offer['link']) ? htmlspecialchars($offer['link']) : ''; ?>">
+                                        data-link="<?php echo isset($offer['link']) ? htmlspecialchars($offer['link']) : ''; ?>"
+                                        data-image="<?php echo !empty($offer_image) ? htmlspecialchars($offer_image) : ''; ?>"
+                                        data-type="<?php echo htmlspecialchars($offer_type); ?>">
                                         View Details
                                     </button>
                                 </div>
@@ -499,26 +544,48 @@ include 'includes/header.php';
 
 <!-- Task Details Modal -->
 <div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="taskModalLabel">Task Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <h6>Description</h6>
-                <p id="taskDescription"></p>
-                
-                <h6>Requirements</h6>
-                <p id="taskRequirements"></p>
-                
-                <div class="text-center mb-3">
-                    <h6>Points Reward</h6>
-                    <p id="taskPoints" class="mb-0 fw-bold"></p>
-                </div>
-                
-                <div class="d-grid">
-                    <a href="#" id="directTaskLink" class="btn btn-primary start-task-btn" target="_blank">Start Task</a>
+                <div class="row">
+                    <div class="col-md-4 mb-3 mb-md-0" id="taskImageCol">
+                        <div class="task-modal-image-container">
+                            <img src="" id="taskImage" class="img-fluid rounded mb-3" alt="Task image">
+                            <div id="taskTypeTag" class="task-type-tag"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="task-details-container">
+                            <h5 id="taskTitle" class="mb-4"></h5>
+                            
+                            <div class="mb-3">
+                                <h6 class="fw-bold"><i class="fas fa-info-circle me-2 text-primary"></i>Description</h6>
+                                <p id="taskDescription" class="ms-4"></p>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <h6 class="fw-bold"><i class="fas fa-check-circle me-2 text-success"></i>Requirements</h6>
+                                <p id="taskRequirements" class="ms-4"></p>
+                            </div>
+                            
+                            <div class="mt-4 mb-3 text-center">
+                                <div class="reward-box p-3 rounded bg-light">
+                                    <h6 class="mb-1">Points Reward</h6>
+                                    <p id="taskPoints" class="mb-0 fw-bold fs-4 text-primary"></p>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid mt-4">
+                                <a href="#" id="directTaskLink" class="btn btn-primary btn-lg start-task-btn" target="_blank">
+                                    <i class="fas fa-play-circle me-2"></i> Start Task
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Hidden form that records the task start in our database -->
