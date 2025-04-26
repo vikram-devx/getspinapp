@@ -147,6 +147,119 @@ function sendAdminEmailNotification($title, $message, $type) {
     }
 }
 
+// Additional notification helper functions
+function getNotificationUrl($notification) {
+    // Based on notification type and related_id, generate appropriate URL
+    switch ($notification['type']) {
+        case 'reward':
+        case 'redemption':
+            if (!empty($notification['related_id'])) {
+                return "redemptions.php?id=" . $notification['related_id'];
+            }
+            return "redemptions.php";
+            
+        case 'user':
+            if (!empty($notification['related_id'])) {
+                return "users.php?id=" . $notification['related_id'];
+            }
+            return "users.php";
+            
+        case 'transaction':
+            return "transactions.php";
+            
+        case 'system':
+        default:
+            return "index.php";
+    }
+}
+
+function getNotificationIcon($type) {
+    // Return Font Awesome icon class based on notification type
+    switch ($type) {
+        case 'reward':
+        case 'redemption':
+            return "fa-gift";
+            
+        case 'user':
+            return "fa-user";
+            
+        case 'transaction':
+            return "fa-money-bill";
+            
+        case 'warning':
+            return "fa-exclamation-triangle";
+            
+        case 'error':
+            return "fa-times-circle";
+            
+        case 'success':
+            return "fa-check-circle";
+            
+        case 'system':
+        default:
+            return "fa-info-circle";
+    }
+}
+
+function getNotificationIconClass($type) {
+    // Return Bootstrap color class based on notification type
+    switch ($type) {
+        case 'reward':
+        case 'redemption':
+            return "warning";
+            
+        case 'user':
+            return "primary";
+            
+        case 'transaction':
+            return "success";
+            
+        case 'warning':
+            return "warning";
+            
+        case 'error':
+            return "danger";
+            
+        case 'success':
+            return "success";
+            
+        case 'system':
+        default:
+            return "info";
+    }
+}
+
+// Format date for display
+function formatDate($date_string) {
+    if (empty($date_string)) {
+        return 'N/A';
+    }
+    
+    $date = new DateTime($date_string);
+    $now = new DateTime();
+    $diff = $now->diff($date);
+    
+    if ($diff->days == 0) {
+        // Today
+        if ($diff->h == 0) {
+            if ($diff->i == 0) {
+                return "Just now";
+            }
+            return $diff->i . " minute" . ($diff->i > 1 ? "s" : "") . " ago";
+        }
+        return $diff->h . " hour" . ($diff->h > 1 ? "s" : "") . " ago";
+    } else if ($diff->days == 1) {
+        // Yesterday
+        return "Yesterday at " . $date->format('g:i A');
+    } else if ($diff->days < 7) {
+        // Within a week
+        return $date->format('l') . " at " . $date->format('g:i A');
+    } else {
+        // More than a week
+        return $date->format('M j, Y') . " at " . $date->format('g:i A');
+    }
+}
+
 // Function to get available offers from OGAds API
 function getOffers($ip = null, $user_agent = null, $offer_type = null, $max = null, $min = null) {
     // Get database connection
@@ -564,6 +677,23 @@ function redeemReward($user_id, $reward_id, $redemption_details = null) {
         $result = $auth->updatePoints($user_id, $reward['points_required'], 'spend', $description, $redemption_id, 'redemption');
         
         if ($result) {
+            // Create admin notification for the new redemption
+            $username = $user['username'];
+            $reward_name = $reward['name'];
+            $points = $reward['points_required'];
+            
+            $notification_title = "New Reward Redemption";
+            $notification_message = "User {$username} has redeemed {$reward_name} for {$points} points.";
+            
+            // Create the notification
+            createAdminNotification(
+                $notification_title,
+                $notification_message,
+                'reward',
+                $redemption_id,
+                'redemption'
+            );
+            
             return [
                 'status' => 'success',
                 'message' => 'Reward redeemed successfully',
@@ -1348,8 +1478,4 @@ function formatCurrency($amount) {
     return '$' . number_format($amount, 2);
 }
 
-// Format date
-function formatDate($date) {
-    return date('M j, Y g:i A', strtotime($date));
-}
 ?>

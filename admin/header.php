@@ -320,6 +320,54 @@ $app_name = getSetting('app_name', APP_NAME);
                     
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
+                        <!-- Nav Item - Notifications -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <?php 
+                            // Get unread notifications count
+                            $unread_count = getUnreadNotificationsCount();
+                            $notifications = getAdminNotifications(5);
+                            ?>
+                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-bell fa-fw"></i>
+                                <!-- Counter - Notifications -->
+                                <?php if ($unread_count > 0): ?>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    <?php echo $unread_count; ?>
+                                    <span class="visually-hidden">unread notifications</span>
+                                </span>
+                                <?php endif; ?>
+                            </a>
+                            <!-- Dropdown - Notifications -->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                                <h6 class="dropdown-header bg-primary text-white">
+                                    Notifications
+                                </h6>
+                                
+                                <?php if (empty($notifications)): ?>
+                                <div class="dropdown-item text-center small text-gray-500">No notifications found</div>
+                                <?php else: ?>
+                                    <?php foreach ($notifications as $notification): ?>
+                                    <a class="dropdown-item d-flex align-items-center notification-item <?php echo $notification['is_read'] ? '' : 'bg-light'; ?>" 
+                                       href="<?php echo getNotificationUrl($notification); ?>"
+                                       data-notification-id="<?php echo $notification['id']; ?>">
+                                        <div class="me-3">
+                                            <div class="icon-circle bg-<?php echo getNotificationIconClass($notification['type']); ?>">
+                                                <i class="fas <?php echo getNotificationIcon($notification['type']); ?> text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="small text-gray-500"><?php echo formatDate($notification['created_at']); ?></div>
+                                            <span class="fw-bold"><?php echo htmlspecialchars($notification['title']); ?></span>
+                                            <div class="small"><?php echo htmlspecialchars($notification['message']); ?></div>
+                                        </div>
+                                    </a>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                                
+                                <a class="dropdown-item text-center small text-primary" href="notifications.php">Show All Notifications</a>
+                            </div>
+                        </li>
+
                         <div class="topbar-divider d-none d-sm-block"></div>
                         
                         <!-- Nav Item - User Information -->
@@ -333,6 +381,10 @@ $app_name = getSetting('app_name', APP_NAME);
                                 <a class="dropdown-item" href="../dashboard.php">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     User Dashboard
+                                </a>
+                                <a class="dropdown-item" href="settings.php">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Admin Settings
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="../login.php?action=logout">
