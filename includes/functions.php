@@ -287,12 +287,29 @@ function getUserStats($user_id) {
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         $current_points = $result['points'] ?: 0;
         
+        // Get referral count
+        $stmt = $conn->prepare("SELECT COUNT(*) as total_referrals FROM referrals WHERE referrer_id = :user_id");
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $total_referrals = $result['total_referrals'] ?: 0;
+        
+        // Get referral income
+        $stmt = $conn->prepare("SELECT SUM(points) as referral_income FROM transactions 
+                               WHERE user_id = :user_id AND type = 'earn' AND description LIKE 'Referral bonus%'");
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $referral_income = $result['referral_income'] ?: 0;
+        
         return [
             'total_earned' => $total_earned,
             'total_spent' => $total_spent,
             'completed_offers' => $completed_offers,
             'redeemed_rewards' => $redeemed_rewards,
-            'current_points' => $current_points
+            'current_points' => $current_points,
+            'total_referrals' => $total_referrals,
+            'referral_income' => $referral_income
         ];
     } catch (PDOException $e) {
         error_log("Error getting user stats: " . $e->getMessage());
@@ -301,7 +318,9 @@ function getUserStats($user_id) {
             'total_spent' => 0,
             'completed_offers' => 0,
             'redeemed_rewards' => 0,
-            'current_points' => 0
+            'current_points' => 0,
+            'total_referrals' => 0,
+            'referral_income' => 0
         ];
     }
 }

@@ -53,6 +53,14 @@ $stats = getUserStats($current_user['id']);
                 Redeemed Rewards
                 <span class="badge bg-info rounded-pill"><?php echo $stats['redeemed_rewards']; ?></span>
             </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                Your Referrals
+                <span class="badge bg-warning rounded-pill"><?php echo $stats['total_referrals']; ?></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                Referral Income
+                <span class="badge bg-warning rounded-pill"><?php echo formatPoints($stats['referral_income']); ?></span>
+            </li>
         </ul>
     </div>
 </div>
