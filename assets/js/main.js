@@ -52,6 +52,7 @@ $(document).ready(function() {
         var taskDescription = $(this).data('description');
         var taskRequirements = $(this).data('requirements');
         var taskPoints = $(this).data('points');
+        var taskLink = $(this).data('link');
         
         // Populate modal with task details
         $('#taskModalLabel').text(taskTitle);
@@ -61,6 +62,12 @@ $(document).ready(function() {
         
         // Set the offer ID in the form's hidden input
         $('#taskForm').find('input[name="offer_id"]').val(taskId);
+        
+        // If we have a direct offer link from OGAds, use it
+        if (taskLink) {
+            // Set the form's action to tasks.php for proper tracking
+            $('#taskForm').attr('action', 'tasks.php');
+        }
         
         // Show the modal
         var taskModal = new bootstrap.Modal(document.getElementById('taskModal'));

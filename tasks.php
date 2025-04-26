@@ -336,7 +336,8 @@ include 'includes/header.php';
                                         data-description="<?php echo !empty($offer_description) ? htmlspecialchars($offer_description) : 'No description'; ?>"
                                         data-requirements="<?php echo htmlspecialchars($offer_requirements); ?>"
                                         data-payout="$<?php echo number_format($offer_payout, 2); ?>"
-                                        data-points="<?php echo formatPoints($points); ?>">
+                                        data-points="<?php echo formatPoints($points); ?>"
+                                        data-link="<?php echo isset($offer['link']) ? htmlspecialchars($offer['link']) : ''; ?>">
                                         View Details
                                     </button>
                                 </div>
