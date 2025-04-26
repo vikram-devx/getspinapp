@@ -321,6 +321,19 @@ include 'includes/header.php';
 
 <div class="row">
     <div class="col-lg-8">
+        <!-- Task Progress Section -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Your Active Tasks</h5>
+            </div>
+            <div class="card-body">
+                <div id="task-progress-container">
+                    <p class="text-center text-muted" id="no-tasks-message">You don't have any active tasks.</p>
+                    <!-- Task progress items will be added here dynamically -->
+                </div>
+            </div>
+        </div>
+        
         <div class="card mb-4">
             <div class="card-header">
                 <h5 class="mb-0">Available Tasks</h5>
