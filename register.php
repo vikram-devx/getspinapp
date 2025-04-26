@@ -13,12 +13,16 @@ if ($auth->isLoggedIn()) {
 $error = '';
 $success = '';
 
+// Get referral code from URL if present
+$referral_code = isset($_GET['ref']) ? trim($_GET['ref']) : '';
+
 // Process registration form
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = isset($_POST['username']) ? trim($_POST['username']) : '';
     $email = isset($_POST['email']) ? trim($_POST['email']) : '';
     $password = isset($_POST['password']) ? $_POST['password'] : '';
     $confirm_password = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : '';
+    $referral_code = isset($_POST['referral_code']) ? trim($_POST['referral_code']) : '';
     
     // Basic validation
     if (empty($username) || empty($email) || empty($password) || empty($confirm_password)) {
@@ -32,11 +36,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($password !== $confirm_password) {
         $error = 'Passwords do not match';
     } else {
-        // Register the user
-        $result = $auth->register($username, $email, $password);
+        // Register the user with referral code if provided
+        $result = $auth->register($username, $email, $password, $referral_code);
         
         if ($result['status'] === 'success') {
             $success = 'Registration successful! You can now <a href="login.php">login</a>.';
+            
+            // Add additional message if they used a referral code
+            if (!empty($referral_code)) {
+                $success .= '<br>You registered with a referral code!';
+            }
         } else {
             $error = $result['message'];
         }
@@ -80,9 +89,15 @@ include 'includes/header.php';
                         <div id="password-error" class="invalid-feedback" style="display: none;"></div>
                     </div>
                     
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <label for="confirm_password" class="form-label">Confirm Password</label>
                         <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="referral_code" class="form-label">Referral Code (Optional)</label>
+                        <input type="text" class="form-control" id="referral_code" name="referral_code" value="<?php echo htmlspecialchars($referral_code); ?>">
+                        <div class="form-text">If you were referred by a friend, enter their code here</div>
                     </div>
                     
                     <div class="d-grid">

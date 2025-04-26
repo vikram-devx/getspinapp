@@ -83,6 +83,11 @@ $stats = getUserStats($current_user['id']);
                     <i class="fas fa-exchange-alt me-2"></i> Transaction History
                 </a>
             </li>
+            <li class="list-group-item bg-light">
+                <a href="referrals.php" class="text-decoration-none">
+                    <i class="fas fa-user-plus me-2"></i> <strong>Refer Friends & Earn 100 Points!</strong>
+                </a>
+            </li>
         </ul>
     </div>
 </div>
