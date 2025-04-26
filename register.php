@@ -64,7 +64,11 @@ include 'includes/header.php';
         <div class="card auth-form">
             <div class="card-body p-4">
                 <div class="auth-header text-center mb-4">
-                    <?php if (!empty($app_logo)): ?>
+                    <?php if (!empty($auth_card_logo)): ?>
+                    <div class="mb-3">
+                        <img src="<?php echo htmlspecialchars($auth_card_logo); ?>" alt="<?php echo htmlspecialchars($app_name); ?>" class="img-fluid auth-card-logo">
+                    </div>
+                    <?php elseif (!empty($app_logo)): ?>
                     <div class="mb-3">
                         <img src="<?php echo htmlspecialchars($app_logo); ?>" alt="<?php echo htmlspecialchars($app_name); ?>" class="img-fluid" style="max-height: 60px;">
                     </div>

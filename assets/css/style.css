@@ -215,6 +215,7 @@ body .navbar + .full-width-container {
     max-width: 450px;
     margin: 0 auto;
     border-top: 4px solid var(--logo-red);
+    margin-top: 2rem;
 }
 
 .auth-header {
@@ -224,6 +225,14 @@ body .navbar + .full-width-container {
 
 .auth-header img {
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* Special styles for the auth card logo */
+.auth-header img.auth-card-logo {
+    max-height: 150px !important;
+    width: auto;
+    display: block;
+    margin: 0 auto 1rem;
 }
 
 .auth-footer {
