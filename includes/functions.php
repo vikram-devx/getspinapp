@@ -2,6 +2,151 @@
 require_once 'db.php';
 require_once 'config.php';
 
+// Admin notification functions
+function createAdminNotification($title, $message, $type = 'info', $related_id = null, $related_type = null) {
+    try {
+        $db = Database::getInstance();
+        $conn = $db->getConnection();
+        
+        $stmt = $conn->prepare("INSERT INTO admin_notifications (title, message, type, related_id, related_type) 
+                               VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$title, $message, $type, $related_id, $related_type]);
+        
+        // Send email notification if enabled
+        sendAdminEmailNotification($title, $message, $type);
+        
+        return $conn->lastInsertId();
+    } catch (PDOException $e) {
+        error_log("Error creating admin notification: " . $e->getMessage());
+        return false;
+    }
+}
+
+function getAdminNotifications($limit = 10, $unread_only = false) {
+    try {
+        $db = Database::getInstance();
+        $conn = $db->getConnection();
+        
+        $sql = "SELECT * FROM admin_notifications";
+        if ($unread_only) {
+            $sql .= " WHERE is_read = 0";
+        }
+        $sql .= " ORDER BY created_at DESC LIMIT ?";
+        
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(1, $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Error retrieving admin notifications: " . $e->getMessage());
+        return [];
+    }
+}
+
+function getUnreadNotificationsCount() {
+    try {
+        $db = Database::getInstance();
+        $conn = $db->getConnection();
+        
+        $stmt = $conn->query("SELECT COUNT(*) FROM admin_notifications WHERE is_read = 0");
+        return $stmt->fetchColumn();
+    } catch (PDOException $e) {
+        error_log("Error counting unread notifications: " . $e->getMessage());
+        return 0;
+    }
+}
+
+function markNotificationAsRead($id) {
+    try {
+        $db = Database::getInstance();
+        $conn = $db->getConnection();
+        
+        $stmt = $conn->prepare("UPDATE admin_notifications SET is_read = 1 WHERE id = ?");
+        $stmt->execute([$id]);
+        
+        return $stmt->rowCount() > 0;
+    } catch (PDOException $e) {
+        error_log("Error marking notification as read: " . $e->getMessage());
+        return false;
+    }
+}
+
+function markAllNotificationsAsRead() {
+    try {
+        $db = Database::getInstance();
+        $conn = $db->getConnection();
+        
+        $stmt = $conn->query("UPDATE admin_notifications SET is_read = 1 WHERE is_read = 0");
+        
+        return $stmt->rowCount();
+    } catch (PDOException $e) {
+        error_log("Error marking all notifications as read: " . $e->getMessage());
+        return false;
+    }
+}
+
+function sendAdminEmailNotification($title, $message, $type) {
+    try {
+        $db = Database::getInstance();
+        $conn = $db->getConnection();
+        
+        // Check if email notifications are enabled
+        $stmt = $conn->query("SELECT setting_value FROM admin_settings WHERE setting_key = 'notification_email_enabled'");
+        $enabled = $stmt->fetchColumn();
+        
+        if ($enabled != '1') {
+            return false; // Email notifications are disabled
+        }
+        
+        // Get notification email
+        $stmt = $conn->query("SELECT setting_value FROM admin_settings WHERE setting_key = 'notification_email'");
+        $email = $stmt->fetchColumn();
+        
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return false; // Invalid or empty email
+        }
+        
+        // Get app name
+        $app_name = getSetting('app_name', APP_NAME);
+        
+        // Email headers
+        $headers = "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+        $headers .= "From: " . $app_name . " <noreply@" . $_SERVER['SERVER_NAME'] . ">" . "\r\n";
+        
+        // Email subject
+        $subject = "[$app_name Admin] $title";
+        
+        // Email body
+        $body = "
+        <html>
+        <head>
+            <title>$title</title>
+        </head>
+        <body>
+            <h2>$title</h2>
+            <p>$message</p>
+            <p style='margin-top: 20px;'>
+                <a href='" . APP_URL . "/admin/' style='padding: 10px 15px; background-color: #4e73df; color: white; text-decoration: none; border-radius: 4px;'>
+                    View Admin Dashboard
+                </a>
+            </p>
+            <p style='margin-top: 20px; font-size: 12px; color: #666;'>
+                This is an automated notification from your $app_name admin panel.
+            </p>
+        </body>
+        </html>
+        ";
+        
+        // Send email
+        return mail($email, $subject, $body, $headers);
+    } catch (Exception $e) {
+        error_log("Error sending notification email: " . $e->getMessage());
+        return false;
+    }
+}
+
 // Function to get available offers from OGAds API
 function getOffers($ip = null, $user_agent = null, $offer_type = null, $max = null, $min = null) {
     // Get database connection
