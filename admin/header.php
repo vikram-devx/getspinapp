@@ -2,6 +2,8 @@
 // Admin panel header
 require_once '../includes/config.php';
 require_once '../includes/auth.php';
+require_once '../includes/functions.php';
+require_once '../includes/db.php';
 
 $auth = new Auth();
 
@@ -13,13 +15,16 @@ if (!$auth->isLoggedIn() || !$auth->isAdmin()) {
 
 $current_user = $auth->getUser();
 $current_page = basename($_SERVER['PHP_SELF']);
+
+// Get app name from settings
+$app_name = getSetting('app_name', APP_NAME);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - <?php echo APP_NAME; ?></title>
+    <title>Admin Panel - <?php echo $app_name; ?></title>
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">

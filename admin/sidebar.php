@@ -9,7 +9,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <div class="sidebar-brand-icon">
             <i class="fas fa-trophy"></i>
         </div>
-        <div class="sidebar-brand-text ms-2"><?php echo APP_NAME; ?> Admin</div>
+        <div class="sidebar-brand-text ms-2"><?php echo $app_name; ?> Admin</div>
     </a>
 
     <!-- Divider -->
