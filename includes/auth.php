@@ -103,6 +103,12 @@ class Auth {
                     
                     // Award 100 points to the referrer
                     $this->updatePoints($referrer_id, 100, 'earn', 'Referral bonus for inviting ' . $username);
+                    
+                    // Update referral status to 'completed'
+                    $stmt = $conn->prepare("UPDATE referrals SET status = 'completed', updated_at = CURRENT_TIMESTAMP WHERE referrer_id = :referrer_id AND referred_id = :referred_id");
+                    $stmt->bindValue(':referrer_id', $referrer_id);
+                    $stmt->bindValue(':referred_id', $new_user_id);
+                    $stmt->execute();
                 }
                 
                 // Commit the transaction
