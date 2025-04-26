@@ -10,7 +10,7 @@ $auth_card_logo = getSetting('auth_card_logo', '');
 
 // If user is already logged in, redirect to dashboard
 if ($auth->isLoggedIn()) {
-    header('Location: dashboard.php');
+    header('Location: ' . url('dashboard', [], true));
     exit;
 }
 
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = $auth->register($username, $email, $password, $referral_code);
         
         if ($result['status'] === 'success') {
-            $success = 'Registration successful! You can now <a href="login.php">login</a>.';
+            $success = 'Registration successful! You can now <a href="' . url('login') . '">login</a>.';
             
             // Add additional message if they used a referral code
             if (!empty($referral_code)) {
@@ -87,7 +87,7 @@ include 'includes/header.php';
                 <div class="alert alert-success"><?php echo $success; ?></div>
                 <?php else: ?>
                 
-                <form id="registerForm" method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+                <form id="registerForm" method="post" action="<?php echo url('register'); ?>">
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
                         <input type="text" class="form-control" id="username" name="username" value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>" required>

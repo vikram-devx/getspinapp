@@ -11,13 +11,13 @@ $auth_card_logo = getSetting('auth_card_logo', '');
 // Handle logout action
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     $auth->logout();
-    header('Location: login.php');
+    header('Location: ' . url('login', [], true));
     exit;
 }
 
 // If user is already logged in, redirect to dashboard
 if ($auth->isLoggedIn()) {
-    header('Location: dashboard.php');
+    header('Location: ' . url('dashboard', [], true));
     exit;
 }
 
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = $auth->login($username, $password);
         
         if ($result['status'] === 'success') {
-            header('Location: dashboard.php');
+            header('Location: ' . url('dashboard', [], true));
             exit;
         } else {
             $error = $result['message'];
@@ -71,7 +71,7 @@ include 'includes/header.php';
                 <div class="alert alert-danger"><?php echo $error; ?></div>
                 <?php endif; ?>
                 
-                <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+                <form method="post" action="<?php echo url('login'); ?>">
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
                         <input type="text" class="form-control" id="username" name="username" value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>" required>
@@ -92,7 +92,7 @@ include 'includes/header.php';
                 </form>
                 
                 <div class="auth-footer">
-                    <p>Don't have an account? <a href="register.php">Register</a></p>
+                    <p>Don't have an account? <a href="<?php echo url('register'); ?>">Register</a></p>
                 </div>
             </div>
         </div>
