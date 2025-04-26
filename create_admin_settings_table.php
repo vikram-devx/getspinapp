@@ -40,7 +40,10 @@ try {
         // Insert default settings
         $default_settings = [
             ['notification_email', ''],
-            ['notification_email_enabled', '0']
+            ['notification_email_enabled', '0'],
+            ['emailjs_user_id', ''],
+            ['emailjs_service_id', ''],
+            ['emailjs_template_id', '']
         ];
         
         $stmt = $conn->prepare("INSERT INTO admin_settings (setting_key, setting_value) VALUES (?, ?)");

@@ -31,4 +31,27 @@ date_default_timezone_set('UTC');
 if (!file_exists(__DIR__ . '/../data')) {
     mkdir(__DIR__ . '/../data', 0777, true);
 }
+
+// Load EmailJS settings from database if they exist
+function loadEmailJSSettings() {
+    try {
+        $db = new PDO('sqlite:' . DB_PATH);
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        
+        $stmt = $db->query("SELECT setting_key, setting_value FROM admin_settings WHERE setting_key IN ('emailjs_user_id', 'emailjs_service_id', 'emailjs_template_id')");
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            if (!empty($row['setting_value'])) {
+                putenv($row['setting_key'] . "=" . $row['setting_value']);
+            }
+        }
+    } catch (PDOException $e) {
+        // Silently fail - database may not be initialized yet
+        error_log("Error loading EmailJS settings: " . $e->getMessage());
+    }
+}
+
+// Only load settings if the admin_settings table exists
+if (file_exists(DB_PATH)) {
+    loadEmailJSSettings();
+}
 ?>

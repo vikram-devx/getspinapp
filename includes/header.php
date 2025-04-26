@@ -40,6 +40,9 @@ $app_logo = getSetting('app_logo', '');
         window.EMAILJS_USER_ID = '<?php echo getenv("EMAILJS_USER_ID"); ?>';
         window.EMAILJS_SERVICE_ID = '<?php echo getenv("EMAILJS_SERVICE_ID"); ?>';
         window.EMAILJS_TEMPLATE_ID = '<?php echo getenv("EMAILJS_TEMPLATE_ID"); ?>';
+        
+        // Log to console if EmailJS is properly configured
+        console.log('EmailJS status:', window.EMAILJS_USER_ID ? 'Configured' : 'Not configured');
     </script>
 </head>
 <body>

@@ -32,6 +32,20 @@ $app_name = getSetting('app_name', APP_NAME);
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <!-- EmailJS Credentials -->
+    <script type="text/javascript">
+        // Set EmailJS credentials as global variables
+        window.EMAILJS_USER_ID = '<?php echo getenv("EMAILJS_USER_ID"); ?>';
+        window.EMAILJS_SERVICE_ID = '<?php echo getenv("EMAILJS_SERVICE_ID"); ?>';
+        window.EMAILJS_TEMPLATE_ID = '<?php echo getenv("EMAILJS_TEMPLATE_ID"); ?>';
+        
+        // Log to console if EmailJS is properly configured
+        console.log('Admin EmailJS status:', window.EMAILJS_USER_ID ? 'Configured' : 'Not configured');
+    </script>
+    
     <!-- Custom Admin CSS -->
     <style>
         /* Admin Panel Styles */

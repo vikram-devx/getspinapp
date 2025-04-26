@@ -417,19 +417,110 @@ include 'header.php';
         </div>
         <div class="card-body">
             <p>
-                You can test the notifications system by clicking the button below. 
-                This will create a test notification that will appear in your notifications panel.
+                You can test the notifications system by clicking the buttons below. 
+                Create a test notification to appear in your notifications panel or test your EmailJS configuration.
             </p>
-            <form method="post" action="">
-                <input type="hidden" name="create_test_notification" value="1">
-                <button type="button" id="testNotificationBtn" class="btn btn-info">
-                    <i class="fas fa-bell"></i> Create Test Notification
-                </button>
-            </form>
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">System Notification</h5>
+                            <p class="card-text">Test the in-app notification system.</p>
+                            <form method="post" action="">
+                                <input type="hidden" name="create_test_notification" value="1">
+                                <button type="button" id="testNotificationBtn" class="btn btn-info">
+                                    <i class="fas fa-bell"></i> Create Test Notification
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Email Notification</h5>
+                            <p class="card-text">Test EmailJS email notification system.</p>
+                            <button type="button" id="testEmailJSBtn" class="btn btn-primary">
+                                <i class="fas fa-envelope"></i> Send Test Email
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             <div id="testNotificationResult" class="mt-3" style="display: none;"></div>
+            <div id="testEmailResult" class="mt-3" style="display: none;"></div>
         </div>
     </div>
+    
+    <!-- EmailJS Test Script -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const testEmailBtn = document.getElementById('testEmailJSBtn');
+        const emailResultDiv = document.getElementById('testEmailResult');
+        
+        if (testEmailBtn) {
+            testEmailBtn.addEventListener('click', function() {
+                // Check if EmailJS is configured
+                if (!window.EMAILJS_USER_ID || !window.EMAILJS_SERVICE_ID || !window.EMAILJS_TEMPLATE_ID) {
+                    emailResultDiv.innerHTML = '<div class="alert alert-warning">EmailJS is not properly configured. Please fill in the EmailJS settings above and save them first.</div>';
+                    emailResultDiv.style.display = 'block';
+                    return;
+                }
+                
+                // Get admin email
+                fetch('../includes/ajax_handlers.php?action=get_admin_email')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success || !data.email) {
+                        emailResultDiv.innerHTML = '<div class="alert alert-warning">Please set a notification email above and save before testing.</div>';
+                        emailResultDiv.style.display = 'block';
+                        return;
+                    }
+                    
+                    emailResultDiv.innerHTML = '<div class="spinner-border spinner-border-sm text-primary" role="status"><span class="visually-hidden">Loading...</span></div> Sending test email...';
+                    emailResultDiv.style.display = 'block';
+                    
+                    // Prepare test data
+                    const testData = {
+                        adminEmail: data.email,
+                        userId: 1,
+                        username: 'Admin',
+                        rewardName: 'Test Reward',
+                        pointsUsed: 100,
+                        redemptionId: 0,
+                        redemptionDetails: 'This is a test email from the admin settings panel.'
+                    };
+                    
+                    // Send test email
+                    emailjs.send(
+                        window.EMAILJS_SERVICE_ID,
+                        window.EMAILJS_TEMPLATE_ID,
+                        {
+                            to_email: testData.adminEmail,
+                            user_name: testData.username,
+                            user_id: testData.userId,
+                            reward_name: testData.rewardName,
+                            points_used: testData.pointsUsed,
+                            redemption_id: testData.redemptionId,
+                            redemption_details: testData.redemptionDetails,
+                            date_time: new Date().toLocaleString()
+                        }
+                    )
+                    .then(function(response) {
+                        emailResultDiv.innerHTML = '<div class="alert alert-success">Test email sent successfully to ' + testData.adminEmail + '!</div>';
+                    })
+                    .catch(function(error) {
+                        emailResultDiv.innerHTML = '<div class="alert alert-danger">Error sending test email: ' + error.message + '</div>';
+                    });
+                })
+                .catch(error => {
+                    emailResultDiv.innerHTML = '<div class="alert alert-danger">Error: ' + error.message + '</div>';
+                });
+            });
+        }
+    });
+    </script>
 </div>
 
 <?php include 'footer.php'; ?>
