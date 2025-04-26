@@ -209,13 +209,11 @@ try {
             }
             
             // Record the offer
-            $stmt = $conn->prepare("INSERT INTO user_offers (user_id, offer_id, completed, points_earned, payout, offer_type, ip_address) VALUES (:user_id, :offer_id, :completed, :points, :payout, :offer_type, :ip)");
+            $stmt = $conn->prepare("INSERT INTO user_offers (user_id, offer_id, completed, points_earned, ip_address) VALUES (:user_id, :offer_id, :completed, :points, :ip)");
             $stmt->bindValue(':user_id', $userId);
             $stmt->bindValue(':offer_id', $offerId);
             $stmt->bindValue(':completed', $completed);
             $stmt->bindValue(':points', $completed ? $points : 0);
-            $stmt->bindValue(':payout', $payout);
-            $stmt->bindValue(':offer_type', rand(0, 1) ? 'cpi' : 'cpa');
             $stmt->bindValue(':ip', '127.0.0.1');
             $stmt->execute();
             
