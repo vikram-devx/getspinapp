@@ -1,8 +1,12 @@
 <?php
 require_once 'includes/config.php';
 require_once 'includes/auth.php';
+require_once 'includes/functions.php';
 
 $auth = new Auth();
+
+// Get auth card logo from settings
+$auth_card_logo = getSetting('auth_card_logo', '');
 
 // If user is already logged in, redirect to dashboard
 if ($auth->isLoggedIn()) {

@@ -1,8 +1,12 @@
 <?php
 require_once 'includes/config.php';
 require_once 'includes/auth.php';
+require_once 'includes/functions.php';
 
 $auth = new Auth();
+
+// Get auth card logo from settings
+$auth_card_logo = getSetting('auth_card_logo', '');
 
 // Handle logout action
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {
@@ -48,7 +52,11 @@ include 'includes/header.php';
         <div class="card auth-form">
             <div class="card-body p-4">
                 <div class="auth-header text-center mb-4">
-                    <?php if (!empty($app_logo)): ?>
+                    <?php if (!empty($auth_card_logo)): ?>
+                    <div class="mb-3">
+                        <img src="<?php echo htmlspecialchars($auth_card_logo); ?>" alt="<?php echo htmlspecialchars($app_name); ?>" class="img-fluid" style="max-height: 150px;">
+                    </div>
+                    <?php elseif (!empty($app_logo)): ?>
                     <div class="mb-3">
                         <img src="<?php echo htmlspecialchars($app_logo); ?>" alt="<?php echo htmlspecialchars($app_name); ?>" class="img-fluid" style="max-height: 60px;">
                     </div>
