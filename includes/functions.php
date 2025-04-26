@@ -379,10 +379,7 @@ function redeemReward($user_id, $reward_id, $redemption_details = null) {
     }
     
     try {
-        // Begin transaction
-        $conn->beginTransaction();
-        
-        // Create redemption record
+        // Create redemption record without transaction initially
         if ($redemption_details) {
             $stmt = $conn->prepare("INSERT INTO redemptions (user_id, reward_id, points_used, status, redemption_details) VALUES (:user_id, :reward_id, :points_used, 'pending', :redemption_details)");
             $stmt->bindValue(':user_id', $user_id);
@@ -400,21 +397,27 @@ function redeemReward($user_id, $reward_id, $redemption_details = null) {
         
         // Deduct points from user
         $description = "Redeemed " . $reward['name'];
-        $auth->updatePoints($user_id, $reward['points_required'], 'spend', $description, $redemption_id, 'redemption');
+        $result = $auth->updatePoints($user_id, $reward['points_required'], 'spend', $description, $redemption_id, 'redemption');
         
-        // Commit transaction
-        $conn->commit();
-        
-        return [
-            'status' => 'success',
-            'message' => 'Reward redeemed successfully',
-            'redemption_id' => $redemption_id
-        ];
-    } catch (Exception $e) {
-        // Roll back transaction on error if it's active
-        if ($conn->inTransaction()) {
-            $conn->rollBack();
+        if ($result) {
+            return [
+                'status' => 'success',
+                'message' => 'Reward redeemed successfully',
+                'redemption_id' => $redemption_id
+            ];
+        } else {
+            // If point update failed, delete the redemption record
+            $deleteStmt = $conn->prepare("DELETE FROM redemptions WHERE id = :id");
+            $deleteStmt->bindValue(':id', $redemption_id);
+            $deleteStmt->execute();
+            
+            return [
+                'status' => 'error',
+                'message' => 'Failed to update user points'
+            ];
         }
+    } catch (Exception $e) {
+        error_log("Error in redeemReward: " . $e->getMessage());
         
         return [
             'status' => 'error',

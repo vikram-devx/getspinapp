@@ -176,8 +176,13 @@ class Auth {
         $conn = $this->db->getConnection();
         
         try {
-            // Begin transaction
-            $conn->beginTransaction();
+            // Determine if we need to manage our own transaction
+            $needsTransaction = !$conn->inTransaction();
+            
+            // Begin transaction if needed
+            if ($needsTransaction) {
+                $conn->beginTransaction();
+            }
             
             // Update user points
             if ($type === 'earn') {
@@ -209,21 +214,20 @@ class Auth {
                 }
             }
             
-            // Commit transaction
-            $conn->commit();
+            // Commit transaction if we started it
+            if ($needsTransaction) {
+                $conn->commit();
+            }
             
-            return [
-                'status' => 'success',
-                'message' => 'Points updated successfully'
-            ];
+            return true;
         } catch (PDOException $e) {
-            // Roll back transaction on error
-            $conn->rollBack();
+            // Roll back transaction if we started it
+            if (isset($needsTransaction) && $needsTransaction && $conn->inTransaction()) {
+                $conn->rollBack();
+            }
             
-            return [
-                'status' => 'error',
-                'message' => 'Failed to update points: ' . $e->getMessage()
-            ];
+            error_log("Error updating points: " . $e->getMessage());
+            return false;
         }
     }
 }
