@@ -63,6 +63,9 @@
     <!-- Custom JS -->
     <script src="assets/js/main.js"></script>
     
+    <!-- EmailJS Configuration -->
+    <script src="assets/js/emailjs-config.js"></script>
+    
     <!-- Error handling script to prevent errors from non-existent scripts -->
     <script>
     // Protect against errors from missing scripts or elements

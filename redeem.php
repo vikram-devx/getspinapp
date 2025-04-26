@@ -62,6 +62,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['reward_id'])) {
             if ($result['status'] === 'success') {
                 $message = 'Redemption successful! Your request is now being processed.';
                 $message_type = 'success';
+                
+                // Create admin notification
+                $notification_title = 'New Reward Redemption';
+                $notification_message = "User {$current_user['username']} has redeemed reward: {$reward['name']} for {$reward['points_required']} points.";
+                $notification_type = 'redemption';
+                $related_id = $result['redemption_id']; // Get the redemption ID from the result
+                
+                // Create in-app notification for admin
+                createAdminNotification(
+                    $notification_title,
+                    $notification_message,
+                    $notification_type,
+                    $related_id,
+                    'redemption'
+                );
+                
+                // Store redemption data for EmailJS notification
+                $redemption_data = [
+                    'redemptionId' => $result['redemption_id'],
+                    'userId' => $user_id,
+                    'username' => $current_user['username'],
+                    'rewardName' => $reward['name'],
+                    'pointsUsed' => $reward['points_required'],
+                    'redemptionDetails' => $redemption_details ? htmlspecialchars($redemption_details) : 'None'
+                ];
             } else {
                 $message = $result['message'];
                 $message_type = 'danger';
@@ -90,6 +115,45 @@ include 'includes/header.php';
                 </div>
                 <h3 class="mb-3">Thank You for Your Redemption</h3>
                 <p class="lead mb-4">Your reward request has been received and is now being processed. You will be notified once it's approved.</p>
+                
+                <?php if (isset($redemption_data)): ?>
+                <!-- EmailJS for admin notification -->
+                <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Get admin email from settings
+                    fetch('includes/ajax_handlers.php?action=get_admin_email')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.email) {
+                            // Prepare email data
+                            const redemptionData = {
+                                adminEmail: data.email,
+                                userId: <?php echo $redemption_data['userId']; ?>,
+                                username: '<?php echo addslashes($redemption_data['username']); ?>',
+                                rewardName: '<?php echo addslashes($redemption_data['rewardName']); ?>',
+                                pointsUsed: <?php echo $redemption_data['pointsUsed']; ?>,
+                                redemptionId: <?php echo $redemption_data['redemptionId']; ?>,
+                                redemptionDetails: '<?php echo isset($redemption_data['redemptionDetails']) ? addslashes($redemption_data['redemptionDetails']) : ''; ?>'
+                            };
+                            
+                            // Send email notification
+                            sendRedemptionEmail(redemptionData)
+                            .then(response => {
+                                console.log('Email notification sent successfully');
+                            })
+                            .catch(error => {
+                                console.error('Failed to send email notification:', error);
+                            });
+                        } else {
+                            console.warn('Admin email not available for notification');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching admin email:', error);
+                    });
+                });
+                </script>
+                <?php endif; ?>
                 <?php else: ?>
                 <div class="mb-4">
                     <i class="fas fa-times-circle fa-5x text-danger"></i>
