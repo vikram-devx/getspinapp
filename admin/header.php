@@ -396,3 +396,61 @@ $app_name = getSetting('app_name', APP_NAME);
                     </ul>
                 </nav>
                 <!-- End of Topbar -->
+                
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add event listeners for dropdown notifications
+    document.querySelectorAll('.notification-item').forEach(function(notification) {
+        notification.addEventListener('click', function(e) {
+            const notificationId = this.getAttribute('data-notification-id');
+            if (notificationId) {
+                // Mark notification as read when clicked
+                fetch('../includes/ajax_handlers.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'action=mark_notification_read&notification_id=' + notificationId
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update notification item UI
+                        this.classList.remove('bg-light');
+                        
+                        // Update badge count
+                        updateNotificationCount();
+                    }
+                })
+                .catch(error => console.error('Error marking notification as read:', error));
+            }
+        });
+    });
+    
+    // Function to update notification count
+    function updateNotificationCount() {
+        fetch('../includes/ajax_handlers.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'action=get_unread_count'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const badge = document.querySelector('#alertsDropdown .badge');
+                if (badge) {
+                    if (data.count > 0) {
+                        badge.textContent = data.count;
+                        badge.style.display = 'inline-block';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                }
+            }
+        })
+        .catch(error => console.error('Error getting notification count:', error));
+    }
+});
+</script>

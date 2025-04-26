@@ -88,6 +88,20 @@ $current_page = basename($_SERVER['PHP_SELF']);
             </a>
         </li>
         
+        <!-- Nav Item - Notifications -->
+        <li class="nav-item">
+            <a class="nav-link <?php echo $current_page === 'notifications.php' ? 'active' : ''; ?>" href="notifications.php">
+                <i class="fas fa-fw fa-bell"></i>
+                Notifications
+                <?php 
+                $unread_count = getUnreadNotificationsCount();
+                if ($unread_count > 0): 
+                ?>
+                <span class="badge bg-danger rounded-pill ms-1"><?php echo $unread_count; ?></span>
+                <?php endif; ?>
+            </a>
+        </li>
+        
         <!-- Nav Item - API Settings -->
         <li class="nav-item">
             <a class="nav-link <?php echo $current_page === 'api_settings.php' ? 'active' : ''; ?>" href="api_settings.php">

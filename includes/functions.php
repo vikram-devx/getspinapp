@@ -1361,11 +1361,46 @@ function updateRedemptionStatus($redemption_id, $status) {
     $conn = $db->getConnection();
     
     try {
+        // First get redemption details to create accurate notification
+        $stmt = $conn->prepare("
+            SELECT r.*, rw.name AS reward_name, u.username, u.email
+            FROM redemptions r
+            JOIN rewards rw ON r.reward_id = rw.id
+            JOIN users u ON r.user_id = u.id
+            WHERE r.id = :redemption_id
+        ");
+        $stmt->bindValue(':redemption_id', $redemption_id);
+        $stmt->execute();
+        $redemption = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$redemption) {
+            return [
+                'status' => 'error',
+                'message' => 'Redemption not found'
+            ];
+        }
+        
+        // Update the redemption status
         $stmt = $conn->prepare("UPDATE redemptions SET status = :status WHERE id = :redemption_id");
         $stmt->bindValue(':status', $status);
         $stmt->bindValue(':redemption_id', $redemption_id);
         
         if ($stmt->execute()) {
+            // Create admin notification about the status change
+            $notification_title = "Redemption Status Updated";
+            $notification_message = "Redemption #{$redemption_id} for {$redemption['reward_name']} by {$redemption['username']} has been {$status}.";
+            
+            createAdminNotification(
+                $notification_title,
+                $notification_message,
+                'redemption',
+                $redemption_id,
+                'redemption_status'
+            );
+            
+            // If there's user email and the app is configured to send user emails,
+            // we could send an email to the user here about their redemption status
+            
             return [
                 'status' => 'success',
                 'message' => 'Redemption status updated successfully'
