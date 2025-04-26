@@ -101,8 +101,94 @@ include 'includes/header.php';
                 <script>
                     document.addEventListener('DOMContentLoaded', function() {
                         <?php if ($message): ?>
+                        // Define notification function directly in this page to ensure it's available
+                        function showPageNotification(type, title, message) {
+                            // Remove any existing notifications
+                            var existingNotifications = document.querySelectorAll('.custom-notification');
+                            existingNotifications.forEach(function(notification) {
+                                notification.remove();
+                            });
+                            
+                            // Set icon and color based on type
+                            var icon, bgColor, borderColor;
+                            switch(type) {
+                                case 'success':
+                                    icon = 'fa-check-circle';
+                                    bgColor = '#d4edda';
+                                    borderColor = '#c3e6cb';
+                                    break;
+                                case 'error':
+                                    icon = 'fa-times-circle';
+                                    bgColor = '#f8d7da';
+                                    borderColor = '#f5c6cb';
+                                    break;
+                                case 'warning':
+                                    icon = 'fa-exclamation-triangle';
+                                    bgColor = '#fff3cd';
+                                    borderColor = '#ffeeba';
+                                    break;
+                                case 'info':
+                                default:
+                                    icon = 'fa-info-circle';
+                                    bgColor = '#d1ecf1';
+                                    borderColor = '#bee5eb';
+                                    break;
+                            }
+                            
+                            // Create notification HTML
+                            var notificationHtml = `
+                                <div class="custom-notification" style="display: none;">
+                                    <div class="notification-icon">
+                                        <i class="fas ${icon}"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <div class="notification-title">${title}</div>
+                                        <div class="notification-message">${message}</div>
+                                    </div>
+                                    <div class="notification-close">
+                                        <i class="fas fa-times"></i>
+                                    </div>
+                                </div>
+                            `;
+                            
+                            // Create element from HTML
+                            var div = document.createElement('div');
+                            div.innerHTML = notificationHtml.trim();
+                            var notificationElement = div.firstChild;
+                            
+                            // Style the notification
+                            notificationElement.style.backgroundColor = bgColor;
+                            notificationElement.style.borderColor = borderColor;
+                            
+                            // Append to body
+                            document.body.appendChild(notificationElement);
+                            
+                            // Show with animation
+                            setTimeout(function() {
+                                notificationElement.style.display = 'flex';
+                                notificationElement.style.animation = 'slideIn 0.3s ease-in-out';
+                            }, 100);
+                            
+                            // Auto-hide after 5 seconds
+                            setTimeout(function() {
+                                notificationElement.style.animation = 'slideIn 0.3s ease-in-out reverse';
+                                setTimeout(function() {
+                                    notificationElement.remove();
+                                }, 300);
+                            }, 5000);
+                            
+                            // Add close button functionality
+                            var closeButton = notificationElement.querySelector('.notification-close');
+                            closeButton.addEventListener('click', function() {
+                                notificationElement.style.animation = 'slideIn 0.3s ease-in-out reverse';
+                                setTimeout(function() {
+                                    notificationElement.remove();
+                                }, 300);
+                            });
+                        }
+                        
                         // Show notification based on message type
-                        showNotification(
+                        showPageNotification(
                             '<?php echo $message_type === "success" ? "success" : "error"; ?>', 
                             '<?php echo $message_type === "success" ? "Success" : "Error"; ?>', 
                             '<?php echo addslashes($message); ?>'
