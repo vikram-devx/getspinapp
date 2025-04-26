@@ -1195,6 +1195,25 @@ function getAllUsers() {
     }
 }
 
+// Get username by user ID
+function getUsernameById($user_id) {
+    try {
+        $db = Database::getInstance();
+        $conn = $db->getConnection();
+        
+        $stmt = $conn->prepare("SELECT username FROM users WHERE id = :user_id");
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        return $result ? $result['username'] : 'Unknown User';
+    } catch (PDOException $e) {
+        error_log("Error getting username by ID: " . $e->getMessage());
+        return 'Unknown User';
+    }
+}
+
 // Get all rewards
 function getAllRewards() {
     $db = Database::getInstance();

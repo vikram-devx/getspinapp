@@ -125,6 +125,54 @@ if (isset($_GET['action'])) {
             $message_type = 'danger';
         }
     }
+    
+    // Block/Unblock user
+    if ($action === 'toggle_block' && isset($_GET['id'])) {
+        $user_id = (int)$_GET['id'];
+        
+        // Get current block status
+        $stmt = $conn->prepare("SELECT is_blocked FROM users WHERE id = :user_id");
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($user_data) {
+            // Toggle the block status
+            $new_status = $user_data['is_blocked'] ? 0 : 1;
+            $stmt = $conn->prepare("UPDATE users SET is_blocked = :is_blocked WHERE id = :user_id");
+            $stmt->bindValue(':is_blocked', $new_status, PDO::PARAM_INT);
+            $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+            
+            if ($stmt->execute()) {
+                $message = $new_status ? 'User blocked successfully' : 'User unblocked successfully';
+                $message_type = 'success';
+                
+                // Create an admin notification
+                $notification_title = $new_status ? 'User Blocked' : 'User Unblocked';
+                $username = getUsernameById($user_id);
+                $notification_message = $new_status 
+                    ? "User {$username} (ID: {$user_id}) has been blocked." 
+                    : "User {$username} (ID: {$user_id}) has been unblocked.";
+                
+                createAdminNotification(
+                    $notification_title,
+                    $notification_message,
+                    'user_' . ($new_status ? 'blocked' : 'unblocked'),
+                    ['user_id' => $user_id]
+                );
+            } else {
+                $message = 'Failed to update user status';
+                $message_type = 'danger';
+            }
+        } else {
+            $message = 'User not found';
+            $message_type = 'danger';
+        }
+        
+        // Redirect back to the user view
+        header("Location: users.php?action=view&id={$user_id}");
+        exit;
+    }
 }
 
 // Get all users
@@ -150,7 +198,21 @@ include 'header.php';
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
             <h6 class="m-0 font-weight-bold text-primary">User Details: <?php echo htmlspecialchars($user['username']); ?></h6>
-            <a href="users.php" class="btn btn-sm btn-secondary">Back to Users</a>
+            <div>
+                <?php 
+                // Check if user is blocked and display appropriate button
+                $is_blocked = isset($user['is_blocked']) && $user['is_blocked'] == 1;
+                $block_btn_class = $is_blocked ? 'btn-success' : 'btn-danger';
+                $block_btn_text = $is_blocked ? 'Unblock User' : 'Block User';
+                $block_btn_icon = $is_blocked ? 'fa-unlock' : 'fa-user-slash';
+                ?>
+                <a href="users.php?action=toggle_block&id=<?php echo $user['id']; ?>" 
+                   class="btn btn-sm <?php echo $block_btn_class; ?> me-2" 
+                   onclick="return confirm('Are you sure you want to <?php echo $is_blocked ? 'unblock' : 'block'; ?> this user?');">
+                    <i class="fas <?php echo $block_btn_icon; ?> me-1"></i> <?php echo $block_btn_text; ?>
+                </a>
+                <a href="users.php" class="btn btn-sm btn-secondary">Back to Users</a>
+            </div>
         </div>
         <div class="card-body">
             <div class="row mb-4">
