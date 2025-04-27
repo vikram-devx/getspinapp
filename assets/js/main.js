@@ -96,8 +96,13 @@ $(document).ready(function() {
         var container = $('#task-progress-container');
         container.empty();
         
-        // If no tasks, show message
-        if (!progressData || progressData.length === 0) {
+        // Filter out canceled tasks (with 'failed' status)
+        var activeTasks = progressData.filter(function(task) {
+            return task.status !== 'failed';
+        });
+        
+        // If no active tasks, show message
+        if (!activeTasks || activeTasks.length === 0) {
             container.html('<p class="text-center text-muted" id="no-tasks-message">You don\'t have any active tasks.</p>');
             return;
         }
@@ -106,7 +111,7 @@ $(document).ready(function() {
         var completedTasks = [];
         
         // Create progress items
-        progressData.forEach(function(task) {
+        activeTasks.forEach(function(task) {
             var progressPercent = task.current_progress || task.progress_percent || 0;
             var statusClass = 'info';
             var statusIcon = 'fas fa-sync-alt fa-spin';
@@ -205,6 +210,46 @@ $(document).ready(function() {
         
         // Hide no tasks message
         $('#no-tasks-message').hide();
+        
+        // Add a "Canceled Tasks" section with Resume buttons for any failed tasks
+        var canceledTasks = progressData.filter(function(task) {
+            return task.status === 'failed';
+        });
+        
+        if (canceledTasks.length > 0) {
+            // Create canceled tasks section if it doesn't exist
+            if ($('#canceled-tasks-section').length === 0) {
+                container.after('<div id="canceled-tasks-section" class="mt-4"><h5>Canceled Tasks</h5><div id="canceled-tasks-container"></div></div>');
+            }
+            
+            var canceledContainer = $('#canceled-tasks-container');
+            canceledContainer.empty();
+            
+            // Add each canceled task
+            canceledTasks.forEach(function(task) {
+                var taskHtml = `
+                    <div class="canceled-task-item mb-3 p-3 border rounded" data-offer-id="${task.offer_id}">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="task-name">${task.offer_name || `Task #${task.offer_id}`}</span>
+                            <button class="btn btn-sm btn-outline-success resume-task-btn" data-offer-id="${task.offer_id}">
+                                <i class="fas fa-play-circle me-1"></i> Resume
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                canceledContainer.append(taskHtml);
+            });
+            
+            // Attach event listeners for Resume buttons
+            $('.resume-task-btn').on('click', function() {
+                var offerId = $(this).data('offer-id');
+                resumeTask(offerId);
+            });
+        } else {
+            // Remove canceled tasks section if it exists and there are no canceled tasks
+            $('#canceled-tasks-section').remove();
+        }
         
         // Attach event listeners for Cancel buttons
         $('.cancel-task-btn').on('click', function() {
