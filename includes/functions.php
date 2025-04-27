@@ -2,6 +2,47 @@
 require_once 'db.php';
 require_once 'config.php';
 
+/**
+ * Detect user's country using IP address
+ * 
+ * @return string Country code (2-letter ISO code)
+ */
+function detectUserCountry() {
+    // Default country if detection fails
+    $default_country = 'US';
+    
+    // Try to get IP address
+    $ip = '';
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else {
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+    }
+    
+    // For localhost or invalid IPs, return default
+    if (empty($ip) || $ip == '127.0.0.1' || $ip == '::1') {
+        return $default_country;
+    }
+    
+    // Try to get country using free IP geolocation service
+    try {
+        $response = @file_get_contents("http://ip-api.com/json/{$ip}?fields=status,countryCode");
+        if ($response) {
+            $data = json_decode($response, true);
+            if ($data && isset($data['status']) && $data['status'] === 'success' && !empty($data['countryCode'])) {
+                return $data['countryCode'];
+            }
+        }
+    } catch (Exception $e) {
+        error_log("Error detecting country: " . $e->getMessage());
+    }
+    
+    // Fallback to default country if detection fails
+    return $default_country;
+}
+
 // Admin notification functions
 function createAdminNotification($title, $message, $type = 'info', $related_id = null, $related_type = null) {
     try {

@@ -242,8 +242,8 @@ if ($offers_result['status'] === 'success') {
         $message = "No offers available: " . $error_message;
         $message_type = "info";
         
-        // Use sample offers for demonstration
-        $use_sample_offers = true;
+        // Don't use sample offers for production
+        $use_sample_offers = false;
     } elseif (isset($offers_result['offers']['success']) && $offers_result['offers']['success'] === true && 
               isset($offers_result['offers']['offers']) && is_array($offers_result['offers']['offers']) && 
               !empty($offers_result['offers']['offers'])) {
@@ -271,7 +271,7 @@ if ($offers_result['status'] === 'success') {
             // API returned success but no offers (empty array or null)
             $message = "No offers available for your region at this time.";
             $message_type = "info";
-            $use_sample_offers = true;
+            $use_sample_offers = false;
         }
     }
 } else {
@@ -285,8 +285,8 @@ if ($offers_result['status'] === 'success') {
     }
     $message_type = "info";
     
-    // Use sample offers for this case
-    $use_sample_offers = true;
+    // Don't use sample offers for production
+    $use_sample_offers = false;
 }
 
 // Initialize $offers as an empty array if it's not set

@@ -198,13 +198,13 @@ $(document).ready(function() {
             });
         }
         
-        // Handle completed tasks - show the 5 most recent
+        // Handle completed tasks - show only the 3 most recent
         const recentCompleted = completedTasks.sort((a, b) => {
             // Sort by completion time if available, otherwise by last_updated
             const aTime = a.completion_time || a.last_updated;
             const bTime = b.completion_time || b.last_updated;
             return new Date(bTime) - new Date(aTime); // Newest first
-        }).slice(0, 5); // Take only the 5 most recent
+        }).slice(0, 3); // Take only the 3 most recent
         
         if (recentCompleted.length === 0) {
             completedContainer.html('<p class="text-center text-muted" id="no-completed-tasks-message">You haven\'t completed any tasks recently.</p>');
@@ -238,6 +238,17 @@ $(document).ready(function() {
             
             // Hide no completed tasks message
             $('#no-completed-tasks-message').hide();
+            
+            // Add "Show All" link if there are more than 3 completed tasks
+            if (completedTasks.length > 3) {
+                completedContainer.append(`
+                    <div class="text-center mt-3">
+                        <a href="completed_tasks.php" class="btn btn-sm btn-outline-success">
+                            <i class="fas fa-list me-1"></i> Show All (${completedTasks.length} tasks)
+                        </a>
+                    </div>
+                `);
+            }
         }
         
         // Show notifications for newly completed tasks - with a large, more noticeable popup
