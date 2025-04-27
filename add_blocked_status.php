@@ -7,47 +7,41 @@ $db = Database::getInstance();
 $conn = $db->getConnection();
 
 try {
-    // Modify the CHECK constraint to include 'canceled' status
-    $sql = "CREATE TABLE task_progress_new (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER NOT NULL,
-        offer_id INTEGER NOT NULL,
-        status TEXT CHECK(status IN ('started', 'in_progress', 'completed', 'failed', 'canceled')) NOT NULL,
-        progress_percent INTEGER DEFAULT 0,
-        progress_message TEXT,
-        estimated_completion_time DATETIME,
-        completion_time DATETIME,
-        last_updated DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(id)
-    )";
+    // Check if the column already exists
+    $stmt = $conn->query("PRAGMA table_info(task_progress)");
+    $columns = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-    // Begin transaction
-    $conn->beginTransaction();
-    
-    // Create new table with updated constraint
-    $conn->exec($sql);
-    
-    // Copy data from old table to new
-    $conn->exec("INSERT INTO task_progress_new 
-                 SELECT * FROM task_progress");
-                 
-    // Drop old table
-    $conn->exec("DROP TABLE task_progress");
-    
-    // Rename new table to original name
-    $conn->exec("ALTER TABLE task_progress_new RENAME TO task_progress");
-    
-    // Commit transaction
-    $conn->commit();
-    
-    echo "Successfully updated task_progress table to include 'canceled' status.";
-    
-} catch (PDOException $e) {
-    // Rollback transaction on error
-    if ($conn->inTransaction()) {
-        $conn->rollBack();
+    $columnExists = false;
+    foreach ($columns as $column) {
+        if ($column['name'] === 'is_user_canceled') {
+            $columnExists = true;
+            break;
+        }
     }
     
-    echo "Error updating task_progress table: " . $e->getMessage();
+    if (!$columnExists) {
+        // Add the is_user_canceled column to task_progress table
+        $sql = "ALTER TABLE task_progress ADD COLUMN is_user_canceled INTEGER DEFAULT 0";
+        $conn->exec($sql);
+        echo "Column 'is_user_canceled' successfully added to task_progress table.";
+        
+        // Update any existing failed task entries that were manually canceled
+        $updateSql = "UPDATE task_progress SET is_user_canceled = 1 WHERE status = 'failed' AND progress_message = 'Task canceled by user'";
+        $rowsAffected = $conn->exec($updateSql);
+        echo "<br>Updated $rowsAffected existing task entries.";
+    } else {
+        echo "Column 'is_user_canceled' already exists in task_progress table.";
+    }
+    
+    // Display current table structure
+    echo "<h2>Updated Task Progress Table Structure:</h2>";
+    $stmt = $conn->query("PRAGMA table_info(task_progress)");
+    $updatedColumns = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    echo "<pre>";
+    print_r($updatedColumns);
+    echo "</pre>";
+    
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
 }
 ?>

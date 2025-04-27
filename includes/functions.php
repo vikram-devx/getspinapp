@@ -911,11 +911,12 @@ function cancelTask($user_id, $offer_id) {
         }
         
         // Update the task status to failed (since 'canceled' is not allowed by the constraint)
-        // We use 'failed' status to represent a canceled task
+        // We use 'failed' status but mark it as user-canceled to distinguish from naturally failed tasks
         $updateStmt = $conn->prepare("UPDATE task_progress SET 
                                     status = 'failed', 
                                     progress_percent = 0, 
                                     progress_message = 'Task canceled by user',
+                                    is_user_canceled = 1,
                                     last_updated = CURRENT_TIMESTAMP 
                                     WHERE id = :id");
         
@@ -968,11 +969,12 @@ function resumeTask($user_id, $offer_id) {
             return ['status' => 'error', 'message' => 'Only canceled tasks can be resumed'];
         }
         
-        // Update task status to started
+        // Update task status to started and reset the is_user_canceled flag
         $updateStmt = $conn->prepare("UPDATE task_progress SET 
                                     status = 'started', 
                                     progress_percent = 5, 
                                     progress_message = 'Task resumed - waiting for offer interaction',
+                                    is_user_canceled = 0,
                                     last_updated = CURRENT_TIMESTAMP 
                                     WHERE id = :id");
                                     
@@ -1032,9 +1034,9 @@ function trackTaskProgress($user_id, $offer_id, $status, $progress_percent = 0, 
         } else {
             // Create new record
             $stmt = $conn->prepare("INSERT INTO task_progress 
-                (user_id, offer_id, status, progress_percent, progress_message, estimated_completion_time) 
+                (user_id, offer_id, status, progress_percent, progress_message, estimated_completion_time, is_user_canceled) 
                 VALUES 
-                (:user_id, :offer_id, :status, :progress_percent, :message, :est_time)");
+                (:user_id, :offer_id, :status, :progress_percent, :message, :est_time, 0)");
             
             $stmt->bindValue(':user_id', $user_id);
             $stmt->bindValue(':offer_id', $offer_id);
