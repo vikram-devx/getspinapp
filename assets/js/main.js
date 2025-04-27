@@ -102,12 +102,31 @@ $(document).ready(function() {
             return;
         }
         
+        // Track newly completed tasks to show notifications
+        var completedTasks = [];
+        
         // Create progress items
         progressData.forEach(function(task) {
             var progressPercent = task.current_progress || task.progress_percent || 0;
             var statusClass = 'info';
             var statusIcon = 'fas fa-sync-alt fa-spin';
             var statusText = task.status.replace('_', ' ').toUpperCase();
+            
+            // Check if this is a newly completed task
+            if (task.status === 'completed' && progressPercent === 100) {
+                // Check if we've already notified about this task
+                var taskKey = 'task_completed_' + task.offer_id;
+                if (!localStorage.getItem(taskKey)) {
+                    // Add to our notification list
+                    completedTasks.push({
+                        id: task.offer_id,
+                        points: task.points_earned || 0
+                    });
+                    
+                    // Mark as notified
+                    localStorage.setItem(taskKey, 'true');
+                }
+            }
             
             // Set appropriate classes based on status
             switch(task.status) {
@@ -197,6 +216,27 @@ $(document).ready(function() {
             var offerId = $(this).data('offer-id');
             resumeTask(offerId);
         });
+        
+        // Show notifications for completed tasks
+        if (completedTasks.length > 0) {
+            completedTasks.forEach(function(task) {
+                // If points are available, show a points notification
+                if (task.points > 0) {
+                    showNotification(
+                        'success', 
+                        'Task Completed!', 
+                        `Congratulations! You've earned ${task.points} points for completing task #${task.id}.`
+                    );
+                } else {
+                    // Otherwise just show a completion notification
+                    showNotification(
+                        'success', 
+                        'Task Completed!', 
+                        `Congratulations! You've successfully completed task #${task.id}.`
+                    );
+                }
+            });
+        }
     }
     
     // Function to cancel a task

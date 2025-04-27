@@ -1,5 +1,5 @@
 <?php
-require_once 'includes/init.php';
+require_once './includes/init.php';
 
 // Check if user is logged in
 $auth = new Auth();

@@ -1148,6 +1148,7 @@ function getTaskProgress($user_id, $offer_id = null) {
     try {
         $sql = "SELECT tp.*, 
                 uo.completed as task_completed,
+                uo.points_earned,
                 CASE 
                     WHEN uo.completed = 1 THEN 100 
                     ELSE tp.progress_percent 
