@@ -77,16 +77,21 @@ if (isset($_GET['action'])) {
                     // Complete the offer and credit points
                     $points = (int)($payout * POINTS_CONVERSION_RATE);
                     $description = "Completed sample offer #{$offer_id}";
-                    $auth->updatePoints($user_id, $points, 'earn', $description, $offer_id, 'offer');
+                    $result = $auth->updatePoints($user_id, $points, 'earn', $description, $offer_id, 'offer');
                     
-                    // Mark offer as completed
-                    $stmt = $conn->prepare("UPDATE user_offers SET completed = 1, points_earned = :points, completed_at = datetime('now'), offer_type = :offer_type, payout = :payout WHERE user_id = :user_id AND offer_id = :offer_id");
-                    $stmt->bindValue(':points', $points);
-                    $stmt->bindValue(':user_id', $user_id);
-                    $stmt->bindValue(':offer_id', $offer_id);
-                    $stmt->bindValue(':offer_type', $offer_type);
-                    $stmt->bindValue(':payout', $payout);
-                    $stmt->execute();
+                    if ($result['status'] === 'success') {
+                        // Mark offer as completed
+                        $stmt = $conn->prepare("UPDATE user_offers SET completed = 1, points_earned = :points, completed_at = datetime('now'), offer_type = :offer_type, payout = :payout WHERE user_id = :user_id AND offer_id = :offer_id");
+                        $stmt->bindValue(':points', $points);
+                        $stmt->bindValue(':user_id', $user_id);
+                        $stmt->bindValue(':offer_id', $offer_id);
+                        $stmt->bindValue(':offer_type', $offer_type);
+                        $stmt->bindValue(':payout', $payout);
+                        $stmt->execute();
+                    } else {
+                        error_log("Failed to update points: " . $result['message']);
+                        $message = "There was an error processing your task: " . $result['message'];
+                        $message_type = 'danger';
                 }
             } else {
                 // For real API offers
