@@ -1,7 +1,12 @@
 <?php
-require_once 'includes/config.php';
-require_once 'includes/auth.php';
-require_once 'includes/functions.php';
+// Handle both direct access and access via subdirectory (for pretty URLs)
+$base_path = '';
+if (!file_exists('includes/config.php') && file_exists('../includes/config.php')) {
+    $base_path = '../';
+}
+require_once $base_path . 'includes/config.php';
+require_once $base_path . 'includes/auth.php';
+require_once $base_path . 'includes/functions.php';
 
 $auth = new Auth();
 
@@ -44,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-include 'includes/header.php';
+include $base_path . 'includes/header.php';
 ?>
 
 <div class="row">
@@ -99,4 +104,4 @@ include 'includes/header.php';
     </div>
 </div>
 
-<?php include 'includes/footer.php'; ?>
+<?php include $base_path . 'includes/footer.php'; ?>
