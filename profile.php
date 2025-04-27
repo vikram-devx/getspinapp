@@ -65,9 +65,8 @@ $stmt = $conn->prepare("SELECT COUNT(*) as total_pending FROM task_progress WHER
 $stmt->execute([$user_id]);
 $total_pending = $stmt->fetch(PDO::FETCH_ASSOC)['total_pending'];
 
-$stmt = $conn->prepare("SELECT SUM(points) as total_points FROM users WHERE id = ?");
-$stmt->execute([$user_id]);
-$total_points = $stmt->fetch(PDO::FETCH_ASSOC)['total_points'];
+// Use the current user's points directly
+$total_points = $current_user['points'];
 
 // Include the header after all data is fetched
 require_once 'includes/header.php';
@@ -187,7 +186,7 @@ require_once 'includes/header.php';
                         <div class="row mb-3">
                             <label for="account_status" class="col-sm-3 col-form-label">Account Status</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="account_status" value="<?php echo isset($user['status']) && $user['status'] === 'active' ? 'Active' : 'Inactive'; ?>" readonly>
+                                <input type="text" class="form-control" id="account_status" value="Active" readonly>
                             </div>
                         </div>
                     </form>
