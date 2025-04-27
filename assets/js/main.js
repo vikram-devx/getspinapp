@@ -216,6 +216,7 @@ $(document).ready(function() {
         var taskTitle = $(this).data('title');
         var taskDescription = $(this).data('description');
         var taskRequirements = $(this).data('requirements');
+        var taskAdCopy = $(this).data('adcopy');
         var taskPoints = $(this).data('points');
         var taskLink = $(this).data('link');
         var taskImage = $(this).data('image');
@@ -226,6 +227,7 @@ $(document).ready(function() {
         $('#taskModalLabel').text(taskTitle);
         $('#taskDescription').text(taskDescription);
         $('#taskRequirements').html(taskRequirements);
+        $('#taskAdCopy').html(taskAdCopy);
         $('#taskPoints').text(taskPoints);
         
         // Handle task image

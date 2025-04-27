@@ -468,6 +468,7 @@ include 'includes/header.php';
                                         data-title="<?php echo !empty($offer_name) ? htmlspecialchars($offer_name) : 'No title'; ?>"
                                         data-description="<?php echo !empty($offer_description) ? htmlspecialchars($offer_description) : 'No description'; ?>"
                                         data-requirements="<?php echo htmlspecialchars($offer_requirements); ?>"
+                                        data-adcopy="<?php echo !empty($offer['adcopy']) ? htmlspecialchars($offer['adcopy']) : ''; ?>"
                                         data-payout="$<?php echo number_format($offer_payout, 2); ?>"
                                         data-points="<?php echo formatPoints($points); ?>"
                                         data-link="<?php echo isset($offer['link']) ? htmlspecialchars($offer['link']) : ''; ?>"
@@ -570,6 +571,11 @@ include 'includes/header.php';
                             <div class="mb-3">
                                 <h6 class="fw-bold"><i class="fas fa-check-circle me-2 text-success"></i>Requirements</h6>
                                 <p id="taskRequirements" class="ms-4"></p>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <h6 class="fw-bold"><i class="fas fa-bullhorn me-2 text-warning"></i>Ad Copy</h6>
+                                <p id="taskAdCopy" class="ms-4"></p>
                             </div>
                             
                             <div class="mt-4 mb-3 text-center">
