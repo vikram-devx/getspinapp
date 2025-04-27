@@ -604,11 +604,9 @@ include 'includes/header.php';
                     <div class="col-md-8">
                         <div class="task-details-container">
                             <div class="mb-3">
+                                <div id="taskDeviceCompat" class="task-device-compatibility mb-2 d-flex"></div>
                                 <h6 class="fw-bold"><i class="fas fa-info-circle me-2 text-primary"></i>Description</h6>
-                                <div class="d-flex ms-4 mb-1 align-items-center">
-                                    <div id="taskDeviceCompat" class="task-device-compatibility me-2"></div>
-                                    <p id="taskDescription" class="mb-0"></p>
-                                </div>
+                                <p id="taskDescription" class="ms-4"></p>
                             </div>
                             
                             <div class="mb-3">
