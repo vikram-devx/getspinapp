@@ -391,7 +391,7 @@ $(document).ready(function() {
     $('#directTaskLink').on('click', function(e) {
         // Don't prevent default behavior - let the link naturally open in a new tab
         
-        // Show loading state
+        // Show loading state briefly
         $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
         $(this).addClass('disabled');
         
@@ -422,6 +422,18 @@ $(document).ready(function() {
                         console.error('Error recording task tracking:', error);
                     }
                 });
+                
+                // Close the modal after a short delay to ensure the new tab has opened
+                setTimeout(function() {
+                    // Hide the task modal
+                    $('#taskModal').modal('hide');
+                    
+                    // Reset the button state after the modal is hidden (in case user views details again)
+                    setTimeout(function() {
+                        $('#directTaskLink').html('<i class="fas fa-play-circle me-2"></i> Start Task').removeClass('disabled');
+                    }, 300);
+                }, 500);
+                
             }, 100);
         } else {
             console.log("No valid offer link found");
