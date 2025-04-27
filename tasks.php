@@ -436,40 +436,62 @@ include 'includes/header.php';
                     ?>
                     <div class="col-md-6 mb-4">
                         <div class="card h-100 task-card">
-                            <?php 
-                            // Get offer image if available
-                            $offer_image = isset($offer['picture']) ? $offer['picture'] : '';
-                            if (!empty($offer_image)): 
-                            ?>
-                            <div class="task-image-container">
-                                <img src="<?php echo htmlspecialchars($offer_image); ?>" class="card-img-top task-image" alt="<?php echo htmlspecialchars($offer_name); ?>">
-                                <div class="task-badge <?php echo $offer_type === 'cpi' ? 'badge-app-install' : 'badge-cpa'; ?>">
-                                    <?php if ($offer_type === 'cpi'): ?>
-                                        <i class="fas fa-mobile-alt me-1"></i> APP INSTALL
-                                    <?php else: ?>
-                                        <i class="fas fa-tasks me-1"></i> <?php echo strtoupper($offer_type); ?>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                            <?php endif; ?>
                             <div class="card-body">
-                                <div class="d-flex flex-column">
-                                    <h5 class="card-title"><?php echo !empty($offer_name) ? htmlspecialchars($offer_name) : 'No title'; ?></h5>
-                                    
-                                    <?php if (empty($offer_image)): ?>
-                                    <div class="mb-2">
-                                        <span class="offer-type offer-type-<?php echo $offer_type; ?>">
-                                            <?php if ($offer_type === 'cpi'): ?>
-                                                <i class="fas fa-mobile-alt me-1"></i> APP INSTALL
-                                            <?php else: ?>
-                                                <?php echo strtoupper($offer_type); ?>
-                                            <?php endif; ?>
-                                        </span>
+                                <div class="d-flex">
+                                    <?php 
+                                    // Get offer image if available
+                                    $offer_image = isset($offer['picture']) ? $offer['picture'] : '';
+                                    ?>
+                                    <div class="task-icon me-3">
+                                        <?php if (!empty($offer_image)): ?>
+                                            <img src="<?php echo htmlspecialchars($offer_image); ?>" class="icon-image" alt="<?php echo htmlspecialchars($offer_name); ?>">
+                                        <?php else: ?>
+                                            <div class="icon-placeholder">
+                                                <i class="fas <?php echo $offer_type === 'cpi' ? 'fa-mobile-alt' : 'fa-tasks'; ?> fa-2x"></i>
+                                            </div>
+                                        <?php endif; ?>
                                     </div>
-                                    <?php endif; ?>
                                     
-                                    <p class="card-text task-description"><?php echo !empty($offer_description) ? htmlspecialchars($offer_description) : 'No description'; ?></p>
+                                    <div class="task-content">
+                                        <h5 class="card-title"><?php echo !empty($offer_name) ? htmlspecialchars($offer_name) : 'No title'; ?></h5>
+                                        
+                                        <div class="task-type-badges mb-2">
+                                            <span class="offer-type offer-type-<?php echo $offer_type; ?>">
+                                                <?php if ($offer_type === 'cpi'): ?>
+                                                    <i class="fas fa-mobile-alt me-1"></i> APP INSTALL
+                                                <?php else: ?>
+                                                    <i class="fas fa-tasks me-1"></i> <?php echo strtoupper($offer_type); ?>
+                                                <?php endif; ?>
+                                            </span>
+                                            
+                                            <?php
+                                            // Display device badges if available and app install type
+                                            if ($offer_type === 'cpi' && isset($offer['device'])):
+                                                $devices = explode(',', $offer['device']);
+                                                foreach ($devices as $device):
+                                                    $device = trim($device);
+                                                    if (stripos($device, 'android') !== false):
+                                            ?>
+                                                <span class="device-badge device-android">
+                                                    <i class="fab fa-android me-1"></i> Android
+                                                </span>
+                                            <?php 
+                                                    elseif (stripos($device, 'ios') !== false || stripos($device, 'iphone') !== false || stripos($device, 'ipad') !== false):
+                                            ?>
+                                                <span class="device-badge device-ios">
+                                                    <i class="fab fa-apple me-1"></i> iOS
+                                                </span>
+                                            <?php
+                                                    endif;
+                                                endforeach;
+                                            endif;
+                                            ?>
+                                        </div>
+                                        
+                                        <p class="card-text task-description"><?php echo !empty($offer_description) ? htmlspecialchars($offer_description) : 'No description'; ?></p>
+                                    </div>
                                 </div>
+                                
                                 <div class="d-flex justify-content-between align-items-center mt-3">
                                     <div class="task-payout">
                                         <strong><?php echo formatPoints($points); ?></strong> points
