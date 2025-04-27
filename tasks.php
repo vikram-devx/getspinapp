@@ -92,6 +92,7 @@ if (isset($_GET['action'])) {
                         error_log("Failed to update points: " . $result['message']);
                         $message = "There was an error processing your task: " . $result['message'];
                         $message_type = 'danger';
+                    }
                 }
             } else {
                 // For real API offers
