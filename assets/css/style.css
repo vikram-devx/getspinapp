@@ -943,3 +943,59 @@ body .navbar + .full-width-container {
         height: 8px;
     }
 }
+
+/* Task Completion Popup */
+.task-completion-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    background-color: white;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 0;
+    width: 350px;
+    max-width: 90%;
+    z-index: 2000;
+    opacity: 0;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.task-completion-popup.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.task-completion-header {
+    background-color: #28a745;
+    color: white;
+    padding: 15px 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.task-completion-body {
+    padding: 20px;
+    text-align: center;
+}
+
+.task-completion-body p {
+    margin-bottom: 10px;
+}
+
+.points-earned {
+    font-size: 1.2rem;
+    margin-top: 20px;
+}
+
+.points-earned span {
+    color: #28a745;
+    font-weight: bold;
+    font-size: 1.5rem;
+    display: block;
+    margin-top: 5px;
+}

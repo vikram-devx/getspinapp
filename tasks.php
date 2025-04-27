@@ -384,6 +384,19 @@ include 'includes/header.php';
             </div>
         </div>
         
+        <!-- Recently Completed Tasks Section -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-check-circle me-2"></i>Recently Completed Tasks</h5>
+            </div>
+            <div class="card-body">
+                <div id="completed-tasks-container">
+                    <p class="text-center text-muted" id="no-completed-tasks-message">You haven't completed any tasks recently.</p>
+                    <!-- Recently completed task items will be added here dynamically -->
+                </div>
+            </div>
+        </div>
+        
         <div class="card mb-4">
             <div class="card-header">
                 <h5 class="mb-0">Available Tasks</h5>

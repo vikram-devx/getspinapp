@@ -92,20 +92,25 @@ $(document).ready(function() {
     }
     
     function updateTaskProgressUI(progressData) {
-        // Clear container
-        var container = $('#task-progress-container');
-        container.empty();
+        // Clear containers
+        var activeContainer = $('#task-progress-container');
+        var completedContainer = $('#completed-tasks-container');
+        activeContainer.empty();
+        completedContainer.empty();
         
         // Track newly completed tasks to show notifications
         var newlyCompletedTasks = [];
         
-        // Filter tasks to show only active tasks (started or in_progress)
+        // Separate active and completed tasks
         var activeTasks = [];
+        var completedTasks = [];
         
         if (progressData && progressData.length > 0) {
             progressData.forEach(function(task) {
-                // Check if this is a newly completed task and show notifications
+                // Check if this is a completed task
                 if (task.status === 'completed') {
+                    completedTasks.push(task);
+                    
                     // Check if we've already notified about this task
                     var taskKey = 'task_completed_' + task.offer_id;
                     if (!localStorage.getItem(taskKey)) {
@@ -127,91 +132,154 @@ $(document).ready(function() {
             });
         }
         
-        // If no active tasks, show message
+        // Handle active tasks
         if (activeTasks.length === 0) {
-            container.html('<p class="text-center text-muted" id="no-tasks-message">You don\'t have any active tasks.</p>');
-            return;
+            activeContainer.html('<p class="text-center text-muted" id="no-tasks-message">You don\'t have any active tasks.</p>');
+        } else {
+            // Generate HTML for each active task
+            activeTasks.forEach(function(task) {
+                var progressPercent = task.current_progress || task.progress_percent || 0;
+                var statusClass = 'info';
+                var statusIcon = 'fas fa-sync-alt fa-spin';
+                var statusText = task.status.replace('_', ' ').toUpperCase();
+                
+                // Set appropriate classes based on status
+                switch(task.status) {
+                    case 'started':
+                        statusClass = 'warning';
+                        statusIcon = 'fas fa-hourglass-start';
+                        break;
+                    case 'in_progress':
+                        statusClass = 'info';
+                        statusIcon = 'fas fa-spinner fa-spin';
+                        break;
+                }
+                
+                // Always show Cancel button for active tasks
+                var actionButtonsHTML = `
+                    <button class="btn btn-sm btn-outline-danger cancel-task-btn" data-offer-id="${task.offer_id}">
+                        <i class="fas fa-times-circle me-1"></i> Cancel
+                    </button>
+                `;
+                
+                // Create progress item HTML
+                var progressHtml = `
+                    <div class="task-progress-item mb-4" data-offer-id="${task.offer_id}">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="task-name fw-bold">${task.offer_name || `Task #${task.offer_id}`}</span>
+                            <span class="badge bg-${statusClass}"><i class="${statusIcon} me-1"></i> ${statusText}</span>
+                        </div>
+                        <div class="progress mb-2" style="height: 10px;">
+                            <div class="progress-bar progress-bar-striped bg-${statusClass}" role="progressbar" 
+                                style="width: ${progressPercent}%" 
+                                aria-valuenow="${progressPercent}" 
+                                aria-valuemin="0" 
+                                aria-valuemax="100">
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between small mb-2">
+                            <span class="text-muted">${task.progress_message || 'Processing...'}</span>
+                            <span class="text-muted">${progressPercent}%</span>
+                        </div>
+                        <div class="text-end">${actionButtonsHTML}</div>
+                    </div>
+                `;
+                
+                activeContainer.append(progressHtml);
+            });
+            
+            // Hide no tasks message
+            $('#no-tasks-message').hide();
+            
+            // Attach event listeners for Cancel buttons
+            $('.cancel-task-btn').on('click', function() {
+                var offerId = $(this).data('offer-id');
+                cancelTask(offerId);
+            });
         }
         
-        // Generate HTML for each active task
-        activeTasks.forEach(function(task) {
-            var progressPercent = task.current_progress || task.progress_percent || 0;
-            var statusClass = 'info';
-            var statusIcon = 'fas fa-sync-alt fa-spin';
-            var statusText = task.status.replace('_', ' ').toUpperCase();
-            
-            // Set appropriate classes based on status
-            switch(task.status) {
-                case 'started':
-                    statusClass = 'warning';
-                    statusIcon = 'fas fa-hourglass-start';
-                    break;
-                case 'in_progress':
-                    statusClass = 'info';
-                    statusIcon = 'fas fa-spinner fa-spin';
-                    break;
-            }
-            
-            // Always show Cancel button for active tasks
-            var actionButtonsHTML = `
-                <button class="btn btn-sm btn-outline-danger cancel-task-btn" data-offer-id="${task.offer_id}">
-                    <i class="fas fa-times-circle me-1"></i> Cancel
-                </button>
-            `;
-            
-            // Create progress item HTML
-            var progressHtml = `
-                <div class="task-progress-item mb-4" data-offer-id="${task.offer_id}">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="task-name fw-bold">${task.offer_name || `Task #${task.offer_id}`}</span>
-                        <span class="badge bg-${statusClass}"><i class="${statusIcon} me-1"></i> ${statusText}</span>
-                    </div>
-                    <div class="progress mb-2" style="height: 10px;">
-                        <div class="progress-bar progress-bar-striped bg-${statusClass}" role="progressbar" 
-                            style="width: ${progressPercent}%" 
-                            aria-valuenow="${progressPercent}" 
-                            aria-valuemin="0" 
-                            aria-valuemax="100">
+        // Handle completed tasks - show the 5 most recent
+        const recentCompleted = completedTasks.sort((a, b) => {
+            // Sort by completion time if available, otherwise by last_updated
+            const aTime = a.completion_time || a.last_updated;
+            const bTime = b.completion_time || b.last_updated;
+            return new Date(bTime) - new Date(aTime); // Newest first
+        }).slice(0, 5); // Take only the 5 most recent
+        
+        if (recentCompleted.length === 0) {
+            completedContainer.html('<p class="text-center text-muted" id="no-completed-tasks-message">You haven\'t completed any tasks recently.</p>');
+        } else {
+            // Generate HTML for each completed task
+            recentCompleted.forEach(function(task) {
+                // Get completion time
+                const completionTime = task.completion_time || task.last_updated;
+                const formattedTime = new Date(completionTime).toLocaleString();
+                
+                // Get points earned
+                const pointsEarned = task.points_earned || 0;
+                
+                // Create completed task item HTML
+                var completedHtml = `
+                    <div class="completed-task-item mb-3 p-2 border-bottom">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="task-name fw-bold">${task.offer_name || `Task #${task.offer_id}`}</span>
+                                <div class="text-muted small">Completed on ${formattedTime}</div>
+                            </div>
+                            <div class="text-success fw-bold">
+                                +${pointsEarned} points
+                            </div>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-between small mb-2">
-                        <span class="text-muted">${task.progress_message || 'Processing...'}</span>
-                        <span class="text-muted">${progressPercent}%</span>
-                    </div>
-                    <div class="text-end">${actionButtonsHTML}</div>
-                </div>
-            `;
+                `;
+                
+                completedContainer.append(completedHtml);
+            });
             
-            container.append(progressHtml);
-        });
+            // Hide no completed tasks message
+            $('#no-completed-tasks-message').hide();
+        }
         
-        // Hide no tasks message
-        $('#no-tasks-message').hide();
-        
-        // Attach event listeners for Cancel buttons
-        $('.cancel-task-btn').on('click', function() {
-            var offerId = $(this).data('offer-id');
-            cancelTask(offerId);
-        });
-        
-        // Show notifications for completed tasks
+        // Show notifications for newly completed tasks - with a large, more noticeable popup
         if (newlyCompletedTasks.length > 0) {
             newlyCompletedTasks.forEach(function(task) {
-                // If points are available, show a points notification
-                if (task.points > 0) {
-                    showNotification(
-                        'success', 
-                        'Task Completed!', 
-                        `Congratulations! You've earned ${task.points} points for completing ${task.name}.`
-                    );
-                } else {
-                    // Otherwise just show a completion notification
-                    showNotification(
-                        'success', 
-                        'Task Completed!', 
-                        `Congratulations! You've successfully completed ${task.name}.`
-                    );
-                }
+                // Always show a more noticeable notification for completed tasks
+                const notification = `
+                    <div class="task-completion-popup">
+                        <div class="task-completion-header">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Task Completed!
+                        </div>
+                        <div class="task-completion-body">
+                            <p><strong>${task.name}</strong> has been completed successfully!</p>
+                            <p class="points-earned">You earned <span>${task.points} points</span></p>
+                        </div>
+                    </div>
+                `;
+                
+                // Create and append the notification element
+                const $notification = $(notification);
+                $('body').append($notification);
+                
+                // Show with animation
+                setTimeout(() => {
+                    $notification.addClass('show');
+                    
+                    // Remove after 5 seconds
+                    setTimeout(() => {
+                        $notification.removeClass('show');
+                        setTimeout(() => {
+                            $notification.remove();
+                        }, 500);
+                    }, 5000);
+                }, 100);
+                
+                // Also show a regular notification
+                showNotification(
+                    'success', 
+                    'Task Completed!', 
+                    `Congratulations! You've earned ${task.points} points for completing ${task.name}.`
+                );
             });
         }
     }
