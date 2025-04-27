@@ -107,6 +107,7 @@ $(document).ready(function() {
             var progressPercent = task.current_progress || task.progress_percent || 0;
             var statusClass = 'info';
             var statusIcon = 'fas fa-sync-alt fa-spin';
+            var statusText = task.status.replace('_', ' ').toUpperCase();
             
             // Set appropriate classes based on status
             switch(task.status) {
@@ -126,6 +127,34 @@ $(document).ready(function() {
                     statusClass = 'info';
                     statusIcon = 'fas fa-spinner fa-spin';
                     break;
+                case 'canceled':
+                    statusClass = 'secondary';
+                    statusIcon = 'fas fa-ban';
+                    break;
+            }
+            
+            // Action buttons HTML
+            var actionButtonsHTML = '';
+            
+            // Only show action buttons for tasks that are not completed
+            if (task.status !== 'completed') {
+                // Show Cancel button for active tasks
+                if (task.status === 'started' || task.status === 'in_progress') {
+                    actionButtonsHTML = `
+                        <button class="btn btn-sm btn-outline-danger cancel-task-btn" data-offer-id="${task.offer_id}">
+                            <i class="fas fa-times-circle me-1"></i> Cancel
+                        </button>
+                    `;
+                }
+                
+                // Show Resume button for canceled tasks
+                if (task.status === 'canceled') {
+                    actionButtonsHTML = `
+                        <button class="btn btn-sm btn-outline-success resume-task-btn" data-offer-id="${task.offer_id}">
+                            <i class="fas fa-play-circle me-1"></i> Resume
+                        </button>
+                    `;
+                }
             }
             
             // Create progress item HTML
@@ -133,7 +162,7 @@ $(document).ready(function() {
                 <div class="task-progress-item mb-4" data-offer-id="${task.offer_id}">
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <span class="task-name fw-bold">Task #${task.offer_id}</span>
-                        <span class="badge bg-${statusClass}"><i class="${statusIcon} me-1"></i> ${task.status.replace('_', ' ').toUpperCase()}</span>
+                        <span class="badge bg-${statusClass}"><i class="${statusIcon} me-1"></i> ${statusText}</span>
                     </div>
                     <div class="progress mb-2" style="height: 10px;">
                         <div class="progress-bar progress-bar-striped bg-${statusClass}" role="progressbar" 
@@ -143,22 +172,125 @@ $(document).ready(function() {
                             aria-valuemax="100">
                         </div>
                     </div>
-                    <div class="d-flex justify-content-between small">
+                    <div class="d-flex justify-content-between small mb-2">
                         <span class="text-muted">${task.progress_message || 'Processing...'}</span>
                         <span class="text-muted">${progressPercent}%</span>
                     </div>
+                    ${actionButtonsHTML ? `<div class="text-end">${actionButtonsHTML}</div>` : ''}
                 </div>
             `;
             
             container.append(progressHtml);
-            
-            // Simulate functionality has been removed
         });
         
         // Hide no tasks message
         $('#no-tasks-message').hide();
         
-        // Simulation functionality has been removed
+        // Attach event listeners for Cancel buttons
+        $('.cancel-task-btn').on('click', function() {
+            var offerId = $(this).data('offer-id');
+            cancelTask(offerId);
+        });
+        
+        // Attach event listeners for Resume buttons
+        $('.resume-task-btn').on('click', function() {
+            var offerId = $(this).data('offer-id');
+            resumeTask(offerId);
+        });
+    }
+    
+    // Function to cancel a task
+    function cancelTask(offerId) {
+        $.ajax({
+            url: 'task_action.php',
+            type: 'POST',
+            data: {
+                action: 'cancel',
+                offer_id: offerId
+            },
+            dataType: 'json',
+            beforeSend: function() {
+                // Disable the cancel button and show loading state
+                $(`.cancel-task-btn[data-offer-id="${offerId}"]`).prop('disabled', true)
+                    .html('<i class="fas fa-spinner fa-spin me-1"></i> Canceling...');
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    // Show success notification
+                    showNotification('success', 'Task Canceled', response.message);
+                    
+                    // Refresh task progress UI if task_progress data is returned
+                    if (response.task_progress) {
+                        updateTaskProgressUI(response.task_progress);
+                    } else {
+                        // Otherwise, just reload task progress data
+                        loadTaskProgress();
+                    }
+                } else {
+                    // Show error notification
+                    showNotification('error', 'Error', response.message);
+                    
+                    // Re-enable the button
+                    $(`.cancel-task-btn[data-offer-id="${offerId}"]`).prop('disabled', false)
+                        .html('<i class="fas fa-times-circle me-1"></i> Cancel');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error canceling task:', error);
+                showNotification('error', 'Error', 'Failed to cancel task. Please try again.');
+                
+                // Re-enable the button
+                $(`.cancel-task-btn[data-offer-id="${offerId}"]`).prop('disabled', false)
+                    .html('<i class="fas fa-times-circle me-1"></i> Cancel');
+            }
+        });
+    }
+    
+    // Function to resume a task
+    function resumeTask(offerId) {
+        $.ajax({
+            url: 'task_action.php',
+            type: 'POST',
+            data: {
+                action: 'resume',
+                offer_id: offerId
+            },
+            dataType: 'json',
+            beforeSend: function() {
+                // Disable the resume button and show loading state
+                $(`.resume-task-btn[data-offer-id="${offerId}"]`).prop('disabled', true)
+                    .html('<i class="fas fa-spinner fa-spin me-1"></i> Resuming...');
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    // Show success notification
+                    showNotification('success', 'Task Resumed', response.message);
+                    
+                    // Refresh task progress UI if task_progress data is returned
+                    if (response.task_progress) {
+                        updateTaskProgressUI(response.task_progress);
+                    } else {
+                        // Otherwise, just reload task progress data
+                        loadTaskProgress();
+                    }
+                } else {
+                    // Show error notification
+                    showNotification('error', 'Error', response.message);
+                    
+                    // Re-enable the button
+                    $(`.resume-task-btn[data-offer-id="${offerId}"]`).prop('disabled', false)
+                        .html('<i class="fas fa-play-circle me-1"></i> Resume');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error resuming task:', error);
+                showNotification('error', 'Error', 'Failed to resume task. Please try again.');
+                
+                // Re-enable the button
+                $(`.resume-task-btn[data-offer-id="${offerId}"]`).prop('disabled', false)
+                    .html('<i class="fas fa-play-circle me-1"></i> Resume');
+            }
+        });
     }
     
     // simulateTaskProgress function has been removed
