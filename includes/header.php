@@ -62,6 +62,20 @@ $app_logo = getSetting('app_logo', '');
                 <?php echo htmlspecialchars($app_name); ?>
                 <?php endif; ?>
             </a>
+            
+            <!-- Spacer div to push mobile elements to the right -->
+            <div class="flex-grow-1 d-lg-none"></div>
+            
+            <?php if (!$auth->isLoggedIn()): ?>
+            <!-- Mobile/Tablet Login Icon (only shown on small screens) -->
+            <a href="<?php echo url('login'); ?>" class="d-lg-none mobile-login-icon" title="Login">
+                <i class="fas fa-user-circle"></i>
+            </a>
+            <a href="<?php echo url('register'); ?>" class="d-lg-none mobile-login-icon mobile-register-icon" title="Register">
+                <i class="fas fa-user-plus"></i>
+            </a>
+            <?php endif; ?>
+            
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>

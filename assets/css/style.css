@@ -14,6 +14,43 @@
     --hero-bg: #333333;       /* Lighter background for hero section */
 }
 
+/* Mobile Login Icon */
+.mobile-login-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    padding: 0.6rem;
+    font-size: 1.6rem;
+    margin-right: 0.75rem;
+    transition: all 0.2s ease;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.15);
+    width: 42px;
+    height: 42px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-login-icon:hover, 
+.mobile-login-icon:focus {
+    color: white;
+    transform: scale(1.1);
+    background-color: rgba(255, 255, 255, 0.25);
+    text-decoration: none;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Register icon styling */
+.mobile-register-icon {
+    margin-right: 1rem;
+    background-color: rgba(28, 200, 138, 0.25);
+}
+
+.mobile-register-icon:hover, 
+.mobile-register-icon:focus {
+    background-color: rgba(28, 200, 138, 0.35);
+}
+
 /* Override Bootstrap primary color */
 .bg-primary {
     background-color: #0d6efd !important;
