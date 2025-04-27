@@ -278,8 +278,8 @@ body .navbar + .full-width-container {
 }
 
 .offer-type-cpa {
-    background-color: #f0f8ff;
-    color: #0dcaf0;
+    background-color: #fff5e6;
+    color: #fd7e14;
 }
 
 .offer-type-pin {
@@ -343,6 +343,11 @@ body .navbar + .full-width-container {
     background-color: #e3f2fd;
     color: #0d6efd;
     border-radius: 10px;
+}
+
+.task-icon .icon-placeholder-cpa {
+    background-color: #fff5e6;
+    color: #fd7e14;
 }
 
 .task-content {

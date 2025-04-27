@@ -446,8 +446,14 @@ include 'includes/header.php';
                                         <?php if (!empty($offer_image)): ?>
                                             <img src="<?php echo htmlspecialchars($offer_image); ?>" class="icon-image" alt="<?php echo htmlspecialchars($offer_name); ?>">
                                         <?php else: ?>
-                                            <div class="icon-placeholder">
-                                                <i class="fas <?php echo $offer_type === 'cpi' ? 'fa-mobile-alt' : 'fa-tasks'; ?> fa-2x"></i>
+                                            <div class="icon-placeholder <?php echo strtolower($offer_type) === 'cpa' ? 'icon-placeholder-cpa' : ''; ?>">
+                                                <?php if (strtolower($offer_type) === 'cpi'): ?>
+                                                    <i class="fas fa-mobile-alt fa-2x"></i>
+                                                <?php elseif (strtolower($offer_type) === 'cpa'): ?>
+                                                    <i class="fas fa-poll fa-2x"></i>
+                                                <?php else: ?>
+                                                    <i class="fas fa-tasks fa-2x"></i>
+                                                <?php endif; ?>
                                             </div>
                                         <?php endif; ?>
                                     </div>
@@ -457,8 +463,10 @@ include 'includes/header.php';
                                         
                                         <div class="task-type-badges mb-2">
                                             <span class="offer-type offer-type-<?php echo $offer_type; ?>">
-                                                <?php if ($offer_type === 'cpi'): ?>
+                                                <?php if (strtolower($offer_type) === 'cpi'): ?>
                                                     <i class="fas fa-mobile-alt me-1"></i> APP INSTALL
+                                                <?php elseif (strtolower($offer_type) === 'cpa'): ?>
+                                                    <i class="fas fa-poll me-1"></i> SURVEY OFFER
                                                 <?php else: ?>
                                                     <i class="fas fa-tasks me-1"></i> <?php echo strtoupper($offer_type); ?>
                                                 <?php endif; ?>
@@ -466,7 +474,7 @@ include 'includes/header.php';
                                             
                                             <?php
                                             // Display device badges if available and app install type
-                                            if ($offer_type === 'cpi' && isset($offer['device'])):
+                                            if (strtolower($offer_type) === 'cpi' && isset($offer['device'])):
                                                 $devices = explode(',', $offer['device']);
                                                 foreach ($devices as $device):
                                                     $device = trim($device);
