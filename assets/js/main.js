@@ -167,8 +167,8 @@ $(document).ready(function() {
                     `;
                 }
                 
-                // Show Resume button for canceled tasks
-                if (task.status === 'canceled') {
+                // Show Resume button for failed tasks (which represent canceled tasks)
+                if (task.status === 'failed') {
                     actionButtonsHTML = `
                         <button class="btn btn-sm btn-outline-success resume-task-btn" data-offer-id="${task.offer_id}">
                             <i class="fas fa-play-circle me-1"></i> Resume
