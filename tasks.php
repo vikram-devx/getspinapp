@@ -218,8 +218,12 @@ if ($device_info['is_mobile'] && !isset($settings['ogads_ctype'])) {
     error_log("Mobile device detected - prioritizing CPI offers");
 }
 
-// Get available offers from the API
-$offers_result = getOffers(null, null, $ctype, $max_offers, $min_offers);
+// Detect user's country for country-specific offers
+$user_country = detectUserCountry();
+error_log("Detected user country: " . $user_country);
+
+// Get available offers from the API, filtered by user's country
+$offers_result = getOffers(null, null, $ctype, $max_offers, $min_offers, $user_country);
 
 // For debugging purposes, log the API response
 error_log("OGAds API Response: " . print_r($offers_result, true));

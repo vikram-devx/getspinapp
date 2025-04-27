@@ -302,7 +302,7 @@ function formatDate($date_string) {
 }
 
 // Function to get available offers from OGAds API
-function getOffers($ip = null, $user_agent = null, $offer_type = null, $max = null, $min = null) {
+function getOffers($ip = null, $user_agent = null, $offer_type = null, $max = null, $min = null, $country = null) {
     // Get database connection
     $db = Database::getInstance();
     $conn = $db->getConnection();
@@ -348,6 +348,12 @@ function getOffers($ip = null, $user_agent = null, $offer_type = null, $max = nu
         'ip' => $ip,                   // Client IP (REQUIRED)
         'user_agent' => $user_agent,   // Client User Agent (REQUIRED)
     ];
+    
+    // Add country parameter if provided
+    if ($country) {
+        $data['country'] = $country;
+        error_log("Filtering offers by country: " . $country);
+    }
     
     // Use settings from database if available
     if (!$offer_type && isset($settings['ogads_ctype']) && !empty($settings['ogads_ctype'])) {
