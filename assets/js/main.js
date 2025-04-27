@@ -235,9 +235,20 @@ $(document).ready(function() {
             $('#taskImageCol').show();
             
             // Set the task type badge
-            var typeLabel = taskType === 'cpi' ? 'APP INSTALL' : taskType.toUpperCase();
-            var typeIcon = taskType === 'cpi' ? '<i class="fas fa-mobile-alt me-1"></i>' : '<i class="fas fa-tasks me-1"></i>';
-            $('#taskTypeTag').html(typeIcon + ' ' + typeLabel).removeClass().addClass('task-type-tag').addClass(taskType);
+            var typeLabel, typeIcon;
+            
+            if (taskType.toLowerCase() === 'cpi') {
+                typeLabel = 'APP INSTALL';
+                typeIcon = '<i class="fas fa-mobile-alt me-1"></i>';
+            } else if (taskType.toLowerCase() === 'cpa') {
+                typeLabel = 'SURVEY OFFER';
+                typeIcon = '<i class="fas fa-poll me-1"></i>';
+            } else {
+                typeLabel = taskType.toUpperCase();
+                typeIcon = '<i class="fas fa-tasks me-1"></i>';
+            }
+            
+            $('#taskTypeTag').html(typeIcon + ' ' + typeLabel).removeClass().addClass('task-type-tag').addClass('offer-type-' + taskType.toLowerCase());
         } else {
             $('#taskImageCol').hide();
         }
