@@ -223,7 +223,6 @@ $(document).ready(function() {
         var taskType = $(this).data('type');
         
         // Populate modal with task details
-        $('#taskTitle').text(taskTitle);
         $('#taskModalLabel').text(taskTitle);
         $('#taskDescription').text(taskDescription);
         $('#taskRequirements').html(taskRequirements);

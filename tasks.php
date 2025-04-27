@@ -411,9 +411,19 @@ include 'includes/header.php';
                         if (empty($offer_name) && isset($offer['name'])) {
                             $offer_name = $offer['name'];
                         }
+                        // Use description if available
                         $offer_description = isset($offer['description']) ? $offer['description'] : '';
-                        if (empty($offer_description) && isset($offer['adcopy'])) {
-                            $offer_description = $offer['adcopy'];
+                        $offer_adcopy = isset($offer['adcopy']) ? $offer['adcopy'] : '';
+                        
+                        // If description is empty, use adcopy as the description but clear adcopy to avoid duplication
+                        if (empty($offer_description) && !empty($offer_adcopy)) {
+                            $offer_description = $offer_adcopy;
+                            $offer_adcopy = '';
+                        }
+                        
+                        // If description and adcopy are the same, clear adcopy to avoid duplication
+                        if ($offer_description === $offer_adcopy) {
+                            $offer_adcopy = '';
                         }
                         $offer_requirements = 'Complete all offer requirements to earn points.';
                         $offer_payout = isset($offer['payout']) ? (float)$offer['payout'] : 0;
@@ -469,7 +479,7 @@ include 'includes/header.php';
                                         data-title="<?php echo !empty($offer_name) ? htmlspecialchars($offer_name) : 'No title'; ?>"
                                         data-description="<?php echo !empty($offer_description) ? htmlspecialchars($offer_description) : 'No description'; ?>"
                                         data-requirements="<?php echo htmlspecialchars($offer_requirements); ?>"
-                                        data-adcopy="<?php echo !empty($offer['adcopy']) ? htmlspecialchars($offer['adcopy']) : ''; ?>"
+                                        data-adcopy="<?php echo !empty($offer_adcopy) ? htmlspecialchars($offer_adcopy) : ''; ?>"
                                         data-payout="$<?php echo number_format($offer_payout, 2); ?>"
                                         data-points="<?php echo formatPoints($points); ?>"
                                         data-link="<?php echo isset($offer['link']) ? htmlspecialchars($offer['link']) : ''; ?>"
@@ -562,8 +572,6 @@ include 'includes/header.php';
                     </div>
                     <div class="col-md-8">
                         <div class="task-details-container">
-                            <h5 id="taskTitle" class="mb-4"></h5>
-                            
                             <div class="mb-3">
                                 <h6 class="fw-bold"><i class="fas fa-info-circle me-2 text-primary"></i>Description</h6>
                                 <p id="taskDescription" class="ms-4"></p>
