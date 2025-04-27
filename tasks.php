@@ -514,7 +514,8 @@ include 'includes/header.php';
                                         data-points="<?php echo formatPoints($points); ?>"
                                         data-link="<?php echo isset($offer['link']) ? htmlspecialchars($offer['link']) : ''; ?>"
                                         data-image="<?php echo !empty($offer_image) ? htmlspecialchars($offer_image) : ''; ?>"
-                                        data-type="<?php echo htmlspecialchars($offer_type); ?>">
+                                        data-type="<?php echo htmlspecialchars($offer_type); ?>"
+                                        data-device="<?php echo isset($offer['device']) ? htmlspecialchars($offer['device']) : ''; ?>">
                                         View Details
                                     </button>
                                 </div>
@@ -604,6 +605,7 @@ include 'includes/header.php';
                         <div class="task-details-container">
                             <div class="mb-3">
                                 <h6 class="fw-bold"><i class="fas fa-info-circle me-2 text-primary"></i>Description</h6>
+                                <div id="taskDeviceCompat" class="task-device-compatibility mb-2"></div>
                                 <p id="taskDescription" class="ms-4"></p>
                             </div>
                             
