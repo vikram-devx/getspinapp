@@ -202,7 +202,7 @@ $total_points = $stmt->fetch(PDO::FETCH_ASSOC)['total_points'];
                         </div>
                     <?php endif; ?>
                     
-                    <form method="post" action="<?php echo url('profile'); ?>">
+                    <form method="post" action="profile.php">
                         <div class="row mb-3">
                             <label for="current_password" class="col-sm-3 col-form-label">Current Password</label>
                             <div class="col-sm-9">

@@ -118,7 +118,7 @@ $app_logo = getSetting('app_logo', '');
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="<?php echo url('dashboard'); ?>"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                                <li><a class="dropdown-item" href="<?php echo url('profile'); ?>"><i class="fas fa-user-cog"></i> My Profile</a></li>
+                                <li><a class="dropdown-item" href="profile.php"><i class="fas fa-user-cog"></i> My Profile</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="<?php echo url('login', ['action' => 'logout']); ?>"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                             </ul>
