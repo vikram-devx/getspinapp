@@ -1301,7 +1301,25 @@ function getTaskProgress($user_id, $offer_id = null) {
 
 // Helper function to get a custom task name
 function getCustomTaskName($task_id) {
-    // These are common task names from OGAds
+    global $db;
+    
+    // First try to get the real offer name from the database
+    try {
+        $conn = $db->getConnection();
+        $sql = "SELECT offer_name FROM user_offers WHERE offer_id = :offer_id LIMIT 1";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue(':offer_id', $task_id);
+        $stmt->execute();
+        
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result && !empty($result['offer_name'])) {
+            return $result['offer_name'];
+        }
+    } catch (PDOException $e) {
+        // Continue to fallback if database lookup fails
+    }
+    
+    // These are common task names from OGAds (fallback mapping)
     $taskNames = [
         '61182' => 'Kroger Gift Card',
         '60878' => 'MyPoints Rewards',
@@ -1312,11 +1330,16 @@ function getCustomTaskName($task_id) {
         '60442' => 'Google Play Card',
         '60088' => 'Quiz Game',
         '59817' => 'Walmart Gift Card',
-        '59469' => 'Burger King Offer'
+        '59469' => 'Burger King Offer',
+        '43399' => 'Raid Shadow Legends',
+        '50521' => 'State of Survival',
+        '62170' => 'NFL Shop Gift Card',
+        '61822' => 'DisneyPlus Subscription',
+        '58462' => 'Rise of Kingdoms'
     ];
     
-    // Return custom name if available, otherwise default to Task ID
-    return $taskNames[$task_id] ?? 'Task #' . $task_id;
+    // Return custom name if available, otherwise return a better default
+    return $taskNames[$task_id] ?? 'Offer #' . $task_id;
 }
 
 // Function to complete user offer
