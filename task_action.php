@@ -1,5 +1,5 @@
 <?php
-require_once './includes/init.php';
+require_once 'includes/init.php';
 
 // Check if user is logged in
 $auth = new Auth();
@@ -30,14 +30,21 @@ if (empty($action) || empty($offer_id)) {
     exit;
 }
 
+// Debug log
+error_log("Processing task action: " . $action . " for offer ID: " . $offer_id . ", user ID: " . $user['id']);
+
 // Process the action
 $result = [];
 switch ($action) {
     case 'cancel':
+        error_log("Calling cancelTask function");
         $result = cancelTask($user['id'], $offer_id);
+        error_log("Cancel task result: " . json_encode($result));
         break;
     case 'resume':
+        error_log("Calling resumeTask function");
         $result = resumeTask($user['id'], $offer_id);
+        error_log("Resume task result: " . json_encode($result));
         break;
     default:
         $result = ['status' => 'error', 'message' => 'Invalid action'];

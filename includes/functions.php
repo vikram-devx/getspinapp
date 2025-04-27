@@ -868,6 +868,9 @@ function cancelTask($user_id, $offer_id) {
     $conn = $db->getConnection();
     
     try {
+        // Debug
+        error_log("cancelTask called for user_id: $user_id, offer_id: $offer_id");
+        
         // Check if the task exists and is not already completed or canceled
         $stmt = $conn->prepare("SELECT id, status FROM task_progress WHERE user_id = :user_id AND offer_id = :offer_id");
         $stmt->bindValue(':user_id', $user_id);
@@ -876,8 +879,27 @@ function cancelTask($user_id, $offer_id) {
         
         $task = $stmt->fetch(PDO::FETCH_ASSOC);
         
+        // Debug
+        error_log("Task found: " . json_encode($task));
+        
         if (!$task) {
-            return ['status' => 'error', 'message' => 'Task not found'];
+            error_log("Task not found in database");
+            
+            // Insert a new task record with canceled status if it doesn't exist
+            $insertStmt = $conn->prepare("INSERT INTO task_progress 
+                (user_id, offer_id, status, progress_percent, progress_message, last_updated) 
+                VALUES 
+                (:user_id, :offer_id, 'canceled', 0, 'Task canceled by user', CURRENT_TIMESTAMP)");
+            
+            $insertStmt->bindValue(':user_id', $user_id);
+            $insertStmt->bindValue(':offer_id', $offer_id);
+            
+            if ($insertStmt->execute()) {
+                return ['status' => 'success', 'message' => 'Task canceled successfully'];
+            } else {
+                error_log("Failed to insert canceled task");
+                return ['status' => 'error', 'message' => 'Failed to insert canceled task'];
+            }
         }
         
         if ($task['status'] === 'completed') {
@@ -888,16 +910,27 @@ function cancelTask($user_id, $offer_id) {
             return ['status' => 'error', 'message' => 'Task is already canceled'];
         }
         
-        // Update task status to canceled
-        $updateStmt = $conn->prepare("UPDATE task_progress SET status = 'canceled', progress_percent = 0, 
-                                    updated_at = datetime('now') WHERE id = :id");
-        $updateStmt->bindValue(':id', $task['id']);
-        $updateStmt->execute();
+        // Update the task status to canceled
+        // Use column names that actually exist in the table
+        $updateStmt = $conn->prepare("UPDATE task_progress SET 
+                                    status = 'canceled', 
+                                    progress_percent = 0, 
+                                    progress_message = 'Task canceled by user',
+                                    last_updated = CURRENT_TIMESTAMP 
+                                    WHERE id = :id");
         
-        return ['status' => 'success', 'message' => 'Task canceled successfully'];
+        $updateStmt->bindValue(':id', $task['id']);
+        $result = $updateStmt->execute();
+        
+        if ($result) {
+            return ['status' => 'success', 'message' => 'Task canceled successfully'];
+        } else {
+            error_log("Failed to update task status");
+            return ['status' => 'error', 'message' => 'Failed to update task status'];
+        }
     } catch (PDOException $e) {
         error_log("Error canceling task: " . $e->getMessage());
-        return ['status' => 'error', 'message' => 'Database error'];
+        return ['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()];
     }
 }
 
@@ -913,6 +946,9 @@ function resumeTask($user_id, $offer_id) {
     $conn = $db->getConnection();
     
     try {
+        // Debug
+        error_log("resumeTask called for user_id: $user_id, offer_id: $offer_id");
+        
         // Check if the task exists and is canceled
         $stmt = $conn->prepare("SELECT id, status FROM task_progress WHERE user_id = :user_id AND offer_id = :offer_id");
         $stmt->bindValue(':user_id', $user_id);
@@ -920,6 +956,9 @@ function resumeTask($user_id, $offer_id) {
         $stmt->execute();
         
         $task = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        // Debug
+        error_log("Task found: " . json_encode($task));
         
         if (!$task) {
             return ['status' => 'error', 'message' => 'Task not found'];
@@ -930,16 +969,25 @@ function resumeTask($user_id, $offer_id) {
         }
         
         // Update task status to started
-        $updateStmt = $conn->prepare("UPDATE task_progress SET status = 'started', progress_percent = 5, 
-                                    updated_at = datetime('now'), message = 'Task resumed - waiting for offer interaction' 
+        $updateStmt = $conn->prepare("UPDATE task_progress SET 
+                                    status = 'started', 
+                                    progress_percent = 5, 
+                                    progress_message = 'Task resumed - waiting for offer interaction',
+                                    last_updated = CURRENT_TIMESTAMP 
                                     WHERE id = :id");
+                                    
         $updateStmt->bindValue(':id', $task['id']);
-        $updateStmt->execute();
+        $result = $updateStmt->execute();
         
-        return ['status' => 'success', 'message' => 'Task resumed successfully'];
+        if ($result) {
+            return ['status' => 'success', 'message' => 'Task resumed successfully'];
+        } else {
+            error_log("Failed to update task status");
+            return ['status' => 'error', 'message' => 'Failed to resume task']; 
+        }
     } catch (PDOException $e) {
         error_log("Error resuming task: " . $e->getMessage());
-        return ['status' => 'error', 'message' => 'Database error'];
+        return ['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()];
     }
 }
 
