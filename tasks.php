@@ -406,9 +406,10 @@ include 'includes/header.php';
                     foreach ($offers as $offer):
                         // Extract relevant information from the offer based on OGAds API structure
                         $offer_id = isset($offer['offerid']) ? $offer['offerid'] : '';
-                        $offer_name = isset($offer['name']) ? $offer['name'] : '';
-                        if (empty($offer_name) && isset($offer['name_short'])) {
-                            $offer_name = $offer['name_short'];
+                        // Prioritize short name as requested
+                        $offer_name = isset($offer['name_short']) ? $offer['name_short'] : '';
+                        if (empty($offer_name) && isset($offer['name'])) {
+                            $offer_name = $offer['name'];
                         }
                         $offer_description = isset($offer['description']) ? $offer['description'] : '';
                         if (empty($offer_description) && isset($offer['adcopy'])) {
@@ -574,7 +575,7 @@ include 'includes/header.php';
                             </div>
                             
                             <div class="mb-3">
-                                <h6 class="fw-bold"><i class="fas fa-bullhorn me-2 text-warning"></i>Ad Copy</h6>
+                                <h6 class="fw-bold"><i class="fas fa-bullhorn me-2 text-warning"></i>Instructions</h6>
                                 <p id="taskAdCopy" class="ms-4"></p>
                             </div>
                             
