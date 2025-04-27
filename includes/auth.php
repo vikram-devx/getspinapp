@@ -349,7 +349,10 @@ class Auth {
                 $conn->commit();
             }
             
-            return true;
+            return [
+                'status' => 'success',
+                'message' => 'Points updated successfully'
+            ];
         } catch (PDOException $e) {
             // Roll back transaction if we started it
             if (isset($needsTransaction) && $needsTransaction && $conn->inTransaction()) {
@@ -357,7 +360,10 @@ class Auth {
             }
             
             error_log("Error updating points: " . $e->getMessage());
-            return false;
+            return [
+                'status' => 'error',
+                'message' => 'Error updating points: ' . $e->getMessage()
+            ];
         }
     }
 }
