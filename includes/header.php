@@ -117,9 +117,10 @@ $app_logo = getSetting('app_logo', '');
                                 <i class="fas fa-user"></i> <?php echo htmlspecialchars($current_user['username']); ?>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="<?php echo url('dashboard'); ?>">Dashboard</a></li>
+                                <li><a class="dropdown-item" href="<?php echo url('dashboard'); ?>"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                                <li><a class="dropdown-item" href="<?php echo url('profile'); ?>"><i class="fas fa-user-cog"></i> My Profile</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="<?php echo url('login', ['action' => 'logout']); ?>">Logout</a></li>
+                                <li><a class="dropdown-item" href="<?php echo url('login', ['action' => 'logout']); ?>"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                             </ul>
                         </li>
                     <?php else: ?>

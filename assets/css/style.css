@@ -518,6 +518,38 @@ body .navbar + .full-width-container {
     }
 }
 
+/* Profile Page Styles */
+.avatar-placeholder.rounded-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.avatar-placeholder.rounded-circle:hover {
+    transform: scale(1.05);
+}
+
+.profile-stat-card {
+    transition: transform 0.2s ease;
+}
+
+.profile-stat-card:hover {
+    transform: translateY(-3px);
+}
+
+.quick-action-link:hover {
+    background-color: rgba(13, 110, 253, 0.05);
+}
+
+.dropdown-item i {
+    width: 20px;
+    text-align: center;
+    margin-right: 5px;
+}
+
 /* Admin Dashboard */
 .admin-dashboard-stats {
     display: grid;
