@@ -26,8 +26,8 @@ $stats = getUserStats($current_user['id']);
             <small class="text-muted">Available Points</small>
         </div>
         <div class="d-grid gap-2">
-            <a href="rewards.php" class="btn btn-primary"><i class="fas fa-gift me-2"></i>Redeem Points</a>
-            <a href="tasks.php" class="btn btn-outline-primary"><i class="fas fa-tasks me-2"></i>Available Tasks <span class="badge bg-warning text-dark ms-1" style="font-size: 0.7rem;">Earn Free Spins</span></a>
+            <a href="<?php echo url('rewards'); ?>" class="btn btn-primary"><i class="fas fa-gift me-2"></i>Redeem Points</a>
+            <a href="<?php echo url('tasks'); ?>" class="btn btn-outline-primary"><i class="fas fa-tasks me-2"></i>Available Tasks <span class="badge bg-warning text-dark ms-1" style="font-size: 0.7rem;">Earn Free Spins</span></a>
         </div>
     </div>
 </div>
@@ -73,32 +73,32 @@ $stats = getUserStats($current_user['id']);
     <div class="card-body">
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
-                <a href="tasks.php" class="text-decoration-none">
+                <a href="<?php echo url('tasks'); ?>" class="text-decoration-none">
                     <i class="fas fa-tasks me-2"></i> Available Tasks <span class="badge bg-warning text-dark" style="font-size: 0.7rem;">Earn Free Spins</span>
                 </a>
             </li>
             <li class="list-group-item">
-                <a href="rewards.php" class="text-decoration-none">
+                <a href="<?php echo url('rewards'); ?>" class="text-decoration-none">
                     <i class="fas fa-gift me-2"></i> Rewards Catalog
                 </a>
             </li>
             <li class="list-group-item">
-                <a href="dashboard.php?tab=redemptions" class="text-decoration-none">
+                <a href="<?php echo url('dashboard', ['tab' => 'redemptions']); ?>" class="text-decoration-none">
                     <i class="fas fa-history me-2"></i> Redemption History
                 </a>
             </li>
             <li class="list-group-item">
-                <a href="dashboard.php?tab=transactions" class="text-decoration-none">
+                <a href="<?php echo url('dashboard', ['tab' => 'transactions']); ?>" class="text-decoration-none">
                     <i class="fas fa-exchange-alt me-2"></i> Transaction History
                 </a>
             </li>
             <li class="list-group-item">
-                <a href="leaderboard.php" class="text-decoration-none">
+                <a href="<?php echo url('leaderboard'); ?>" class="text-decoration-none">
                     <i class="fas fa-trophy me-2"></i> User Leaderboard
                 </a>
             </li>
             <li class="list-group-item bg-light">
-                <a href="referrals.php" class="text-decoration-none">
+                <a href="<?php echo url('referrals'); ?>" class="text-decoration-none">
                     <i class="fas fa-user-plus me-2"></i> <strong>Refer Friends & Earn 100 Points!</strong>
                 </a>
             </li>
