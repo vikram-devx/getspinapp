@@ -221,6 +221,7 @@ $(document).ready(function() {
         var taskLink = $(this).data('link');
         var taskImage = $(this).data('image');
         var taskType = $(this).data('type');
+        var taskDevice = $(this).data('device');
         
         // Populate modal with task details
         $('#taskModalLabel').text(taskTitle);
@@ -228,6 +229,28 @@ $(document).ready(function() {
         $('#taskRequirements').html(taskRequirements);
         $('#taskAdCopy').html(taskAdCopy);
         $('#taskPoints').text(taskPoints);
+        
+        // Handle device compatibility icons
+        if (taskDevice) {
+            var deviceIcons = '';
+            var deviceString = taskDevice.toLowerCase();
+            
+            if (deviceString.includes('android')) {
+                deviceIcons += '<span class="device-badge device-android me-2"><i class="fab fa-android me-1"></i>Android</span>';
+            }
+            
+            if (deviceString.includes('iphone') || deviceString.includes('ipad') || deviceString.includes('ios')) {
+                deviceIcons += '<span class="device-badge device-ios me-2"><i class="fab fa-apple me-1"></i>iOS</span>';
+            }
+            
+            if (deviceString.includes('desktop')) {
+                deviceIcons += '<span class="device-badge me-2"><i class="fas fa-desktop me-1"></i>Desktop</span>';
+            }
+            
+            $('#taskDeviceCompat').html('<div class="ms-4 mb-2"><strong>Compatible with:</strong> ' + deviceIcons + '</div>');
+        } else {
+            $('#taskDeviceCompat').html('');
+        }
         
         // Handle task image
         if (taskImage && taskImage !== '') {

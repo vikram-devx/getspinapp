@@ -189,12 +189,14 @@ body .navbar + .full-width-container {
 
 .task-type-tag.offer-type-cpi {
     background-color: #0d6efd;
+    color: #ffffff;
     box-shadow: 0 2px 5px rgba(13, 110, 253, 0.3);
 }
 
 .task-type-tag.offer-type-cpa {
-    background-color: #fd7e14;
-    box-shadow: 0 2px 5px rgba(253, 126, 20, 0.3);
+    background-color: #e8f5e9;
+    color: #198754;
+    box-shadow: 0 2px 5px rgba(25, 135, 84, 0.3);
 }
 
 .reward-box {
