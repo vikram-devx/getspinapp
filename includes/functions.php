@@ -885,11 +885,11 @@ function cancelTask($user_id, $offer_id) {
         if (!$task) {
             error_log("Task not found in database");
             
-            // Insert a new task record with canceled status if it doesn't exist
+            // Create a new "failed" status task instead (which is allowed by the constraint)
             $insertStmt = $conn->prepare("INSERT INTO task_progress 
                 (user_id, offer_id, status, progress_percent, progress_message, last_updated) 
                 VALUES 
-                (:user_id, :offer_id, 'canceled', 0, 'Task canceled by user', CURRENT_TIMESTAMP)");
+                (:user_id, :offer_id, 'failed', 0, 'Task canceled by user', CURRENT_TIMESTAMP)");
             
             $insertStmt->bindValue(':user_id', $user_id);
             $insertStmt->bindValue(':offer_id', $offer_id);
@@ -906,14 +906,14 @@ function cancelTask($user_id, $offer_id) {
             return ['status' => 'error', 'message' => 'Cannot cancel a completed task'];
         }
         
-        if ($task['status'] === 'canceled') {
+        if ($task['status'] === 'failed') {
             return ['status' => 'error', 'message' => 'Task is already canceled'];
         }
         
-        // Update the task status to canceled
-        // Use column names that actually exist in the table
+        // Update the task status to failed (since 'canceled' is not allowed by the constraint)
+        // We use 'failed' status to represent a canceled task
         $updateStmt = $conn->prepare("UPDATE task_progress SET 
-                                    status = 'canceled', 
+                                    status = 'failed', 
                                     progress_percent = 0, 
                                     progress_message = 'Task canceled by user',
                                     last_updated = CURRENT_TIMESTAMP 
@@ -949,7 +949,7 @@ function resumeTask($user_id, $offer_id) {
         // Debug
         error_log("resumeTask called for user_id: $user_id, offer_id: $offer_id");
         
-        // Check if the task exists and is canceled
+        // Check if the task exists and has 'failed' status (our replacement for canceled)
         $stmt = $conn->prepare("SELECT id, status FROM task_progress WHERE user_id = :user_id AND offer_id = :offer_id");
         $stmt->bindValue(':user_id', $user_id);
         $stmt->bindValue(':offer_id', $offer_id);
@@ -964,7 +964,7 @@ function resumeTask($user_id, $offer_id) {
             return ['status' => 'error', 'message' => 'Task not found'];
         }
         
-        if ($task['status'] !== 'canceled') {
+        if ($task['status'] !== 'failed') {
             return ['status' => 'error', 'message' => 'Only canceled tasks can be resumed'];
         }
         

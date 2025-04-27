@@ -1,33 +1,33 @@
 <?php
-require_once 'includes/init.php';
+require_once 'includes/config.php';
+require_once 'includes/db.php';
 
-// Initialize Database
+// Get database instance
 $db = Database::getInstance();
 $conn = $db->getConnection();
 
-// Check task_progress table structure
 try {
-    $query = "PRAGMA table_info(task_progress)";
-    $stmt = $conn->query($query);
+    // Check the structure of the task_progress table
+    $sql = "PRAGMA table_info(task_progress)";
+    $stmt = $conn->query($sql);
     $columns = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-    echo "<h2>Task Progress Table Columns:</h2>";
+    echo "<h2>Task Progress Table Structure:</h2>";
     echo "<pre>";
     print_r($columns);
     echo "</pre>";
     
-    // Check for any existing records
-    $query = "SELECT * FROM task_progress LIMIT 5";
-    $stmt = $conn->query($query);
-    $records = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Check for any sample data
+    $sql = "SELECT * FROM task_progress LIMIT 1";
+    $stmt = $conn->query($sql);
+    $sample = $stmt->fetch(PDO::FETCH_ASSOC);
     
-    echo "<h2>Sample Records:</h2>";
+    echo "<h2>Sample Data:</h2>";
     echo "<pre>";
-    print_r($records);
+    print_r($sample);
     echo "</pre>";
     
 } catch (PDOException $e) {
-    echo "<h2>Error:</h2>";
-    echo "<p>" . $e->getMessage() . "</p>";
+    echo "Error: " . $e->getMessage();
 }
 ?>

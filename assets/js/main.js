@@ -146,9 +146,10 @@ $(document).ready(function() {
                     statusClass = 'info';
                     statusIcon = 'fas fa-spinner fa-spin';
                     break;
-                case 'canceled':
+                case 'failed': // Using 'failed' status to represent canceled tasks
                     statusClass = 'secondary';
                     statusIcon = 'fas fa-ban';
+                    statusText = 'CANCELED'; // Display as 'CANCELED' instead of 'FAILED'
                     break;
             }
             
