@@ -7,7 +7,7 @@ $auth = new Auth();
 
 // Check if user is logged in
 if (!$auth->isLoggedIn()) {
-    header('Location: login.php');
+    header('Location: ' . url('login'));
     exit;
 }
 
@@ -126,12 +126,12 @@ include 'includes/header.php';
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-4 mb-3">
-                                            <a href="tasks.php" class="btn btn-primary d-block">
+                                            <a href="<?php echo url('tasks'); ?>" class="btn btn-primary d-block">
                                                 <i class="fas fa-tasks me-2"></i> Find Tasks
                                             </a>
                                         </div>
                                         <div class="col-md-4 mb-3">
-                                            <a href="rewards.php" class="btn btn-success d-block">
+                                            <a href="<?php echo url('rewards'); ?>" class="btn btn-success d-block">
                                                 <i class="fas fa-gift me-2"></i> View Rewards
                                             </a>
                                         </div>
@@ -152,7 +152,7 @@ include 'includes/header.php';
                             <div class="card h-100">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h5 class="mb-0">Leaderboard</h5>
-                                    <a href="leaderboard.php" class="btn btn-sm btn-outline-primary">Full Leaderboard</a>
+                                    <a href="<?php echo url('leaderboard'); ?>" class="btn btn-sm btn-outline-primary">Full Leaderboard</a>
                                 </div>
                                 <div class="card-body">
                                     <?php if (count($top_users) > 0): ?>
@@ -404,7 +404,7 @@ include 'includes/header.php';
                         No redemptions yet. Redeem your points for rewards!
                     </div>
                     <div class="text-center mt-4">
-                        <a href="rewards.php" class="btn btn-primary">
+                        <a href="<?php echo url('rewards'); ?>" class="btn btn-primary">
                             <i class="fas fa-gift me-2"></i> Browse Rewards
                         </a>
                     </div>
