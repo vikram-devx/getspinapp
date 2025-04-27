@@ -622,7 +622,7 @@ include 'includes/header.php';
                             </div>
                             
                             <div id="instructionsSection" class="mb-3">
-                                <h6 class="fw-bold"><i class="fas fa-bullhorn me-2 text-warning"></i>Instructions</h6>
+                                <h6 class="fw-bold"><i class="fas fa-list-check me-2 text-warning"></i>Instructions</h6>
                                 <p id="taskAdCopy" class="ms-4"></p>
                             </div>
                             
