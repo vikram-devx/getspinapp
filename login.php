@@ -16,7 +16,8 @@ $auth_card_logo = getSetting('auth_card_logo', '');
 // Handle logout action
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     $auth->logout();
-    header('Location: ' . url('login', [], true));
+    // Use direct file reference to avoid pretty URL redirection issues
+    header('Location: login.php');
     exit;
 }
 
@@ -78,7 +79,7 @@ include $base_path . 'includes/header.php';
                 <div class="alert alert-danger"><?php echo $error; ?></div>
                 <?php endif; ?>
                 
-                <form method="post" action="<?php echo url('login'); ?>">
+                <form method="post" action="login.php">
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
                         <input type="text" class="form-control" id="username" name="username" value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>" required>
@@ -99,7 +100,7 @@ include $base_path . 'includes/header.php';
                 </form>
                 
                 <div class="auth-footer">
-                    <p>Don't have an account? <a href="<?php echo url('register'); ?>">Register</a></p>
+                    <p>Don't have an account? <a href="register.php">Register</a></p>
                 </div>
             </div>
         </div>

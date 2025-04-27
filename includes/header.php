@@ -125,10 +125,10 @@ $app_logo = getSetting('app_logo', '');
                         </li>
                     <?php else: ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo url('login'); ?>">Login</a>
+                            <a class="nav-link" href="login.php">Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo url('register'); ?>">Register</a>
+                            <a class="nav-link" href="register.php">Register</a>
                         </li>
                     <?php endif; ?>
                 </ul>
