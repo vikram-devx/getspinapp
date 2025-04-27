@@ -42,13 +42,33 @@ $app_logo = getSetting('app_logo', '');
     
     <!-- EmailJS Credentials -->
     <script type="text/javascript">
+        <?php
+        // Retrieve EmailJS settings directly from the database for more reliable access
+        $db = Database::getInstance();
+        $conn = $db->getConnection();
+        $emailjs_settings = [];
+        
+        try {
+            $stmt = $conn->query("SELECT setting_key, setting_value FROM admin_settings WHERE setting_key IN ('emailjs_user_id', 'emailjs_service_id', 'emailjs_template_id')");
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $emailjs_settings[$row['setting_key']] = $row['setting_value'];
+            }
+        } catch (PDOException $e) {
+            // Silently fail - table may not exist yet
+        }
+        ?>
+        
         // Set EmailJS credentials as global variables
-        window.EMAILJS_USER_ID = '<?php echo getenv("EMAILJS_USER_ID"); ?>';
-        window.EMAILJS_SERVICE_ID = '<?php echo getenv("EMAILJS_SERVICE_ID"); ?>';
-        window.EMAILJS_TEMPLATE_ID = '<?php echo getenv("EMAILJS_TEMPLATE_ID"); ?>';
+        window.EMAILJS_USER_ID = '<?php echo isset($emailjs_settings['emailjs_user_id']) ? $emailjs_settings['emailjs_user_id'] : getenv("EMAILJS_USER_ID"); ?>';
+        window.EMAILJS_SERVICE_ID = '<?php echo isset($emailjs_settings['emailjs_service_id']) ? $emailjs_settings['emailjs_service_id'] : getenv("EMAILJS_SERVICE_ID"); ?>';
+        window.EMAILJS_TEMPLATE_ID = '<?php echo isset($emailjs_settings['emailjs_template_id']) ? $emailjs_settings['emailjs_template_id'] : getenv("EMAILJS_TEMPLATE_ID"); ?>';
         
         // Log to console if EmailJS is properly configured
+        <?php if ($auth->isAdmin()): ?>
+        console.log('Admin EmailJS status:', window.EMAILJS_USER_ID ? 'Configured' : 'Not configured');
+        <?php else: ?>
         console.log('EmailJS status:', window.EMAILJS_USER_ID ? 'Configured' : 'Not configured');
+        <?php endif; ?>
     </script>
 </head>
 <body>

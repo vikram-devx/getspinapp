@@ -7,7 +7,12 @@
 (function() {
     // Check if EmailJS User ID is available
     if (window.EMAILJS_USER_ID) {
-        emailjs.init(window.EMAILJS_USER_ID);
+        try {
+            emailjs.init(window.EMAILJS_USER_ID);
+            console.log('EmailJS initialized successfully');
+        } catch (e) {
+            console.error('Error initializing EmailJS:', e);
+        }
     } else {
         console.error('EmailJS User ID not set');
     }
