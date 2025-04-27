@@ -92,46 +92,63 @@ $(document).ready(function() {
     }
     
     function updateTaskProgressUI(progressData) {
-        // Clear container
-        var container = $('#task-progress-container');
-        container.empty();
+        // Clear all tab containers
+        $('#active-tasks-container').empty();
+        $('#completed-tasks-container').empty();
+        $('#failed-tasks-container').empty();
+        $('#canceled-tasks-container').empty();
         
-        // Filter out canceled tasks (with 'failed' status)
-        var activeTasks = progressData.filter(function(task) {
-            return task.status !== 'failed';
-        });
+        // For backwards compatibility
+        $('#task-progress-container').empty();
         
-        // If no active tasks, show message
-        if (!activeTasks || activeTasks.length === 0) {
-            container.html('<p class="text-center text-muted" id="no-tasks-message">You don\'t have any active tasks.</p>');
-            return;
-        }
+        // Track counts for each tab
+        var activeTasks = [];
+        var completedTasks = [];
+        var failedTasks = [];
+        var canceledTasks = [];
         
         // Track newly completed tasks to show notifications
-        var completedTasks = [];
+        var newlyCompletedTasks = [];
         
-        // Create progress items
-        activeTasks.forEach(function(task) {
+        // Sort tasks into appropriate categories
+        if (progressData && progressData.length > 0) {
+            progressData.forEach(function(task) {
+                // Check if this is a newly completed task
+                if (task.status === 'completed') {
+                    // Check if we've already notified about this task
+                    var taskKey = 'task_completed_' + task.offer_id;
+                    if (!localStorage.getItem(taskKey)) {
+                        // Add to our notification list
+                        newlyCompletedTasks.push({
+                            id: task.offer_id,
+                            name: task.offer_name || `Task #${task.offer_id}`,
+                            points: task.points_earned || 0
+                        });
+                        
+                        // Mark as notified
+                        localStorage.setItem(taskKey, 'true');
+                    }
+                    completedTasks.push(task);
+                } else if (task.status === 'failed') {
+                    // Determine if this is a user-canceled task
+                    if (task.is_user_canceled === '1') {
+                        canceledTasks.push(task);
+                    } else {
+                        failedTasks.push(task);
+                    }
+                } else {
+                    // Active tasks are those with 'started' or 'in_progress' status
+                    activeTasks.push(task);
+                }
+            });
+        }
+        
+        // Function to generate task HTML
+        function generateTaskHtml(task, includeActions = true) {
             var progressPercent = task.current_progress || task.progress_percent || 0;
             var statusClass = 'info';
             var statusIcon = 'fas fa-sync-alt fa-spin';
             var statusText = task.status.replace('_', ' ').toUpperCase();
-            
-            // Check if this is a newly completed task
-            if (task.status === 'completed' && progressPercent === 100) {
-                // Check if we've already notified about this task
-                var taskKey = 'task_completed_' + task.offer_id;
-                if (!localStorage.getItem(taskKey)) {
-                    // Add to our notification list
-                    completedTasks.push({
-                        id: task.offer_id,
-                        points: task.points_earned || 0
-                    });
-                    
-                    // Mark as notified
-                    localStorage.setItem(taskKey, 'true');
-                }
-            }
             
             // Set appropriate classes based on status
             switch(task.status) {
@@ -140,8 +157,14 @@ $(document).ready(function() {
                     statusIcon = 'fas fa-check-circle';
                     break;
                 case 'failed':
-                    statusClass = 'danger';
-                    statusIcon = 'fas fa-times-circle';
+                    if (task.is_user_canceled === '1') {
+                        statusClass = 'secondary';
+                        statusIcon = 'fas fa-ban';
+                        statusText = 'CANCELED';
+                    } else {
+                        statusClass = 'danger';
+                        statusIcon = 'fas fa-times-circle';
+                    }
                     break;
                 case 'started':
                     statusClass = 'warning';
@@ -151,39 +174,36 @@ $(document).ready(function() {
                     statusClass = 'info';
                     statusIcon = 'fas fa-spinner fa-spin';
                     break;
-                case 'failed': // Using 'failed' status to represent canceled tasks
-                    statusClass = 'secondary';
-                    statusIcon = 'fas fa-ban';
-                    statusText = 'CANCELED'; // Display as 'CANCELED' instead of 'FAILED'
-                    break;
             }
             
             // Action buttons HTML
             var actionButtonsHTML = '';
             
-            // Only show action buttons for tasks that are not completed
-            if (task.status !== 'completed') {
-                // Show Cancel button for active tasks
-                if (task.status === 'started' || task.status === 'in_progress') {
-                    actionButtonsHTML = `
-                        <button class="btn btn-sm btn-outline-danger cancel-task-btn" data-offer-id="${task.offer_id}">
-                            <i class="fas fa-times-circle me-1"></i> Cancel
-                        </button>
-                    `;
-                }
-                
-                // Show Resume button for failed tasks (which represent canceled tasks)
-                if (task.status === 'failed') {
-                    actionButtonsHTML = `
-                        <button class="btn btn-sm btn-outline-success resume-task-btn" data-offer-id="${task.offer_id}">
-                            <i class="fas fa-play-circle me-1"></i> Resume
-                        </button>
-                    `;
+            if (includeActions) {
+                // Only show action buttons for tasks that are not completed
+                if (task.status !== 'completed') {
+                    // Show Cancel button for active tasks
+                    if (task.status === 'started' || task.status === 'in_progress') {
+                        actionButtonsHTML = `
+                            <button class="btn btn-sm btn-outline-danger cancel-task-btn" data-offer-id="${task.offer_id}">
+                                <i class="fas fa-times-circle me-1"></i> Cancel
+                            </button>
+                        `;
+                    }
+                    
+                    // Show Resume button for failed or canceled tasks
+                    if (task.status === 'failed') {
+                        actionButtonsHTML = `
+                            <button class="btn btn-sm btn-outline-success resume-task-btn" data-offer-id="${task.offer_id}">
+                                <i class="fas fa-play-circle me-1"></i> Resume
+                            </button>
+                        `;
+                    }
                 }
             }
             
             // Create progress item HTML
-            var progressHtml = `
+            return `
                 <div class="task-progress-item mb-4" data-offer-id="${task.offer_id}">
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <span class="task-name fw-bold">${task.offer_name || `Task #${task.offer_id}`}</span>
@@ -204,84 +224,106 @@ $(document).ready(function() {
                     ${actionButtonsHTML ? `<div class="text-end">${actionButtonsHTML}</div>` : ''}
                 </div>
             `;
-            
-            container.append(progressHtml);
-        });
-        
-        // Hide no tasks message
-        $('#no-tasks-message').hide();
-        
-        // Add a "Canceled Tasks" section with Resume buttons for any failed tasks
-        var canceledTasks = progressData.filter(function(task) {
-            return task.status === 'failed';
-        });
-        
-        if (canceledTasks.length > 0) {
-            // Create canceled tasks section if it doesn't exist
-            if ($('#canceled-tasks-section').length === 0) {
-                container.after('<div id="canceled-tasks-section" class="mt-4"><h5>Canceled Tasks</h5><div id="canceled-tasks-container"></div></div>');
-            }
-            
-            var canceledContainer = $('#canceled-tasks-container');
-            canceledContainer.empty();
-            
-            // Add each canceled task
-            canceledTasks.forEach(function(task) {
-                var taskHtml = `
-                    <div class="canceled-task-item mb-3 p-3 border rounded" data-offer-id="${task.offer_id}">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="task-name">${task.offer_name || `Task #${task.offer_id}`}</span>
-                            <button class="btn btn-sm btn-outline-success resume-task-btn" data-offer-id="${task.offer_id}">
-                                <i class="fas fa-play-circle me-1"></i> Resume
-                            </button>
-                        </div>
-                    </div>
-                `;
-                
-                canceledContainer.append(taskHtml);
-            });
-            
-            // Attach event listeners for Resume buttons
-            $('.resume-task-btn').on('click', function() {
-                var offerId = $(this).data('offer-id');
-                resumeTask(offerId);
-            });
-        } else {
-            // Remove canceled tasks section if it exists and there are no canceled tasks
-            $('#canceled-tasks-section').remove();
         }
         
-        // Attach event listeners for Cancel buttons
+        // Populate active tasks tab
+        const activeTasksContainer = $('#active-tasks-container');
+        if (activeTasks.length > 0) {
+            activeTasks.forEach(function(task) {
+                activeTasksContainer.append(generateTaskHtml(task, true));
+            });
+            $('#no-active-tasks-message').hide();
+        } else {
+            $('#no-active-tasks-message').show();
+        }
+        
+        // Populate completed tasks tab
+        const completedTasksContainer = $('#completed-tasks-container');
+        if (completedTasks.length > 0) {
+            completedTasks.forEach(function(task) {
+                completedTasksContainer.append(generateTaskHtml(task, false));
+            });
+            $('#no-completed-tasks-message').hide();
+        } else {
+            $('#no-completed-tasks-message').show();
+        }
+        
+        // Populate failed tasks tab
+        const failedTasksContainer = $('#failed-tasks-container');
+        if (failedTasks.length > 0) {
+            failedTasks.forEach(function(task) {
+                failedTasksContainer.append(generateTaskHtml(task, true));
+            });
+            $('#no-failed-tasks-message').hide();
+        } else {
+            $('#no-failed-tasks-message').show();
+        }
+        
+        // Populate canceled tasks tab
+        const canceledTasksContainer = $('#canceled-tasks-container');
+        if (canceledTasks.length > 0) {
+            canceledTasks.forEach(function(task) {
+                canceledTasksContainer.append(generateTaskHtml(task, true));
+            });
+            $('#no-canceled-tasks-message').hide();
+        } else {
+            $('#no-canceled-tasks-message').show();
+        }
+        
+        // Apply tab counts as badges
+        const activeCount = activeTasks.length;
+        const completedCount = completedTasks.length;
+        const failedCount = failedTasks.length;
+        const canceledCount = canceledTasks.length;
+        
+        // Add count badges to the tabs
+        updateTabBadge('active-tab', activeCount);
+        updateTabBadge('completed-tab', completedCount);
+        updateTabBadge('failed-tab', failedCount);
+        updateTabBadge('canceled-tab', canceledCount);
+        
+        // Attach event listeners for action buttons
         $('.cancel-task-btn').on('click', function() {
             var offerId = $(this).data('offer-id');
             cancelTask(offerId);
         });
         
-        // Attach event listeners for Resume buttons
         $('.resume-task-btn').on('click', function() {
             var offerId = $(this).data('offer-id');
             resumeTask(offerId);
         });
         
         // Show notifications for completed tasks
-        if (completedTasks.length > 0) {
-            completedTasks.forEach(function(task) {
+        if (newlyCompletedTasks.length > 0) {
+            newlyCompletedTasks.forEach(function(task) {
                 // If points are available, show a points notification
                 if (task.points > 0) {
                     showNotification(
                         'success', 
                         'Task Completed!', 
-                        `Congratulations! You've earned ${task.points} points for completing task #${task.id}.`
+                        `Congratulations! You've earned ${task.points} points for completing ${task.name}.`
                     );
                 } else {
                     // Otherwise just show a completion notification
                     showNotification(
                         'success', 
                         'Task Completed!', 
-                        `Congratulations! You've successfully completed task #${task.id}.`
+                        `Congratulations! You've successfully completed ${task.name}.`
                     );
                 }
             });
+        }
+    }
+    
+    // Helper function to update tab badges
+    function updateTabBadge(tabId, count) {
+        const tabElement = $(`#${tabId}`);
+        // Remove existing badge if present
+        tabElement.find('.badge').remove();
+        
+        // Only add badge if count > 0
+        if (count > 0) {
+            tabElement.append(`<span class="badge rounded-pill bg-primary ms-1">${count}</span>`);
         }
     }
     
