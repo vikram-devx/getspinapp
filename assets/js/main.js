@@ -228,15 +228,13 @@ $(document).ready(function() {
         $('#taskDescription').text(taskDescription);
         $('#taskRequirements').html(taskRequirements);
         
-        // Get instructions content - for CPI offers, check for instructions key
-        var taskInstructions = $(this).data('instructions'); // Check if instructions field exists
+        // Get instructions content
+        // For CPI offers, check if instructions field exists in the future
+        var instructionsContent = taskAdCopy || '';
         
-        // If instructions field doesn't exist, fall back to adcopy
-        var instructionsContent = taskInstructions || taskAdCopy;
-        
-        // Hide Instructions section completely if it's identical to the description
-        if (instructionsContent && taskDescription && instructionsContent.trim() === taskDescription.trim()) {
-            // Hide the entire Instructions section (including label and icon)
+        // Check if we need to hide the Instructions section
+        if (!instructionsContent || (instructionsContent && taskDescription && instructionsContent.trim() === taskDescription.trim())) {
+            // Hide the entire Instructions section completely when content is empty or matches description
             $('#instructionsSection').hide();
         } else {
             // Show Instructions section and set content

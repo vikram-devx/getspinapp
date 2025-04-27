@@ -413,7 +413,14 @@ include 'includes/header.php';
                         }
                         // Use description if available
                         $offer_description = isset($offer['description']) ? $offer['description'] : '';
-                        $offer_adcopy = isset($offer['adcopy']) ? $offer['adcopy'] : '';
+                        
+                        // For CPI offers, check if there's an instructions field first, otherwise use adcopy
+                        $offer_type = isset($offer['ctype']) ? strtolower($offer['ctype']) : 'cpa';
+                        if ($offer_type === 'cpi' && isset($offer['instructions'])) {
+                            $offer_adcopy = $offer['instructions']; // Use instructions for CPI offers if available
+                        } else {
+                            $offer_adcopy = isset($offer['adcopy']) ? $offer['adcopy'] : '';
+                        }
                         
                         // If description is empty, use adcopy as the description but clear adcopy to avoid duplication
                         if (empty($offer_description) && !empty($offer_adcopy)) {
