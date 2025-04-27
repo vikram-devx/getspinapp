@@ -1,5 +1,9 @@
 <?php
-require_once 'includes/header.php';
+require_once 'includes/config.php';
+require_once 'includes/auth.php';
+require_once 'includes/functions.php';
+
+$auth = new Auth();
 
 // Check if user is logged in
 if (!$auth->isLoggedIn()) {
@@ -8,10 +12,13 @@ if (!$auth->isLoggedIn()) {
     exit;
 }
 
+$current_user = $auth->getUser();
+
 // Get the current user's data
 $user_id = $current_user['id'];
-$db = getDB();
-$stmt = $db->prepare("SELECT * FROM users WHERE id = ?");
+$db = Database::getInstance();
+$conn = $db->getConnection();
+$stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
 $stmt->execute([$user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -38,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
     // Update the password
     else {
         $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-        $stmt = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
+        $stmt = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
         $result = $stmt->execute([$hashed_password, $user_id]);
         
         if ($result) {
@@ -50,17 +57,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
 }
 
 // Get user statistics
-$stmt = $db->prepare("SELECT COUNT(*) as total_completed FROM task_progress WHERE user_id = ? AND status = 'completed'");
+$stmt = $conn->prepare("SELECT COUNT(*) as total_completed FROM task_progress WHERE user_id = ? AND status = 'completed'");
 $stmt->execute([$user_id]);
 $total_completed = $stmt->fetch(PDO::FETCH_ASSOC)['total_completed'];
 
-$stmt = $db->prepare("SELECT COUNT(*) as total_pending FROM task_progress WHERE user_id = ? AND status = 'pending'");
+$stmt = $conn->prepare("SELECT COUNT(*) as total_pending FROM task_progress WHERE user_id = ? AND status = 'pending'");
 $stmt->execute([$user_id]);
 $total_pending = $stmt->fetch(PDO::FETCH_ASSOC)['total_pending'];
 
-$stmt = $db->prepare("SELECT SUM(points) as total_points FROM users WHERE id = ?");
+$stmt = $conn->prepare("SELECT SUM(points) as total_points FROM users WHERE id = ?");
 $stmt->execute([$user_id]);
 $total_points = $stmt->fetch(PDO::FETCH_ASSOC)['total_points'];
+
+// Include the header after all data is fetched
+require_once 'includes/header.php';
 ?>
 
 <div class="container py-4">
