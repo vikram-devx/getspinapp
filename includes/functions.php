@@ -856,6 +856,93 @@ function validatePostbackToken($user_id, $token) {
 }
 
 // Function to create or update task progress
+/**
+ * Cancel a task in progress
+ * 
+ * @param int $user_id The user ID
+ * @param int $offer_id The offer ID
+ * @return array Status and message
+ */
+function cancelTask($user_id, $offer_id) {
+    $db = Database::getInstance();
+    $conn = $db->getConnection();
+    
+    try {
+        // Check if the task exists and is not already completed or canceled
+        $stmt = $conn->prepare("SELECT id, status FROM task_progress WHERE user_id = :user_id AND offer_id = :offer_id");
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->bindValue(':offer_id', $offer_id);
+        $stmt->execute();
+        
+        $task = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$task) {
+            return ['status' => 'error', 'message' => 'Task not found'];
+        }
+        
+        if ($task['status'] === 'completed') {
+            return ['status' => 'error', 'message' => 'Cannot cancel a completed task'];
+        }
+        
+        if ($task['status'] === 'canceled') {
+            return ['status' => 'error', 'message' => 'Task is already canceled'];
+        }
+        
+        // Update task status to canceled
+        $updateStmt = $conn->prepare("UPDATE task_progress SET status = 'canceled', progress_percent = 0, 
+                                    updated_at = datetime('now') WHERE id = :id");
+        $updateStmt->bindValue(':id', $task['id']);
+        $updateStmt->execute();
+        
+        return ['status' => 'success', 'message' => 'Task canceled successfully'];
+    } catch (PDOException $e) {
+        error_log("Error canceling task: " . $e->getMessage());
+        return ['status' => 'error', 'message' => 'Database error'];
+    }
+}
+
+/**
+ * Resume a canceled task
+ * 
+ * @param int $user_id The user ID
+ * @param int $offer_id The offer ID
+ * @return array Status and message
+ */
+function resumeTask($user_id, $offer_id) {
+    $db = Database::getInstance();
+    $conn = $db->getConnection();
+    
+    try {
+        // Check if the task exists and is canceled
+        $stmt = $conn->prepare("SELECT id, status FROM task_progress WHERE user_id = :user_id AND offer_id = :offer_id");
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->bindValue(':offer_id', $offer_id);
+        $stmt->execute();
+        
+        $task = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$task) {
+            return ['status' => 'error', 'message' => 'Task not found'];
+        }
+        
+        if ($task['status'] !== 'canceled') {
+            return ['status' => 'error', 'message' => 'Only canceled tasks can be resumed'];
+        }
+        
+        // Update task status to started
+        $updateStmt = $conn->prepare("UPDATE task_progress SET status = 'started', progress_percent = 5, 
+                                    updated_at = datetime('now'), message = 'Task resumed - waiting for offer interaction' 
+                                    WHERE id = :id");
+        $updateStmt->bindValue(':id', $task['id']);
+        $updateStmt->execute();
+        
+        return ['status' => 'success', 'message' => 'Task resumed successfully'];
+    } catch (PDOException $e) {
+        error_log("Error resuming task: " . $e->getMessage());
+        return ['status' => 'error', 'message' => 'Database error'];
+    }
+}
+
 function trackTaskProgress($user_id, $offer_id, $status, $progress_percent = 0, $message = '', $estimated_time = null) {
     $db = Database::getInstance();
     $conn = $db->getConnection();
