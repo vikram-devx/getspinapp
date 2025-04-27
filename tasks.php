@@ -614,7 +614,7 @@ include 'includes/header.php';
                                 <p id="taskRequirements" class="ms-4"></p>
                             </div>
                             
-                            <div class="mb-3">
+                            <div id="instructionsSection" class="mb-3">
                                 <h6 class="fw-bold"><i class="fas fa-bullhorn me-2 text-warning"></i>Instructions</h6>
                                 <p id="taskAdCopy" class="ms-4"></p>
                             </div>

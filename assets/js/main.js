@@ -231,10 +231,10 @@ $(document).ready(function() {
         // Hide Instructions section if it's identical to the description
         if (taskAdCopy && taskDescription && taskAdCopy.trim() === taskDescription.trim()) {
             // Hide the entire Instructions section
-            $('.task-details-container .mb-3').eq(2).hide();
+            $('#instructionsSection').hide();
         } else {
             // Show Instructions section and set content
-            $('.task-details-container .mb-3').eq(2).show();
+            $('#instructionsSection').show();
             $('#taskAdCopy').html(taskAdCopy);
         }
         
