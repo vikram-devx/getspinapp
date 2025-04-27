@@ -187,7 +187,7 @@ require_once 'includes/header.php';
                         <div class="row mb-3">
                             <label for="account_status" class="col-sm-3 col-form-label">Account Status</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="account_status" value="<?php echo $user['status'] === 'active' ? 'Active' : 'Inactive'; ?>" readonly>
+                                <input type="text" class="form-control" id="account_status" value="<?php echo isset($user['status']) && $user['status'] === 'active' ? 'Active' : 'Inactive'; ?>" readonly>
                             </div>
                         </div>
                     </form>
