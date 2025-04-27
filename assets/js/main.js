@@ -227,7 +227,17 @@ $(document).ready(function() {
         $('#taskModalLabel').text(taskTitle);
         $('#taskDescription').text(taskDescription);
         $('#taskRequirements').html(taskRequirements);
-        $('#taskAdCopy').html(taskAdCopy);
+        
+        // Hide Instructions section if it's identical to the description
+        if (taskAdCopy && taskDescription && taskAdCopy.trim() === taskDescription.trim()) {
+            // Hide the entire Instructions section
+            $('.task-details-container .mb-3').eq(2).hide();
+        } else {
+            // Show Instructions section and set content
+            $('.task-details-container .mb-3').eq(2).show();
+            $('#taskAdCopy').html(taskAdCopy);
+        }
+        
         $('#taskPoints').text(taskPoints);
         
         // Handle device compatibility icons
