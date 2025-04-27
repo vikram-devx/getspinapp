@@ -371,74 +371,15 @@ include 'includes/header.php';
 
 <div class="row">
     <div class="col-lg-8">
-        <!-- Task Progress Section with Tabs -->
+        <!-- Task Progress Section -->
         <div class="card mb-4">
             <div class="card-header">
-                <h5 class="mb-0">Your Tasks</h5>
+                <h5 class="mb-0">Your Active Tasks</h5>
             </div>
             <div class="card-body">
-                <!-- Tabs Navigation -->
-                <ul class="nav nav-tabs mb-3" id="tasksTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="active-tab" data-bs-toggle="tab" data-bs-target="#active-tasks" type="button" role="tab" aria-controls="active-tasks" aria-selected="true">
-                            Active
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="completed-tab" data-bs-toggle="tab" data-bs-target="#completed-tasks" type="button" role="tab" aria-controls="completed-tasks" aria-selected="false">
-                            Completed
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="failed-tab" data-bs-toggle="tab" data-bs-target="#failed-tasks" type="button" role="tab" aria-controls="failed-tasks" aria-selected="false">
-                            Failed
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="canceled-tab" data-bs-toggle="tab" data-bs-target="#canceled-tasks" type="button" role="tab" aria-controls="canceled-tasks" aria-selected="false">
-                            Canceled
-                        </button>
-                    </li>
-                </ul>
-                
-                <!-- Tab Content -->
-                <div class="tab-content" id="tasksTabsContent">
-                    <!-- Active Tasks Tab -->
-                    <div class="tab-pane fade show active" id="active-tasks" role="tabpanel" aria-labelledby="active-tab">
-                        <div id="active-tasks-container">
-                            <p class="text-center text-muted" id="no-active-tasks-message">You don't have any active tasks.</p>
-                            <!-- Active task progress items will be added here dynamically -->
-                        </div>
-                    </div>
-                    
-                    <!-- Completed Tasks Tab -->
-                    <div class="tab-pane fade" id="completed-tasks" role="tabpanel" aria-labelledby="completed-tab">
-                        <div id="completed-tasks-container">
-                            <p class="text-center text-muted" id="no-completed-tasks-message">You haven't completed any tasks yet.</p>
-                            <!-- Completed task items will be added here dynamically -->
-                        </div>
-                    </div>
-                    
-                    <!-- Failed Tasks Tab -->
-                    <div class="tab-pane fade" id="failed-tasks" role="tabpanel" aria-labelledby="failed-tab">
-                        <div id="failed-tasks-container">
-                            <p class="text-center text-muted" id="no-failed-tasks-message">You don't have any failed tasks.</p>
-                            <!-- Failed task items will be added here dynamically -->
-                        </div>
-                    </div>
-                    
-                    <!-- Canceled Tasks Tab -->
-                    <div class="tab-pane fade" id="canceled-tasks" role="tabpanel" aria-labelledby="canceled-tab">
-                        <div id="canceled-tasks-container">
-                            <p class="text-center text-muted" id="no-canceled-tasks-message">You don't have any canceled tasks.</p>
-                            <!-- Canceled task items will be added here dynamically -->
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Legacy container for backward compatibility -->
-                <div id="task-progress-container" style="display: none;">
+                <div id="task-progress-container">
                     <p class="text-center text-muted" id="no-tasks-message">You don't have any active tasks.</p>
+                    <!-- Task progress items will be added here dynamically -->
                 </div>
             </div>
         </div>
