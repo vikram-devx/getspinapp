@@ -1395,7 +1395,12 @@ function completeUserOffer($user_id, $offer_id, $payout) {
         
         // Add points to user
         $description = "Completed offer: " . $offer_id;
-        $auth->updatePoints($user_id, $points, 'earn', $description, $user_offer_id, 'offer');
+        $pointsResult = $auth->updatePoints($user_id, $points, 'earn', $description, $user_offer_id, 'offer');
+        
+        if ($pointsResult['status'] !== 'success') {
+            error_log("Failed to add points to user: " . $pointsResult['message']);
+            throw new Exception("Failed to add points to user: " . $pointsResult['message']);
+        }
         
         // Commit transaction
         $conn->commit();

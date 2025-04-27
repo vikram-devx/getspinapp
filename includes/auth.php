@@ -102,7 +102,10 @@ class Auth {
                     $stmt->execute();
                     
                     // Award 100 points to the referrer
-                    $this->updatePoints($referrer_id, 100, 'earn', 'Referral bonus for inviting ' . $username);
+                    $result = $this->updatePoints($referrer_id, 100, 'earn', 'Referral bonus for inviting ' . $username);
+                    if ($result['status'] !== 'success') {
+                        error_log('Failed to award referral points: ' . $result['message']);
+                    }
                     
                     // Update referral status to 'completed'
                     $stmt = $conn->prepare("UPDATE referrals SET status = 'completed', updated_at = CURRENT_TIMESTAMP WHERE referrer_id = :referrer_id AND referred_id = :referred_id");
