@@ -228,14 +228,20 @@ $(document).ready(function() {
         $('#taskDescription').text(taskDescription);
         $('#taskRequirements').html(taskRequirements);
         
+        // Get instructions content - for CPI offers, check for instructions key
+        var taskInstructions = $(this).data('instructions'); // Check if instructions field exists
+        
+        // If instructions field doesn't exist, fall back to adcopy
+        var instructionsContent = taskInstructions || taskAdCopy;
+        
         // Hide Instructions section completely if it's identical to the description
-        if (taskAdCopy && taskDescription && taskAdCopy.trim() === taskDescription.trim()) {
+        if (instructionsContent && taskDescription && instructionsContent.trim() === taskDescription.trim()) {
             // Hide the entire Instructions section (including label and icon)
             $('#instructionsSection').hide();
         } else {
             // Show Instructions section and set content
             $('#instructionsSection').show();
-            $('#taskAdCopy').html(taskAdCopy);
+            $('#taskAdCopy').html(instructionsContent);
         }
         
         $('#taskPoints').text(taskPoints);
