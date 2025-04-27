@@ -605,8 +605,10 @@ include 'includes/header.php';
                         <div class="task-details-container">
                             <div class="mb-3">
                                 <h6 class="fw-bold"><i class="fas fa-info-circle me-2 text-primary"></i>Description</h6>
-                                <div id="taskDeviceCompat" class="task-device-compatibility mb-2"></div>
-                                <p id="taskDescription" class="ms-4"></p>
+                                <div class="d-flex ms-4 mb-1 align-items-center">
+                                    <div id="taskDeviceCompat" class="task-device-compatibility me-2"></div>
+                                    <p id="taskDescription" class="mb-0"></p>
+                                </div>
                             </div>
                             
                             <div class="mb-3">

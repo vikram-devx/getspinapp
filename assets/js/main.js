@@ -236,18 +236,18 @@ $(document).ready(function() {
             var deviceString = taskDevice.toLowerCase();
             
             if (deviceString.includes('android')) {
-                deviceIcons += '<span class="device-badge device-android me-2"><i class="fab fa-android me-1"></i>Android</span>';
+                deviceIcons += '<span class="device-badge device-android me-2"><i class="fab fa-android"></i></span>';
             }
             
             if (deviceString.includes('iphone') || deviceString.includes('ipad') || deviceString.includes('ios')) {
-                deviceIcons += '<span class="device-badge device-ios me-2"><i class="fab fa-apple me-1"></i>iOS</span>';
+                deviceIcons += '<span class="device-badge device-ios me-2"><i class="fab fa-apple"></i></span>';
             }
             
             if (deviceString.includes('desktop')) {
-                deviceIcons += '<span class="device-badge me-2"><i class="fas fa-desktop me-1"></i>Desktop</span>';
+                deviceIcons += '<span class="device-badge me-2"><i class="fas fa-desktop"></i></span>';
             }
             
-            $('#taskDeviceCompat').html('<div class="ms-4 mb-2"><strong>Compatible with:</strong> ' + deviceIcons + '</div>');
+            $('#taskDeviceCompat').html(deviceIcons);
         } else {
             $('#taskDeviceCompat').html('');
         }
