@@ -125,6 +125,22 @@ body .navbar + .full-width-container {
     color: var(--primary-color);
 }
 
+/* Points Badge Styling */
+.points-badge {
+    font-size: 0.9rem;
+    padding: 6px 10px;
+    border-radius: 50px;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background-color: var(--success-color);
+    transition: transform 0.2s;
+}
+
+.points-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
 /* Task Image styles */
 .task-image-container {
     position: relative;

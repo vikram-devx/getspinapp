@@ -593,7 +593,9 @@ include 'includes/header.php';
                                 
                                 <div class="d-flex justify-content-between align-items-center mt-3">
                                     <div class="task-payout">
-                                        <strong><?php echo formatPoints($points); ?></strong> points
+                                        <span class="badge bg-success points-badge">
+                                            <i class="fas fa-coins me-1"></i> <?php echo formatPoints($points); ?> points
+                                        </span>
                                     </div>
                                     <button type="button" class="btn btn-sm btn-primary view-task" 
                                         data-id="<?php echo $offer_id; ?>"
