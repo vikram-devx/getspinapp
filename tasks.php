@@ -347,6 +347,39 @@ if ($use_sample_offers) {
     ];
     
     // Rearrange sample offers based on device type
+    // Get completed offers to filter them out
+    $completed_offers = [];
+    try {
+        $stmt = $conn->prepare("SELECT offer_id FROM user_offers WHERE user_id = :user_id AND completed = 1");
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        if ($result) {
+            foreach ($result as $row) {
+                $completed_offers[] = $row['offer_id'];
+            }
+        }
+    } catch (PDOException $e) {
+        error_log("Error fetching completed offers: " . $e->getMessage());
+    }
+    
+    // Filter out completed offers from sample offers
+    $filtered_offers = [];
+    foreach ($sample_offers as $offer) {
+        $offer_id = isset($offer['offerid']) ? $offer['offerid'] : '';
+        
+        // Skip if this offer has been completed
+        if (in_array($offer_id, $completed_offers)) {
+            continue;
+        }
+        
+        $filtered_offers[] = $offer;
+    }
+    
+    // Replace with filtered sample offers
+    $sample_offers = $filtered_offers;
+    
     if ($device_info['is_mobile']) {
         // For mobile, put CPI offers first
         $offers = sortOffersByDeviceType($sample_offers, 'mobile');
@@ -357,10 +390,44 @@ if ($use_sample_offers) {
         error_log("Using sample offers, sorted for " . $device_type);
     }
 } else {
-    // Sort real offers based on device type if we have offers
+    // Filter out completed offers if we have real offers
     if (!empty($offers)) {
+        // Get completed offers to filter them out
+        $completed_offers = [];
+        try {
+            $stmt = $conn->prepare("SELECT offer_id FROM user_offers WHERE user_id = :user_id AND completed = 1");
+            $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            if ($result) {
+                foreach ($result as $row) {
+                    $completed_offers[] = $row['offer_id'];
+                }
+            }
+        } catch (PDOException $e) {
+            error_log("Error fetching completed offers: " . $e->getMessage());
+        }
+        
+        // Filter out completed offers
+        $filtered_offers = [];
+        foreach ($offers as $offer) {
+            $offer_id = isset($offer['offerid']) ? $offer['offerid'] : '';
+            
+            // Skip if this offer has been completed
+            if (in_array($offer_id, $completed_offers)) {
+                continue;
+            }
+            
+            $filtered_offers[] = $offer;
+        }
+        
+        // Replace offers with filtered list
+        $offers = $filtered_offers;
+        
+        // Sort offers by device type
         $offers = sortOffersByDeviceType($offers, $device_type);
-        error_log("Sorted " . count($offers) . " offers for " . $device_type);
+        error_log("Filtered and sorted " . count($offers) . " offers for " . $device_type);
     }
 }
 
