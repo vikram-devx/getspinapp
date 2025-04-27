@@ -22,7 +22,8 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
 
 // If user is already logged in, redirect to dashboard
 if ($auth->isLoggedIn()) {
-    header('Location: ' . url('dashboard', [], true));
+    // Use direct file reference to avoid pretty URL redirection issues
+    header('Location: dashboard.php');
     exit;
 }
 
@@ -41,7 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = $auth->login($username, $password);
         
         if ($result['status'] === 'success') {
-            header('Location: ' . url('dashboard', [], true));
+            // Use direct file reference to avoid pretty URL redirection issues
+            header('Location: dashboard.php');
             exit;
         } else {
             $error = $result['message'];
