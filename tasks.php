@@ -644,9 +644,7 @@ include 'includes/header.php';
                     <button type="submit" id="hiddenSubmitButton">Submit</button>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
+            <!-- Modal footer removed as requested -->
         </div>
     </div>
 </div>

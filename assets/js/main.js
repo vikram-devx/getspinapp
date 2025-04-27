@@ -228,9 +228,9 @@ $(document).ready(function() {
         $('#taskDescription').text(taskDescription);
         $('#taskRequirements').html(taskRequirements);
         
-        // Hide Instructions section if it's identical to the description
+        // Hide Instructions section completely if it's identical to the description
         if (taskAdCopy && taskDescription && taskAdCopy.trim() === taskDescription.trim()) {
-            // Hide the entire Instructions section
+            // Hide the entire Instructions section (including label and icon)
             $('#instructionsSection').hide();
         } else {
             // Show Instructions section and set content
