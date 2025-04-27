@@ -1220,15 +1220,54 @@ function getTaskProgress($user_id, $offer_id = null) {
         }
         $stmt->execute();
         
-        if ($offer_id) {
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        } else {
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results = $offer_id ? $stmt->fetch(PDO::FETCH_ASSOC) : $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Add task names
+        if ($results) {
+            // If single result
+            if ($offer_id && is_array($results) && !isset($results[0])) {
+                // We need to add a title for this task
+                $task_id = $results['offer_id'];
+                $customName = getCustomTaskName($task_id);
+                $results['offer_name'] = $customName;
+                $results['offer_name_short'] = $customName;
+            } 
+            // If multiple results
+            else if (is_array($results)) {
+                foreach ($results as &$task) {
+                    $task_id = $task['offer_id'];
+                    $customName = getCustomTaskName($task_id);
+                    $task['offer_name'] = $customName;
+                    $task['offer_name_short'] = $customName;
+                }
+            }
         }
+        
+        return $results;
     } catch (PDOException $e) {
         error_log("Error getting task progress: " . $e->getMessage());
         return false;
     }
+}
+
+// Helper function to get a custom task name
+function getCustomTaskName($task_id) {
+    // These are common task names from OGAds
+    $taskNames = [
+        '61182' => 'Kroger Gift Card',
+        '60878' => 'MyPoints Rewards',
+        '60559' => 'Tetris Party',
+        '60557' => 'Evony Game Install',
+        '60552' => 'Target Gift Card',
+        '60444' => 'Amazon Card',
+        '60442' => 'Google Play Card',
+        '60088' => 'Quiz Game',
+        '59817' => 'Walmart Gift Card',
+        '59469' => 'Burger King Offer'
+    ];
+    
+    // Return custom name if available, otherwise default to Task ID
+    return $taskNames[$task_id] ?? 'Task #' . $task_id;
 }
 
 // Function to complete user offer

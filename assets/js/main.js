@@ -181,7 +181,7 @@ $(document).ready(function() {
             var progressHtml = `
                 <div class="task-progress-item mb-4" data-offer-id="${task.offer_id}">
                     <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="task-name fw-bold">Task #${task.offer_id}</span>
+                        <span class="task-name fw-bold">${task.offer_name || `Task #${task.offer_id}`}</span>
                         <span class="badge bg-${statusClass}"><i class="${statusIcon} me-1"></i> ${statusText}</span>
                     </div>
                     <div class="progress mb-2" style="height: 10px;">
