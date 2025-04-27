@@ -12,12 +12,12 @@ $stats = getUserStats($current_user['id']);
         <h5 class="mb-0">User Profile</h5>
     </div>
     <div class="card-body">
-        <div class="d-flex align-items-center mb-3">
-            <div class="avatar-placeholder bg-primary text-white rounded-circle me-3">
+        <div class="text-center mb-3">
+            <div class="avatar-placeholder bg-primary text-white rounded-circle mx-auto mb-2" style="width: 70px; height: 70px; font-size: 1.5rem;">
                 <?php echo strtoupper(substr($current_user['username'], 0, 1)); ?>
             </div>
             <div>
-                <h6 class="mb-0"><?php echo htmlspecialchars($current_user['username']); ?></h6>
+                <h6 class="mb-1"><?php echo htmlspecialchars($current_user['username']); ?></h6>
                 <small class="text-muted">Member since <?php echo date('M Y', strtotime($current_user['created_at'])); ?></small>
             </div>
         </div>
