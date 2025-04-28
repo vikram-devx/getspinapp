@@ -14,41 +14,47 @@
     --hero-bg: #333333;       /* Lighter background for hero section */
 }
 
-/* Mobile Login Icon */
-.mobile-login-icon {
+/* Non-logged-in navigation styling */
+.non-logged-nav {
     display: flex;
     align-items: center;
-    justify-content: center;
+}
+
+.nav-action-btn {
+    display: flex;
+    align-items: center;
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
     color: white;
-    padding: 0.6rem;
-    font-size: 1.6rem;
-    margin-right: 0.75rem;
+    font-weight: 500;
+    font-size: 0.95rem;
     transition: all 0.2s ease;
-    border-radius: 50%;
     background-color: rgba(255, 255, 255, 0.15);
-    width: 42px;
-    height: 42px;
+    margin-right: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.mobile-login-icon:hover, 
-.mobile-login-icon:focus {
-    color: white;
-    transform: scale(1.1);
+.nav-action-btn i {
+    font-size: 1.1rem;
+}
+
+.nav-action-btn:hover, 
+.nav-action-btn:focus {
     background-color: rgba(255, 255, 255, 0.25);
+    color: white;
+    transform: translateY(-2px);
     text-decoration: none;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Register icon styling */
-.mobile-register-icon {
-    margin-right: 1rem;
-    background-color: rgba(28, 200, 138, 0.25);
+.nav-action-btn.btn-register {
+    background-color: rgba(40, 167, 69, 0.85);
 }
 
-.mobile-register-icon:hover, 
-.mobile-register-icon:focus {
-    background-color: rgba(28, 200, 138, 0.35);
+.nav-action-btn.btn-register:hover,
+.nav-action-btn.btn-register:focus {
+    background-color: rgba(40, 167, 69, 1);
 }
 
 /* Override Bootstrap primary color */

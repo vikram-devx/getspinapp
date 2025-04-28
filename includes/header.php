@@ -86,18 +86,9 @@ $app_logo = getSetting('app_logo', '');
             <!-- Spacer div to push mobile elements to the right -->
             <div class="flex-grow-1 d-lg-none"></div>
             
-            <?php if (!$auth->isLoggedIn()): ?>
-            <!-- Mobile/Tablet Login Icon (only shown on small screens) -->
-            <a href="/login" class="d-lg-none mobile-login-icon" title="Login">
-                <i class="fas fa-user-circle"></i>
-            </a>
-            <a href="/register" class="d-lg-none mobile-login-icon mobile-register-icon" title="Register">
-                <i class="fas fa-user-plus"></i>
-            </a>
-            <?php endif; ?>
-            
-            <!-- Modified for new mobile menu - show on mobile only -->
+            <!-- Mobile menu controls - different styles for logged in vs non-logged in users -->
             <?php if ($auth->isLoggedIn()): ?>
+            <!-- For logged-in users: avatar toggle for slide menu + desktop hamburger -->
             <button class="navbar-toggler d-lg-none user-avatar-toggle" type="button" id="mobileMenuToggle" aria-label="Toggle mobile menu">
                 <span class="user-avatar-icon"><?php echo strtoupper(substr($current_user['username'], 0, 1)); ?></span>
             </button>
@@ -106,66 +97,61 @@ $app_logo = getSetting('app_logo', '');
                 <span class="navbar-toggler-icon"></span>
             </button>
             <?php else: ?>
-            <!-- Regular hamburger menu for non-logged in users -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <!-- For non-logged in users: simplified navigation with icons only -->
+            <div class="d-flex align-items-center non-logged-nav">
+                <a href="/login" class="nav-action-btn me-2" title="Login">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span class="d-none d-sm-inline ms-1">Login</span>
+                </a>
+                <a href="/register" class="nav-action-btn btn-register" title="Register">
+                    <i class="fas fa-user-plus"></i>
+                    <span class="d-none d-sm-inline ms-1">Register</span>
+                </a>
+            </div>
             <?php endif; ?>
             
+            <!-- Navigation menu items - only show for logged in users on mobile -->
+            <?php if ($auth->isLoggedIn()): ?>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <?php if ($auth->isLoggedIn()): ?>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/dashboard">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/tasks">Earn Points</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/rewards">Rewards</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/leaderboard">Leaderboard</a>
-                        </li>
-                    <?php else: ?>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/">Home</a>
-                        </li>
-                    <?php endif; ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tasks">Earn Points</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/rewards">Rewards</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/leaderboard">Leaderboard</a>
+                    </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
-                    <?php if ($auth->isLoggedIn()): ?>
-                        <?php if ($auth->isAdmin()): ?>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/admin/index">Admin Panel</a>
-                            </li>
-                        <?php endif; ?>
+                    <?php if ($auth->isAdmin()): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="fas fa-coins"></i> <?php echo formatPoints($current_user['points']); ?> Points
-                            </a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-user"></i> <?php echo htmlspecialchars($current_user['username']); ?>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                                <li><a class="dropdown-item" href="/profile"><i class="fas fa-user-cog"></i> My Profile</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="/login?action=logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-                            </ul>
-                        </li>
-                    <?php else: ?>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/login">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/register">Register</a>
+                            <a class="nav-link" href="/admin/index">Admin Panel</a>
                         </li>
                     <?php endif; ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-coins"></i> <?php echo formatPoints($current_user['points']); ?> Points
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user"></i> <?php echo htmlspecialchars($current_user['username']); ?>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                            <li><a class="dropdown-item" href="/profile"><i class="fas fa-user-cog"></i> My Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/login?action=logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
+            <?php endif; ?>
         </div>
     </nav>
     
