@@ -1795,6 +1795,7 @@ body .navbar + .full-width-container {
     display: none !important;
 }
 
+/* Fix for slides not showing up */
 .dashboard-slider::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera */
 }
@@ -1806,6 +1807,11 @@ body .navbar + .full-width-container {
     position: relative;
     box-sizing: border-box;
     padding: 0.25rem;
+    transform: translateZ(0); /* Force hardware acceleration */
+    will-change: transform; /* Optimization for animations */
+    backface-visibility: hidden; /* Prevent flickering during transitions */
+    opacity: 1 !important; /* Ensure all slides are fully visible */
+    visibility: visible !important; /* Make sure slides are visible */
 }
 
 .dashboard-slide-content {

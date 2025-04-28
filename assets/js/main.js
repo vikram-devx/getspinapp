@@ -812,6 +812,13 @@ $(document).ready(function() {
             // Update currentSlide
             dashCurrentSlide = slideIndex;
             
+            // Ensure all slides are visible in the DOM
+            $('.dashboard-slide').css({
+                'visibility': 'visible',
+                'opacity': '1',
+                'display': 'block'
+            });
+            
             // Use transform for sliding on all devices
             $('.dashboard-slider').css('transform', 'translateX(-' + (slideIndex * 100) + '%)');
             
