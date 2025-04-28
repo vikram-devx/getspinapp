@@ -1383,6 +1383,54 @@ body .navbar + .full-width-container {
 }
 
 @media (max-width: 576px) {
+    /* Fix mobile app layout */
+    .dashboard-container {
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+    
+    /* Make cards full width on mobile */
+    .dashboard-content {
+        width: 100vw;
+        padding: 0;
+        overflow: hidden;
+    }
+    
+    .dashboard-content .card {
+        border-radius: 0;
+        margin-bottom: 0.5rem;
+        border-left: none;
+        border-right: none;
+    }
+    
+    .dashboard-content .card-body {
+        padding: 1rem 0.75rem;
+    }
+    
+    /* Fix row margins */
+    .row {
+        margin-left: -0.35rem;
+        margin-right: -0.35rem;
+    }
+    
+    .col-6, .col-md-6, .col-lg-3, .col-lg-4, .col-md-4 {
+        padding-left: 0.35rem;
+        padding-right: 0.35rem;
+    }
+    
+    /* Make cards fill their container */
+    .dashboard-stat-card {
+        width: 100% !important;
+        margin: 0;
+    }
+    
+    /* Quick action buttons */
+    .quick-action-btn {
+        width: 100%;
+    }
+    
     .dashboard-slide-content {
         padding: 1rem;
         min-height: 200px;
