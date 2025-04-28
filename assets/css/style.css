@@ -2164,13 +2164,14 @@ body .navbar + .full-width-container {
     top: 0;
     left: 0;
     right: 0;
-    z-index: 1030;
+    z-index: 1050; /* Increased z-index to ensure it's above all content */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
+    height: 64px; /* Set explicit height to ensure consistency */
 }
 
 .content-with-fixed-header {
-    padding-top: 100px; /* Significantly increased padding to ensure content is fully visible below header */
+    padding-top: 120px; /* Further increased padding to ensure content is fully visible below header */
     margin-top: 0; /* Reset any margins that might affect positioning */
 }
 
@@ -2198,16 +2199,37 @@ body .navbar + .full-width-container {
     z-index: 5; /* Higher than the fixed header */
 }
 
+/* Special fix for tasks page */
+.card-header h5 {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+/* Additional margin for top card on each page */
+.container > .row > div > .card:first-child {
+    margin-top: 20px;
+}
+
 /* Mobile-specific padding for fixed header and bottom nav */
 @media (max-width: 767.98px) {
     .content-with-fixed-header {
-        padding-top: 100px; /* Same as desktop to ensure consistency across devices */
+        padding-top: 120px; /* Same as desktop to ensure consistency across devices */
         padding-bottom: 75px; /* Add padding at the bottom for the mobile bottom nav */
     }
     
     /* Ensure content isn't hidden behind bottom nav */
     body {
         padding-bottom: 75px;
+    }
+    
+    /* Ensure card tops are visible */
+    .card {
+        margin-top: 15px;
+    }
+    
+    /* Fix for tasks page specifically */
+    .card-header {
+        padding-top: 15px !important;
     }
 }
 
