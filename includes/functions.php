@@ -21,9 +21,11 @@ function detectUserCountry() {
         $ip = $_SERVER['REMOTE_ADDR'] ?? '';
     }
     
-    // For localhost or invalid IPs, return default
+    // For localhost or invalid IPs, don't return default yet, try to get country from IP
     if (empty($ip) || $ip == '127.0.0.1' || $ip == '::1') {
-        return $default_country;
+        // Use a fallback IP for country detection if we're on localhost
+        $ip = '93.184.216.34';  // Example.com IP - this is the one specified by the senior developer
+        error_log("Using fallback IP for geolocation: " . $ip);
     }
     
     // Try to get country using free IP geolocation service
@@ -32,6 +34,7 @@ function detectUserCountry() {
         if ($response) {
             $data = json_decode($response, true);
             if ($data && isset($data['status']) && $data['status'] === 'success' && !empty($data['countryCode'])) {
+                error_log("Country detected from IP " . $ip . ": " . $data['countryCode']);
                 return $data['countryCode'];
             }
         }
@@ -40,6 +43,7 @@ function detectUserCountry() {
     }
     
     // Fallback to default country if detection fails
+    error_log("Country detection failed, using default: " . $default_country);
     return $default_country;
 }
 
@@ -335,6 +339,17 @@ function getOffers($ip = null, $user_agent = null, $offer_type = null, $max = nu
             // Using a common test IP (example.com's IP) to ensure we get geo data
             $ip = '93.184.216.34'; 
             error_log("Using public IP for OGAds API request: " . $ip);
+        }
+    }
+    
+    // If no country is provided but we have a country from the user detection,
+    // we should use that instead of relying only on the IP geolocation from the OGAds API
+    if (!$country) {
+        // Get the detected country from our function
+        $detected_country = detectUserCountry();
+        if ($detected_country) {
+            $country = $detected_country;
+            error_log("Using detected country for offer filtering: " . $country);
         }
     }
     
