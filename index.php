@@ -7,7 +7,7 @@ $auth = new Auth();
 
 // If user is already logged in, redirect to dashboard
 if ($auth->isLoggedIn()) {
-    header('Location: dashboard.php');
+    header('Location: dashboard');
     exit;
 }
 
@@ -102,7 +102,7 @@ include 'includes/header.php';
                     <div class="mt-4">
                         <a href="<?php echo htmlspecialchars($slide['button_url']); ?>" class="btn btn-light btn-lg"><?php echo htmlspecialchars($slide['button_text']); ?></a>
                         <?php if ($index === 0): ?>
-                        <a href="login.php" class="btn btn-outline-light btn-lg ms-2">Login</a>
+                        <a href="login" class="btn btn-outline-light btn-lg ms-2">Login</a>
                         <?php endif; ?>
                     </div>
                     <?php endif; ?>
