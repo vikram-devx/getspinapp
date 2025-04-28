@@ -2251,23 +2251,51 @@ body.dashboard-page .dashboard-stat-card {
 
 /* Featured Promotions Slider Fixes for Tablet */
 @media (min-width: 768px) and (max-width: 991.98px) {
+    /* Transform the slider into a horizontal layout for tablet */
+    .dashboard-slider {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Firefox */
+        padding-bottom: 15px;
+    }
+    
+    .dashboard-slider::-webkit-scrollbar {
+        display: none; /* Chrome, Safari and Opera */
+    }
+    
     .dashboard-slider .dashboard-slide {
-        display: inline-block;
-        width: 100%;
+        flex: 0 0 auto !important;
+        width: 85% !important;
+        scroll-snap-align: start;
+        margin-right: 15px;
+    }
+    
+    .dashboard-slider .dashboard-slide:last-child {
+        margin-right: 0;
     }
     
     .dashboard-slider-wrapper {
-        overflow-x: hidden;
+        overflow: visible !important;
+        padding: 10px 0;
     }
     
+    /* Fix slide content */
     .dashboard-slide-content {
         margin: 0;
+        border-radius: 8px;
+        height: 100%;
     }
     
+    /* Fix row inside each slide */
     .dashboard-slide-content .row {
         flex-direction: row !important;
+        height: 100%;
     }
     
+    /* Fix column widths inside slides */
     .dashboard-slide-content .col-md-8 {
         width: 65% !important;
         padding-left: 15px;
@@ -2282,7 +2310,20 @@ body.dashboard-page .dashboard-stat-card {
     
     .dashboard-slide-content .col-md-4 i {
         display: inline-block !important;
-        font-size: 3em !important;
+        font-size: 2.5em !important;
+    }
+    
+    /* Make the slider dots more visible on tablet */
+    .dashboard-slider-controls {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+    }
+    
+    .dashboard-slider-dot {
+        width: 10px;
+        height: 10px;
+        margin: 0 5px;
     }
 }
 

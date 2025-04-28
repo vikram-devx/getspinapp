@@ -801,17 +801,53 @@ $(document).ready(function() {
         var dashSlideWidth = 25; // 25% per slide (for 4 slides)
         var dashAutoSlideInterval;
         
+        // Handle slider differently based on viewport width
+        var isTablet = window.matchMedia('(min-width: 768px) and (max-width: 991.98px)').matches;
+        
         // Initialize slider if multiple slides exist
         if (dashTotalSlides > 1) {
-            // Start auto-sliding
-            dashStartAutoSlide();
+            if (!isTablet) {
+                // Start auto-sliding for non-tablet devices
+                dashStartAutoSlide();
+            }
             
             // Handle dot click
             $(document).on('click', '.dashboard-slider-dot', function() {
                 var index = $(this).data('slide');
-                dashGoToSlide(index);
-                dashResetAutoSlide();
+                
+                if (isTablet) {
+                    // Tablet - just scroll to the slide
+                    var slideElement = $('.dashboard-slide').eq(index);
+                    if (slideElement.length) {
+                        $('.dashboard-slider').animate({
+                            scrollLeft: slideElement.position().left
+                        }, 500);
+                        
+                        // Update active dot
+                        $('.dashboard-slider-dot').removeClass('active');
+                        $(this).addClass('active');
+                    }
+                } else {
+                    // Desktop/Mobile - use transition
+                    dashGoToSlide(index);
+                    dashResetAutoSlide();
+                }
             });
+            
+            // For tablet, add scroll event to highlight the right dot
+            if (isTablet) {
+                $('.dashboard-slider').on('scroll', function() {
+                    var scrollPos = $(this).scrollLeft();
+                    var slideWidth = $('.dashboard-slide').first().outerWidth(true);
+                    
+                    // Calculate which slide is most visible
+                    var currentIndex = Math.round(scrollPos / slideWidth);
+                    
+                    // Update dots
+                    $('.dashboard-slider-dot').removeClass('active');
+                    $('.dashboard-slider-dot[data-slide="' + currentIndex + '"]').addClass('active');
+                });
+            }
         }
         
         // Function to go to a specific slide
