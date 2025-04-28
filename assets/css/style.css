@@ -518,6 +518,28 @@ body .navbar + .full-width-container {
     gap: 1.5rem;
 }
 
+/* Default layout for large screens */
+@media (min-width: 1200px) {
+    .dashboard-container {
+        display: flex;
+        flex-direction: row;
+    }
+    
+    .dashboard-sidebar {
+        flex: 0 0 300px;
+        display: block !important;
+        position: sticky;
+        top: 90px;
+        height: calc(100vh - 90px);
+        overflow-y: auto;
+    }
+    
+    .dashboard-content {
+        flex: 1;
+        max-width: calc(100% - 315px);
+    }
+}
+
 /* On mobile, reverse the order of sidebar and content */
 @media (max-width: 991px) {
     .dashboard-container {
@@ -2341,6 +2363,32 @@ body.dashboard-page .dashboard-stat-card {
 
 /* Small desktop layout fixes (992px to 1199px) */
 @media (min-width: 992px) and (max-width: 1199.98px) {
+    /* Fix dashboard layout to display sidebar and content side by side */
+    .dashboard-container {
+        display: flex;
+        flex-direction: row !important;
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .dashboard-sidebar {
+        flex: 0 0 250px !important; /* Fixed width sidebar */
+        order: 1;
+        display: block !important;
+        margin-right: 15px;
+        position: sticky;
+        top: 90px;
+        height: calc(100vh - 90px);
+        overflow-y: auto;
+    }
+    
+    .dashboard-content {
+        flex: 1 !important;
+        order: 2;
+        max-width: calc(100% - 265px) !important;
+        padding-left: 0 !important;
+    }
+    
     /* Fix dashboard stat cards on small desktop to display in a row */
     .dashboard-stat-card {
         min-height: 120px;
@@ -2366,10 +2414,24 @@ body.dashboard-page .dashboard-stat-card {
     }
     
     /* Ensure mobile menu doesn't appear on small desktop */
-    @media (min-width: 992px) {
-        .mobile-slide-menu, .menu-backdrop {
-            display: none !important;
-        }
+    .mobile-slide-menu, .menu-backdrop {
+        display: none !important;
+    }
+    
+    /* Improve spacing in small desktop layout */
+    body.dashboard-page .card-body {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+    
+    /* Fix sidebar profile avatar section */
+    .sidebar-profile {
+        padding: 15px 10px;
+    }
+    
+    .sidebar-profile .avatar-container {
+        width: 80px;
+        height: 80px;
     }
 }
 
