@@ -583,28 +583,36 @@ body .navbar + .full-width-container {
     .dashboard-container {
         display: flex;
         flex-direction: row !important;
-        gap: 1.75rem; /* Increased gap for better separation */
-        align-items: flex-start;
+        gap: 1.5rem; /* Adjusted gap between sidebar and content */
+        align-items: stretch; /* Make both columns the same height */
         max-width: 1400px; /* Set a max-width for very large screens */
         margin: 0 auto; /* Center the dashboard content on large screens */
+        padding: 0; /* Remove any padding */
     }
     
     .dashboard-sidebar {
-        flex: 0 0 320px !important; /* Slightly wider sidebar */
+        flex: 0 0 300px !important; /* Fixed width sidebar */
         display: block !important;
-        position: sticky; /* Make sidebar sticky on large screens */
-        top: 90px; /* Position from top to match header height */
-        height: calc(100vh - 110px); /* Set a fixed height */
-        padding: 0 10px 20px 0; /* Add padding for spacing */
-        overflow-x: hidden; /* Only hide horizontal overflow */
-        overflow-y: auto; /* Allow scrolling for tall sidebar content */
-        transition: all 0.3s ease; /* Smooth transitions */
+        position: relative; /* Change to relative positioning */
+        padding: 0; /* Remove all padding */
+        margin: 0; /* Remove all margins */
+        overflow: visible; /* No scrollbars on the sidebar itself */
+        height: auto; /* Let it size naturally */
+    }
+    
+    /* Fixed sidebar cards with no separate scrolling */
+    .dashboard-sidebar .card {
+        margin-bottom: 1.5rem;
+        border-radius: 0.75rem;
+        overflow: hidden;
+        box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.1);
     }
     
     .dashboard-content {
         flex: 1;
-        max-width: calc(100% - 350px); /* Adjusted to account for wider sidebar */
+        max-width: calc(100% - 320px); /* Adjusted to account for sidebar width */
         min-width: 0; /* Prevent flex items from overflowing */
+        padding: 0; /* Remove any padding */
     }
     
     /* Card adjustments for large screens */
@@ -726,22 +734,34 @@ body .navbar + .full-width-container {
         display: flex !important;
         flex-direction: row !important;
         flex-wrap: nowrap !important;
+        align-items: stretch; /* Make both columns the same height */
+        gap: 1.25rem; /* Add gap between sidebar and content */
     }
     
     .dashboard-sidebar {
-        width: 300px;
-        flex: 0 0 300px;
+        width: 280px;
+        flex: 0 0 280px;
         display: block !important;
-        overflow-x: hidden; /* Only hide horizontal overflow */
-        overflow-y: visible; /* Allow vertical content to flow normally */
+        overflow: visible; /* No scrollbars on sidebar itself */
         position: relative;
-        padding-top: 0; /* Remove extra padding at the top */
+        padding: 0; /* Remove all padding */
+        margin: 0; /* Remove all margins */
+        height: auto; /* Let it size naturally */
+    }
+    
+    /* Fix sidebar cards */
+    .dashboard-sidebar .card {
+        margin-bottom: 1.5rem;
+        border-radius: 0.75rem;
+        overflow: hidden;
+        box-shadow: 0 0.15rem 1rem rgba(0, 0, 0, 0.08);
     }
     
     .dashboard-content {
         flex: 1;
-        width: calc(100% - 315px);
-        max-width: calc(100% - 315px);
+        width: calc(100% - 300px);
+        max-width: calc(100% - 300px);
+        padding: 0;
     }
     
     .mobile-sidebar-heading {
@@ -2531,42 +2551,33 @@ body.dashboard-page .dashboard-stat-card {
         width: 100%;
         max-width: 100%;
         gap: 1.25rem; /* Add gap between sidebar and content */
+        align-items: stretch; /* Make both columns the same height */
     }
     
     .dashboard-sidebar {
-        width: 280px !important;
-        flex: 0 0 280px !important; /* Adjusted width for small desktop */
+        width: 270px !important;
+        flex: 0 0 270px !important; /* Adjusted width for small desktop */
         display: block !important;
-        position: sticky; /* Keep sidebar in view while scrolling */
-        top: 80px; /* Align with header */
-        height: calc(100vh - 95px);
-        overflow-y: auto; /* Allow scrolling for tall sidebar */
-        padding-right: 10px; /* Add padding for scrollbar */
-        transition: all 0.3s ease; /* Smooth transitions */
-        /* Styled scrollbar for webkit browsers */
-        scrollbar-width: thin;
-        scrollbar-color: #e0e0e0 transparent;
+        position: relative; /* Change to relative to match large screen behavior */
+        padding: 0; /* Remove all padding */
+        margin: 0; /* Remove all margins */
+        overflow: visible; /* No scrollbars on sidebar itself */
+        height: auto; /* Let it size naturally */
     }
     
-    /* Custom scrollbar styling */
-    .dashboard-sidebar::-webkit-scrollbar {
-        width: 6px;
-    }
-    
-    .dashboard-sidebar::-webkit-scrollbar-thumb {
-        background-color: #e0e0e0;
-        border-radius: 10px;
-    }
-    
-    .dashboard-sidebar::-webkit-scrollbar-thumb:hover {
-        background-color: #d0d0d0;
+    /* Fixed sidebar cards with no separate scrolling */
+    .dashboard-sidebar .card {
+        margin-bottom: 1.5rem;
+        border-radius: 0.75rem;
+        overflow: hidden;
+        box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.1);
     }
     
     .dashboard-content {
         flex: 1 !important;
-        width: calc(100% - 290px) !important;
-        max-width: calc(100% - 290px) !important;
-        padding-left: 0 !important;
+        width: calc(100% - 280px) !important;
+        max-width: calc(100% - 280px) !important;
+        padding: 0 !important;
         min-width: 0; /* Prevent content from overflowing */
     }
     
