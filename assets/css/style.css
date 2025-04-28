@@ -3240,6 +3240,8 @@ body.dashboard-page .dashboard-stat-card {
     transition: opacity 0.5s ease-in-out;
     border-radius: 0 0 0.25rem 0.25rem;
     overflow: hidden;
+    text-align: left !important;
+    align-items: flex-start !important;
 }
 
 .promo-slide.active {
@@ -3300,7 +3302,7 @@ body.dashboard-page .dashboard-stat-card {
     }
     
     .promo-slide h4 {
-        font-size: 1.1rem !important;
+        font-size: 1rem !important;
         margin-bottom: 0.25rem !important;
     }
     
@@ -3312,5 +3314,14 @@ body.dashboard-page .dashboard-stat-card {
     .promo-slide .btn {
         font-size: 0.8rem !important;
         padding: 0.25rem 0.5rem !important;
+    }
+    
+    .promo-slide .fa-2x {
+        font-size: 1.5em !important;
+    }
+    
+    .promo-slide p, .promo-slide div > a {
+        margin-left: 2.5rem !important;
+        padding-left: 0 !important;
     }
 }
