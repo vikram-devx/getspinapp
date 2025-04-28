@@ -1840,15 +1840,25 @@ function url($page, $params = [], $absolute = false) {
     // Build the query string
     $query = !empty($params) ? '?' . http_build_query($params) : '';
     
+    // Get the base path of the application (might be in a subdirectory)
+    $base_path = '';
+    if (isset($_SERVER['SCRIPT_NAME'])) {
+        $base_path = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+        // If we're in the root directory, $base_path will be empty or '/'
+        if ($base_path === '/') {
+            $base_path = '';
+        }
+    }
+    
     // For absolute URLs (if needed)
     if ($absolute) {
         $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https://' : 'http://';
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-        return $protocol . $host . '/' . $page . $query;
+        return $protocol . $host . $base_path . '/' . $page . $query;
     }
     
     // For relative URLs
-    return '/' . $page . $query;
+    return $base_path . '/' . $page . $query;
 }
 
 ?>
