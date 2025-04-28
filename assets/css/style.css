@@ -776,6 +776,10 @@ body .navbar + .full-width-container {
         min-width: 12rem;
         margin-top: 0.75rem;
         animation: fadeInDropdown 0.25s ease-out;
+        position: absolute;
+        z-index: 9999; /* Very high z-index to ensure it's above everything */
+        top: 100%; /* Position it below the link */
+        right: 0; /* Align to the right of the dropdown toggle */
     }
     
     @keyframes fadeInDropdown {
@@ -2480,6 +2484,11 @@ body .navbar + .full-width-container {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     height: 64px; /* Set explicit height to ensure consistency */
+    overflow: visible !important; /* Ensure dropdowns are visible outside the navbar */
+}
+
+.navbar.fixed-header .container {
+    overflow: visible !important; /* Ensure dropdowns are visible outside the container */
 }
 
 .content-with-fixed-header {
@@ -2653,6 +2662,15 @@ body.dashboard-page .dashboard-stat-card {
 
 /* Small desktop layout fixes (992px to 1199px) */
 @media (min-width: 992px) and (max-width: 1199.98px) {
+    /* Fix dropdown menu positioning for small desktop */
+    .nav-item.dropdown .dropdown-menu {
+        position: absolute;
+        z-index: 9999;
+        right: 0;
+        top: 100%;
+        margin-top: 0.75rem;
+    }
+    
     /* Optimized dashboard layout for small desktop screens */
     .dashboard-container {
         display: flex !important;
