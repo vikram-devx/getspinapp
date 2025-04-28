@@ -1366,6 +1366,20 @@ body .navbar + .full-width-container {
         width: 10px;
         height: 10px;
     }
+    
+    /* Ensure slider is always displayed as a row on mobile */
+    .dashboard-slider {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+    }
+    
+    .dashboard-slide {
+        min-width: 80%;
+        max-width: 80%;
+        flex: 0 0 80%;
+        margin-right: 1rem;
+    }
 }
 
 @media (max-width: 576px) {
@@ -1400,6 +1414,28 @@ body .navbar + .full-width-container {
     .dashboard-promo-slider {
         max-width: 100%;
         overflow: hidden;
+    }
+    
+    /* Mobile slider horizontal scroll */
+    .dashboard-slider {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE/Edge */
+    }
+    
+    .dashboard-slider::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+    }
+    
+    .dashboard-slide {
+        scroll-snap-align: start;
+        min-width: 90%;
+        max-width: 90%;
+        flex: 0 0 90%;
+        margin-right: 0.5rem;
     }
 }
 

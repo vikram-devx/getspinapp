@@ -808,8 +808,20 @@ $(document).ready(function() {
             // Update currentSlide
             dashCurrentSlide = slideIndex;
             
-            // Move to the correct slide
-            $('.dashboard-slider').css('transform', 'translateX(-' + (slideIndex * dashSlideWidth) + '%)');
+            // Check screen size to determine slide behavior
+            if (window.innerWidth <= 768) {
+                // On mobile, we use scroll behavior for a more native feel
+                var slideElement = $('.dashboard-slide').eq(slideIndex);
+                var scrollContainer = $('.dashboard-slider');
+                
+                // Smooth scroll to the target slide
+                scrollContainer.animate({
+                    scrollLeft: slideElement.position().left
+                }, 500);
+            } else {
+                // On desktop, use transform for sliding
+                $('.dashboard-slider').css('transform', 'translateX(-' + (slideIndex * dashSlideWidth) + '%)');
+            }
             
             // Update active dot
             $('.dashboard-slider-dot').removeClass('active');
