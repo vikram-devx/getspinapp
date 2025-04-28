@@ -79,4 +79,38 @@ include 'includes/header.php';
     </div>
 </div>
 
+<style>
+    /* Mobile optimization for transactions page */
+    @media (max-width: 767px) {
+        .card-header h5 {
+            font-size: 1.1rem;
+        }
+        
+        .card-header .btn {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+        }
+        
+        .table th {
+            font-size: 0.85rem;
+            padding: 0.5rem 0.25rem;
+        }
+        
+        .table td {
+            font-size: 0.85rem;
+            padding: 0.5rem 0.25rem;
+        }
+        
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.4rem;
+        }
+        
+        .btn-sm {
+            padding: 0.2rem 0.4rem;
+            font-size: 0.75rem;
+        }
+    }
+</style>
+
 <?php include 'includes/dashboard_footer.php'; ?>

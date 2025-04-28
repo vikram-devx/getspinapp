@@ -1731,7 +1731,14 @@ function getAllTransactions() {
 
 // Format points as currency
 function formatPoints($points) {
-    return number_format($points);
+    // Ensure we have a valid number before formatting
+    if ($points === null || $points === '') {
+        return '0';
+    }
+    
+    // Convert to integer to ensure clean formatting
+    $pointsValue = intval($points);
+    return number_format($pointsValue);
 }
 
 // Function to get a setting value
