@@ -27,8 +27,8 @@ include 'includes/header.php';
     </div>
     
     <!-- Dashboard Content -->
-    <div class="dashboard-content">
-        <div class="card">
+    <div class="dashboard-content w-100">
+        <div class="card mx-0">
             <div class="card-header d-flex justify-content-between align-items-center bg-white">
                 <h5 class="mb-0">Transaction History</h5>
                 <a href="<?php echo url('dashboard'); ?>" class="btn btn-sm btn-outline-primary">
@@ -78,6 +78,26 @@ include 'includes/header.php';
 <style>
     /* Mobile optimization for transactions page */
     @media (max-width: 767px) {
+        .dashboard-container {
+            padding: 0;
+            margin: 0;
+            width: 100%;
+        }
+        
+        .dashboard-content {
+            padding: 0;
+        }
+        
+        .card {
+            border-radius: 0;
+            border-left: none;
+            border-right: none;
+        }
+        
+        .card-header {
+            padding: 0.75rem;
+        }
+        
         .card-header h5 {
             font-size: 1.1rem;
         }
@@ -85,6 +105,10 @@ include 'includes/header.php';
         .card-header .btn {
             font-size: 0.8rem;
             padding: 0.25rem 0.5rem;
+        }
+        
+        .card-body {
+            padding: 0.75rem;
         }
         
         .table th {
