@@ -774,4 +774,58 @@ $(document).ready(function() {
             });
         });
     }
+    
+    // Dashboard Promo Slider Functionality
+    if ($('.dashboard-promo-slider').length) {
+        var dashCurrentSlide = 0;
+        var dashSlides = $('.dashboard-slide');
+        var dashTotalSlides = dashSlides.length;
+        var dashSlideWidth = 25; // 25% per slide (for 4 slides)
+        var dashAutoSlideInterval;
+        
+        // Initialize slider if multiple slides exist
+        if (dashTotalSlides > 1) {
+            // Start auto-sliding
+            dashStartAutoSlide();
+            
+            // Handle dot click
+            $(document).on('click', '.dashboard-slider-dot', function() {
+                var index = $(this).data('slide');
+                dashGoToSlide(index);
+                dashResetAutoSlide();
+            });
+        }
+        
+        // Function to go to a specific slide
+        function dashGoToSlide(slideIndex) {
+            // Handle circular navigation
+            if (slideIndex < 0) {
+                slideIndex = dashTotalSlides - 1;
+            } else if (slideIndex >= dashTotalSlides) {
+                slideIndex = 0;
+            }
+            
+            // Update currentSlide
+            dashCurrentSlide = slideIndex;
+            
+            // Move to the correct slide
+            $('.dashboard-slider').css('transform', 'translateX(-' + (slideIndex * dashSlideWidth) + '%)');
+            
+            // Update active dot
+            $('.dashboard-slider-dot').removeClass('active');
+            $('.dashboard-slider-dot[data-slide="' + slideIndex + '"]').addClass('active');
+        }
+        
+        // Auto-slide functionality
+        function dashStartAutoSlide() {
+            dashAutoSlideInterval = setInterval(function() {
+                dashGoToSlide(dashCurrentSlide + 1);
+            }, 4000); // Change slide every 4 seconds
+        }
+        
+        function dashResetAutoSlide() {
+            clearInterval(dashAutoSlideInterval);
+            dashStartAutoSlide();
+        }
+    }
 });
