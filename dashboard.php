@@ -71,35 +71,47 @@ include 'includes/header.php';
                     
                     <!-- Stats Cards -->
                     <div class="row mb-4">
-                        <div class="col-md-6 col-lg-3 mb-3">
-                            <div class="card bg-primary text-white h-100">
+                        <div class="col-6 col-md-6 col-lg-3 mb-3">
+                            <div class="card bg-primary text-white h-100 dashboard-stat-card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Available Points</h5>
-                                    <h2 class="mb-0"><?php echo formatPoints($current_user['points']); ?></h2>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-coins stat-icon me-2"></i>
+                                        <h5 class="card-title mb-0">Available Points</h5>
+                                    </div>
+                                    <h2 class="mb-0 stat-value"><?php echo formatPoints($current_user['points']); ?></h2>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 col-lg-3 mb-3">
-                            <div class="card bg-success text-white h-100">
+                        <div class="col-6 col-md-6 col-lg-3 mb-3">
+                            <div class="card bg-success text-white h-100 dashboard-stat-card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Total Earned</h5>
-                                    <h2 class="mb-0"><?php echo formatPoints($stats['total_earned']); ?></h2>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-chart-line stat-icon me-2"></i>
+                                        <h5 class="card-title mb-0">Total Earned</h5>
+                                    </div>
+                                    <h2 class="mb-0 stat-value"><?php echo formatPoints($stats['total_earned']); ?></h2>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 col-lg-3 mb-3">
-                            <div class="card bg-info text-white h-100">
+                        <div class="col-6 col-md-6 col-lg-3 mb-3">
+                            <div class="card bg-info text-white h-100 dashboard-stat-card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Completed Offers</h5>
-                                    <h2 class="mb-0"><?php echo $stats['completed_offers']; ?></h2>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-tasks stat-icon me-2"></i>
+                                        <h5 class="card-title mb-0">Completed Offers</h5>
+                                    </div>
+                                    <h2 class="mb-0 stat-value"><?php echo $stats['completed_offers']; ?></h2>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 col-lg-3 mb-3">
-                            <div class="card bg-warning text-white h-100">
+                        <div class="col-6 col-md-6 col-lg-3 mb-3">
+                            <div class="card bg-warning text-white h-100 dashboard-stat-card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Redeemed Rewards</h5>
-                                    <h2 class="mb-0"><?php echo $stats['redeemed_rewards']; ?></h2>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-gift stat-icon me-2"></i>
+                                        <h5 class="card-title mb-0">Redeemed Rewards</h5>
+                                    </div>
+                                    <h2 class="mb-0 stat-value"><?php echo $stats['redeemed_rewards']; ?></h2>
                                 </div>
                             </div>
                         </div>
@@ -114,19 +126,22 @@ include 'includes/header.php';
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-4 mb-3">
-                                            <a href="<?php echo url('tasks'); ?>" class="btn btn-primary d-block">
-                                                <i class="fas fa-tasks me-2"></i> Find Tasks
+                                        <div class="col-6 col-md-4 mb-3">
+                                            <a href="<?php echo url('tasks'); ?>" class="btn btn-primary d-flex flex-column align-items-center justify-content-center py-3">
+                                                <i class="fas fa-tasks mb-2 action-icon"></i>
+                                                <span>Find Tasks</span>
                                             </a>
                                         </div>
-                                        <div class="col-md-4 mb-3">
-                                            <a href="<?php echo url('rewards'); ?>" class="btn btn-success d-block">
-                                                <i class="fas fa-gift me-2"></i> View Rewards
+                                        <div class="col-6 col-md-4 mb-3">
+                                            <a href="<?php echo url('rewards'); ?>" class="btn btn-success d-flex flex-column align-items-center justify-content-center py-3">
+                                                <i class="fas fa-gift mb-2 action-icon"></i>
+                                                <span>View Rewards</span>
                                             </a>
                                         </div>
-                                        <div class="col-md-4 mb-3">
-                                            <a href="#" class="btn btn-info d-block">
-                                                <i class="fas fa-user me-2"></i> Edit Profile
+                                        <div class="col-6 col-md-4 mb-3">
+                                            <a href="#" class="btn btn-info d-flex flex-column align-items-center justify-content-center py-3">
+                                                <i class="fas fa-user mb-2 action-icon"></i>
+                                                <span>Edit Profile</span>
                                             </a>
                                         </div>
                                     </div>
@@ -137,10 +152,10 @@ include 'includes/header.php';
                     
                     <!-- Recent Activity -->
                     <div class="row">
-                        <div class="col-lg-4 mb-4">
+                        <div class="col-md-6 col-lg-4 mb-4">
                             <div class="card h-100">
                                 <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0">Leaderboard</h5>
+                                    <h5 class="mb-0"><i class="fas fa-trophy me-2"></i>Leaderboard</h5>
                                     <a href="<?php echo url('leaderboard'); ?>" class="btn btn-sm btn-outline-primary">Full Leaderboard</a>
                                 </div>
                                 <div class="card-body">
@@ -191,10 +206,10 @@ include 'includes/header.php';
                             </div>
                         </div>
                         
-                        <div class="col-lg-4 mb-4">
+                        <div class="col-md-6 col-lg-4 mb-4">
                             <div class="card h-100">
                                 <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0">Recent Transactions</h5>
+                                    <h5 class="mb-0"><i class="fas fa-exchange-alt me-2"></i>Recent Transactions</h5>
                                     <a href="<?php echo url('transactions'); ?>" class="btn btn-sm btn-outline-primary">View All</a>
                                 </div>
                                 <div class="card-body">
@@ -232,10 +247,10 @@ include 'includes/header.php';
                             </div>
                         </div>
                         
-                        <div class="col-lg-4 mb-4">
+                        <div class="col-md-6 col-lg-4 mb-4">
                             <div class="card h-100">
                                 <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0">Recent Redemptions</h5>
+                                    <h5 class="mb-0"><i class="fas fa-gift me-2"></i>Recent Redemptions</h5>
                                     <a href="<?php echo url('redemption_history'); ?>" class="btn btn-sm btn-outline-primary">View All</a>
                                 </div>
                                 <div class="card-body">

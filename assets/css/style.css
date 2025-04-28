@@ -1044,6 +1044,76 @@ body .navbar + .full-width-container {
     .dashboard-sidebar .list-group-item {
         padding: 0.75rem 1rem;
     }
+    
+    /* Dashboard stat cards mobile optimization */
+    .dashboard-stat-card {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease;
+    }
+    
+    .dashboard-stat-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .dashboard-stat-card .card-body {
+        padding: 1rem;
+    }
+    
+    .dashboard-stat-card .stat-icon {
+        font-size: 1.25rem;
+    }
+    
+    .dashboard-stat-card .card-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    .dashboard-stat-card .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+    
+    /* Center align the content on mobile stat cards */
+    @media (max-width: 576px) {
+        .dashboard-stat-card .card-body {
+            padding: 0.75rem;
+            text-align: center;
+        }
+        
+        .dashboard-stat-card .d-flex {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .dashboard-stat-card .stat-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            margin-right: 0 !important;
+        }
+        
+        .dashboard-stat-card .card-title {
+            font-size: 0.8rem;
+        }
+        
+        .dashboard-stat-card .stat-value {
+            font-size: 1.25rem;
+        }
+    }
+    
+    /* Quick action buttons styling for mobile */
+    .action-icon {
+        font-size: 1.25rem;
+    }
+    
+    @media (max-width: 576px) {
+        .action-icon {
+            font-size: 1.5rem;
+        }
+        
+        .btn span {
+            font-size: 0.85rem;
+        }
+    }
 }
 
 /* Extra small devices */
