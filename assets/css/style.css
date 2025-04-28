@@ -1790,6 +1790,12 @@ body .navbar + .full-width-container {
     box-sizing: border-box;
 }
 
+/* Make sure slider takes up full width */
+.dashboard-promo-slider {
+    width: 100%;
+    position: relative;
+}
+
 /* Hide any existing arrow navigation */
 .dashboard-slider-arrows {
     display: none !important;
@@ -1798,6 +1804,11 @@ body .navbar + .full-width-container {
 /* Fix for slides not showing up */
 .dashboard-slider::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera */
+}
+
+.dashboard-slider {
+    width: 100%;
+    transform: translateZ(0); /* Force hardware acceleration for smooth transitions */
 }
 
 .dashboard-slide {
@@ -1812,6 +1823,7 @@ body .navbar + .full-width-container {
     backface-visibility: hidden; /* Prevent flickering during transitions */
     opacity: 1 !important; /* Ensure all slides are fully visible */
     visibility: visible !important; /* Make sure slides are visible */
+    float: left; /* Ensure proper slide behavior in all browsers */
 }
 
 .dashboard-slide-content {

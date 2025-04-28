@@ -800,6 +800,14 @@ $(document).ready(function() {
         var dashTotalSlides = dashSlides.length;
         var dashAutoSlideInterval;
         
+        // Ensure all slides are initially visible in the DOM 
+        // This fixes the issue where only the first slide is visible
+        $('.dashboard-slide').css({
+            'visibility': 'visible',
+            'opacity': '1',
+            'display': 'block'
+        });
+        
         // Function to go to a specific slide
         function dashGoToSlide(slideIndex) {
             // Handle circular navigation
@@ -841,8 +849,13 @@ $(document).ready(function() {
         
         // Initialize slider if multiple slides exist
         if (dashTotalSlides > 1) {
-            // Start auto-sliding
-            dashStartAutoSlide();
+            // Immediately go to the first slide to ensure it's properly initialized
+            dashGoToSlide(0);
+            
+            // Start auto-sliding after a short delay to give time for DOM to fully load
+            setTimeout(function() {
+                dashStartAutoSlide();
+            }, 500);
             
             // Handle dot click
             $(document).on('click', '.dashboard-slider-dot', function() {
