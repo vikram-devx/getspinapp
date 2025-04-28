@@ -56,7 +56,7 @@ include 'includes/header.php';
                         </div>
                     <?php endif; ?>
                 </div>
-                <div class="card-body">
+                <div class="card-body px-4">
                     <div class="leaderboard-description mb-4">
                         <p class="text-muted">Earn more points to climb the ranks! Complete tasks and invite friends to boost your position.</p>
                     </div>
@@ -70,15 +70,15 @@ include 'includes/header.php';
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Rank</th>
+                                        <th class="ps-3">Rank</th>
                                         <th>User</th>
-                                        <th>Points</th>
+                                        <th class="pe-3">Points</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($leaderboard_users as $user): ?>
                                         <tr<?php echo ($auth->isLoggedIn() && $user['id'] == $current_user['id']) ? ' class="table-primary"' : ''; ?>>
-                                            <td>
+                                            <td class="ps-3">
                                                 <?php if ($user['rank'] <= 3): ?>
                                                     <span class="rank-badge rank-<?php echo $user['rank']; ?>">
                                                         <?php if ($user['rank'] == 1): ?>
@@ -105,7 +105,7 @@ include 'includes/header.php';
                                                     <?php endif; ?>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td class="pe-3">
                                                 <strong><?php echo formatPoints($user['points']); ?></strong>
                                             </td>
                                         </tr>
@@ -123,7 +123,7 @@ include 'includes/header.php';
                 <div class="card-header">
                     <h5 class="mb-0">Leaderboard Stats</h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body px-4">
                     <div class="stats-item mb-3">
                         <div class="d-flex justify-content-between">
                             <span>Total Users</span>
@@ -172,7 +172,7 @@ include 'includes/header.php';
                 <div class="card-header">
                     <h5 class="mb-0">How to Earn Points</h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body px-4">
                     <ul class="list-unstyled">
                         <li class="mb-2">
                             <i class="fas fa-check-circle text-success me-2"></i>
@@ -228,6 +228,31 @@ include 'includes/header.php';
     
     .user-avatar {
         font-weight: bold;
+    }
+    
+    /* Add more spacing to leaderboard table */
+    .table-responsive table {
+        border-spacing: 0;
+        border-collapse: separate;
+    }
+    
+    .table-responsive table thead th {
+        padding: 1rem 0.75rem;
+        border-bottom: 2px solid #dee2e6;
+        font-weight: 600;
+    }
+    
+    .table-responsive table tbody td {
+        padding: 0.85rem 0.75rem;
+        vertical-align: middle;
+    }
+    
+    .table-responsive table tbody tr {
+        border-bottom: 1px solid #f5f5f5;
+    }
+    
+    .table-responsive table tbody tr:hover {
+        background-color: rgba(0, 123, 255, 0.03);
     }
 </style>
 
