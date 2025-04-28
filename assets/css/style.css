@@ -2173,6 +2173,13 @@ body .navbar + .full-width-container {
     padding-top: 56px; /* Adjust based on navbar height */
 }
 
+/* Mobile-specific padding for fixed header */
+@media (max-width: 767.98px) {
+    .content-with-fixed-header {
+        padding-top: 70px; /* Increase padding for mobile devices */
+    }
+}
+
 /* Add animation for header scroll state */
 .navbar.fixed-header.scrolled {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
