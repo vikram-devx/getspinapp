@@ -834,7 +834,7 @@ $(document).ready(function() {
         
         // Initialize slider if multiple slides exist
         if (dashTotalSlides > 1) {
-            // Start auto-sliding on all devices
+            // Start auto-sliding
             dashStartAutoSlide();
             
             // Handle dot click
@@ -846,26 +846,7 @@ $(document).ready(function() {
                 dashResetAutoSlide();
             });
             
-            // Add left/right arrow navigation for the slider if not present
-            if ($('.dashboard-slider-arrows').length === 0) {
-                var arrowsHTML = '<div class="dashboard-slider-arrows">' +
-                                 '<div class="dashboard-slider-arrow dashboard-slider-arrow-left"><i class="fas fa-chevron-left"></i></div>' +
-                                 '<div class="dashboard-slider-arrow dashboard-slider-arrow-right"><i class="fas fa-chevron-right"></i></div>' +
-                                 '</div>';
-                
-                $('.dashboard-slider-wrapper').append(arrowsHTML);
-                
-                // Handle arrow clicks
-                $('.dashboard-slider-arrow-left').on('click', function() {
-                    dashGoToSlide(dashCurrentSlide - 1);
-                    dashResetAutoSlide();
-                });
-                
-                $('.dashboard-slider-arrow-right').on('click', function() {
-                    dashGoToSlide(dashCurrentSlide + 1);
-                    dashResetAutoSlide();
-                });
-            }
+            // No arrow navigation, just auto-sliding
         }
     }
     

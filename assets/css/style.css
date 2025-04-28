@@ -1790,6 +1790,11 @@ body .navbar + .full-width-container {
     box-sizing: border-box;
 }
 
+/* Hide any existing arrow navigation */
+.dashboard-slider-arrows {
+    display: none !important;
+}
+
 .dashboard-slider::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera */
 }
@@ -2575,14 +2580,13 @@ body.dashboard-page .dashboard-stat-card {
 
 /* Featured Promotions Slider Fixes for Tablet */
 @media (min-width: 768px) and (max-width: 991.98px) {
-    /* Transform the slider into a horizontal layout for tablet */
+    /* Keep one slide per view for tablet with auto-slide transition */
     .dashboard-slider {
         display: flex !important;
         flex-wrap: nowrap !important;
-        overflow-x: auto !important;
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none; /* Firefox */
+        overflow: hidden !important; /* Hide overflow to show only one slide */
+        scroll-snap-type: none;
+        transition: transform 0.5s ease-in-out;
         padding-bottom: 15px;
     }
     
@@ -2591,18 +2595,14 @@ body.dashboard-page .dashboard-stat-card {
     }
     
     .dashboard-slider .dashboard-slide {
-        flex: 0 0 auto !important;
-        width: 85% !important;
-        scroll-snap-align: start;
-        margin-right: 15px;
-    }
-    
-    .dashboard-slider .dashboard-slide:last-child {
+        flex: 0 0 100% !important;
+        width: 100% !important;
+        min-width: 100% !important;
         margin-right: 0;
     }
     
     .dashboard-slider-wrapper {
-        overflow: visible !important;
+        overflow: hidden !important;
         padding: 10px 0;
     }
     
