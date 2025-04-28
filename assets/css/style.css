@@ -1393,6 +1393,13 @@ body .navbar + .full-width-container {
         margin: 0;
     }
     
+    /* Hide "Your Profile" link in mobile view */
+    .list-group-item a[href="profile.php"],
+    .list-group-item:has(i.fa-user-cog),
+    a.text-primary:has(i.fa-user-circle) {
+        display: none !important;
+    }
+    
     /* Additional mobile app-like adjustments */
     .main-content {
         padding: 0;

@@ -53,8 +53,8 @@ include 'includes/header.php';
 <div class="dashboard-container">
     <!-- Dashboard Sidebar -->
     <div class="dashboard-sidebar">
-        <!-- Mobile-only heading for the sidebar -->
-        <div class="mobile-sidebar-heading">
+        <!-- Mobile-only heading for the sidebar (Hidden on mobile) -->
+        <div class="mobile-sidebar-heading d-none">
             <i class="fas fa-user-circle me-2"></i>Your Profile
         </div>
         <?php include 'includes/sidebar.php'; ?>
