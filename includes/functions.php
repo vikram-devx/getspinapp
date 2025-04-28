@@ -506,12 +506,23 @@ function getOfferDetails($offer_id) {
         error_log("Using public IP for OGAds API offer details request: " . $ip);
     }
     
+    // Get user's country and add it to the request
+    $country = detectUserCountry();
+    if ($country) {
+        error_log("Adding detected country to offer details request: " . $country);
+    }
+    
     // For v2 API, we need to use GET method as POST is not supported
     $data = [
         'offer_id' => $offer_id,
         'ip' => $ip,
         'user_agent' => $_SERVER['HTTP_USER_AGENT']
     ];
+    
+    // Add country parameter if detected
+    if ($country) {
+        $data['country'] = $country;
+    }
     
     // Set up cURL with GET method
     $ch = curl_init();
