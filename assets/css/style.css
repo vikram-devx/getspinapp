@@ -1282,6 +1282,7 @@ body .navbar + .full-width-container {
         border: 2px solid rgba(255, 255, 255, 0.5);
         background-color: rgba(255, 255, 255, 0.2);
         margin-left: 8px;
+        margin-right: 10px; /* Add right margin to prevent icon from touching the edge */
     }
     
     .user-avatar-icon {

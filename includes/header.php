@@ -74,7 +74,7 @@ $app_logo = getSetting('app_logo', '');
 <body>
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
+        <div class="container px-3">
             <a class="navbar-brand" href="/">
                 <?php if ($is_public_page && !empty($app_logo)): ?>
                 <img src="<?php echo $app_logo; ?>" alt="<?php echo htmlspecialchars($app_name); ?>" height="30" class="d-inline-block align-text-top">
