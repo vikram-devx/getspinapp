@@ -800,12 +800,40 @@ $(document).ready(function() {
         var dashTotalSlides = dashSlides.length;
         var dashAutoSlideInterval;
         
-        // Ensure all slides are initially visible in the DOM 
-        // This fixes the issue where only the first slide is visible
+        console.log("Found " + dashTotalSlides + " slides in the dashboard promo slider");
+        
+        // Initial styling to ensure all slides are visible and fix white slides issue
         $('.dashboard-slide').css({
             'visibility': 'visible',
             'opacity': '1',
-            'display': 'block'
+            'display': 'block',
+            'transform': 'translateZ(0)',
+            'position': 'relative'
+        });
+        
+        // Important: Make sure slide content is properly styled
+        $('.dashboard-slide-content').css({
+            'height': '100%',
+            'width': '100%',
+            'box-sizing': 'border-box'
+        });
+        
+        // Additional slider container styling for smoother transitions
+        $('.dashboard-slider').css({
+            'display': 'flex',
+            'flex-direction': 'row',
+            'flex-wrap': 'nowrap',
+            'overflow': 'hidden',
+            'transition': 'transform 0.5s ease-in-out',
+            'transform': 'translateZ(0)',
+            'width': '100%'
+        });
+        
+        // Make sure wrapper doesn't hide slides
+        $('.dashboard-slider-wrapper').css({
+            'overflow': 'hidden',
+            'position': 'relative',
+            'width': '100%'
         });
         
         // Function to go to a specific slide
@@ -817,20 +845,24 @@ $(document).ready(function() {
                 slideIndex = 0;
             }
             
+            console.log("Moving to slide " + slideIndex);
+            
             // Update currentSlide
             dashCurrentSlide = slideIndex;
             
-            // Ensure all slides are visible in the DOM
-            $('.dashboard-slide').css({
+            // Make sure all slides remain visible in the DOM (important!)
+            dashSlides.css({
                 'visibility': 'visible',
                 'opacity': '1',
                 'display': 'block'
             });
             
-            // Use transform for sliding on all devices
-            $('.dashboard-slider').css('transform', 'translateX(-' + (slideIndex * 100) + '%)');
+            // Use transform for smooth sliding on all devices
+            $('.dashboard-slider').css({
+                'transform': 'translateX(-' + (slideIndex * 100) + '%)'
+            });
             
-            // Update active dot
+            // Update active dot indicator
             $('.dashboard-slider-dot').removeClass('active');
             $('.dashboard-slider-dot[data-slide="' + slideIndex + '"]').addClass('active');
         }
@@ -849,13 +881,27 @@ $(document).ready(function() {
         
         // Initialize slider if multiple slides exist
         if (dashTotalSlides > 1) {
-            // Immediately go to the first slide to ensure it's properly initialized
+            console.log("Initializing slider with multiple slides");
+            
+            // Explicitly set dimensions for each slide to ensure proper display
+            dashSlides.each(function(index) {
+                $(this).css({
+                    'width': '100%',
+                    'flex': '0 0 100%',
+                    'min-width': '100%'
+                });
+                
+                // Verify slide is ready
+                console.log("Slide " + index + " prepared");
+            });
+            
+            // Immediately go to the first slide to ensure proper initialization
             dashGoToSlide(0);
             
-            // Start auto-sliding after a short delay to give time for DOM to fully load
+            // Start auto-sliding after a delay to ensure DOM is fully loaded
             setTimeout(function() {
                 dashStartAutoSlide();
-            }, 500);
+            }, 1000);
             
             // Handle dot click
             $(document).on('click', '.dashboard-slider-dot', function() {

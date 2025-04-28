@@ -1788,12 +1788,18 @@ body .navbar + .full-width-container {
     transition: transform 0.5s ease-in-out; /* Add transition for smooth slide movement */
     padding: 0.5rem;
     box-sizing: border-box;
+    transform: translateZ(0); /* Force hardware acceleration for smooth transitions */
+    transform-style: preserve-3d; /* Help with rendering */
+    will-change: transform; /* Optimization hint for browsers */
+    -webkit-backface-visibility: hidden; /* Prevent flickering on Safari/Chrome */
+    backface-visibility: hidden; /* Prevent flickering */
 }
 
 /* Make sure slider takes up full width */
 .dashboard-promo-slider {
     width: 100%;
     position: relative;
+    overflow: hidden; /* Ensure overflowing slides are hidden */
 }
 
 /* Hide any existing arrow navigation */
@@ -1806,11 +1812,6 @@ body .navbar + .full-width-container {
     display: none; /* Chrome, Safari, Opera */
 }
 
-.dashboard-slider {
-    width: 100%;
-    transform: translateZ(0); /* Force hardware acceleration for smooth transitions */
-}
-
 .dashboard-slide {
     flex: 0 0 100%; /* Each slide takes full width */
     width: 100%;
@@ -1820,10 +1821,12 @@ body .navbar + .full-width-container {
     padding: 0.25rem;
     transform: translateZ(0); /* Force hardware acceleration */
     will-change: transform; /* Optimization for animations */
+    -webkit-backface-visibility: hidden; /* Prevent flickering during transitions in webkit */
     backface-visibility: hidden; /* Prevent flickering during transitions */
     opacity: 1 !important; /* Ensure all slides are fully visible */
     visibility: visible !important; /* Make sure slides are visible */
-    float: left; /* Ensure proper slide behavior in all browsers */
+    transform-style: preserve-3d; /* Help with rendering */
+    display: block; /* Ensure display is always block */
 }
 
 .dashboard-slide-content {
