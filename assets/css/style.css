@@ -1230,9 +1230,21 @@ body .navbar + .full-width-container {
     .mobile-menu-footer .logout-btn {
         display: flex;
         align-items: center;
+        justify-content: center;
         color: #dc3545;
         text-decoration: none;
         padding: 10px 0;
+        font-weight: 600;
+        border: 1px solid #dc3545;
+        border-radius: 6px;
+        margin-top: 10px;
+        transition: all 0.2s ease;
+    }
+    
+    .mobile-menu-footer .logout-btn:hover, 
+    .mobile-menu-footer .logout-btn:active {
+        background-color: #dc3545;
+        color: white;
     }
     
     .mobile-menu-footer .logout-btn i {
@@ -1251,6 +1263,26 @@ body .navbar + .full-width-container {
         border-radius: 10px;
         margin-left: 8px;
         vertical-align: top;
+    }
+    
+    /* User Avatar Toggle Button Styling */
+    .user-avatar-toggle {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        background-color: rgba(255, 255, 255, 0.2);
+        margin-left: 8px;
+    }
+    
+    .user-avatar-icon {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: white;
     }
 }
     

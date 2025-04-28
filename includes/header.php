@@ -98,8 +98,8 @@ $app_logo = getSetting('app_logo', '');
             
             <!-- Modified for new mobile menu - show on mobile only -->
             <?php if ($auth->isLoggedIn()): ?>
-            <button class="navbar-toggler d-lg-none" type="button" id="mobileMenuToggle" aria-label="Toggle mobile menu">
-                <span class="navbar-toggler-icon"></span>
+            <button class="navbar-toggler d-lg-none user-avatar-toggle" type="button" id="mobileMenuToggle" aria-label="Toggle mobile menu">
+                <span class="user-avatar-icon"><?php echo strtoupper(substr($current_user['username'], 0, 1)); ?></span>
             </button>
             <!-- Traditional navigation dropdown for desktop only -->
             <button class="navbar-toggler d-none d-lg-block" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -237,6 +237,9 @@ $app_logo = getSetting('app_logo', '');
             <a href="/login?action=logout" class="logout-btn">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </a>
+            <div class="text-center mt-3">
+                <small class="text-muted">Version 1.0 &copy; <?php echo date('Y'); ?> <?php echo htmlspecialchars($app_name); ?></small>
+            </div>
         </div>
     </div>
     <?php endif; ?>
