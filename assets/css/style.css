@@ -1164,6 +1164,7 @@ body .navbar + .full-width-container {
     overflow: hidden;
     width: 100%;
     border-radius: 0 0 0.25rem 0.25rem;
+    max-width: 100%;
 }
 
 .dashboard-slider-wrapper {
@@ -1175,11 +1176,15 @@ body .navbar + .full-width-container {
     display: flex;
     transition: transform 0.5s ease-in-out;
     width: 400%;
+    flex-wrap: nowrap;
+    overflow: hidden;
 }
 
 .dashboard-slide {
     flex: 0 0 25%;
     position: relative;
+    max-width: 25%;
+    box-sizing: border-box;
 }
 
 .dashboard-slide-content {
