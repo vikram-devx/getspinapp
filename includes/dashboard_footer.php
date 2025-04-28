@@ -31,5 +31,6 @@
     <script src="https://unpkg.com/emailjs-com@3/dist/email.min.js"></script>
     <script src="/assets/js/emailjs-config.js"></script>
     <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/promo-slider.js"></script>
 </body>
 </html>
