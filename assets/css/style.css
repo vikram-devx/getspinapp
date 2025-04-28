@@ -2210,17 +2210,36 @@ body .navbar + .full-width-container {
     margin-top: 20px;
 }
 
-/* Slight extra margin for first card on dashboard and tasks */
+/* Extra padding and margin for dashboard and tasks pages */
+.content-with-fixed-header {
+    padding-top: 85px; /* Default padding for all pages with fixed header */
+}
+
+/* Additional top padding and margin specifically for dashboard page elements */
+body.dashboard-page .content-with-fixed-header {
+    padding-top: 90px; /* Extra padding specifically for dashboard */
+}
+
 body.dashboard-page .card:first-of-type,
 body.tasks-page .card:first-of-type {
-    margin-top: 15px !important;
+    margin-top: 25px !important; /* More top margin for first card */
+}
+
+/* Make dashboard header more visible with extra styling */
+body.dashboard-page .card-header h5 {
+    padding-top: 5px;
 }
 
 /* Mobile-specific padding for fixed header and bottom nav */
 @media (max-width: 767.98px) {
     .content-with-fixed-header {
-        padding-top: 120px; /* Same as desktop to ensure consistency across devices */
+        padding-top: 90px; /* Base padding for all pages */
         padding-bottom: 75px; /* Add padding at the bottom for the mobile bottom nav */
+    }
+    
+    /* Dashboard and tasks special mobile padding */
+    body.dashboard-page .content-with-fixed-header {
+        padding-top: 100px !important; /* Extra padding for dashboard on mobile */
     }
     
     /* Ensure content isn't hidden behind bottom nav */
@@ -2238,7 +2257,10 @@ body.tasks-page .card:first-of-type {
         padding-top: 15px !important;
     }
     
-    /* We're now using the default padding for all pages */
+    /* Extra spacing for dashboard card headers */
+    body.dashboard-page .card-header {
+        padding-top: 20px !important;
+    }
 }
 
 /* Add animation for header scroll state */
