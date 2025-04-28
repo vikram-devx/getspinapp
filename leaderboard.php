@@ -47,12 +47,12 @@ include 'includes/header.php';
     <div class="row">
         <div class="col-lg-9">
             <div class="card shadow-sm">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">User Leaderboard</h5>
+                <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                    <h5 class="mb-0 me-2">User Leaderboard</h5>
                     <?php if ($auth->isLoggedIn() && !$auth->isAdmin()): ?>
                         <div class="my-rank-badge">
                             <span class="badge bg-primary">Your Rank: <?php echo $current_user_rank['rank']; ?></span>
-                            <span class="badge bg-info ms-2"><?php echo formatPoints($current_user['points']); ?> Points</span>
+                            <span class="badge bg-info ms-lg-2"><?php echo formatPoints($current_user['points']); ?> Points</span>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -66,19 +66,19 @@ include 'includes/header.php';
                             No users in the leaderboard yet. Be the first to earn points!
                         </div>
                     <?php else: ?>
-                        <div class="table-responsive">
+                        <div class="table-responsive leaderboard-table-container">
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th class="ps-3">Rank</th>
-                                        <th>User</th>
-                                        <th class="pe-3">Points</th>
+                                        <th class="ps-3 rank-col">Rank</th>
+                                        <th class="user-col">User</th>
+                                        <th class="pe-3 points-col text-end">Points</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($leaderboard_users as $user): ?>
                                         <tr<?php echo ($auth->isLoggedIn() && $user['id'] == $current_user['id']) ? ' class="table-primary"' : ''; ?>>
-                                            <td class="ps-3">
+                                            <td class="ps-3 rank-col">
                                                 <?php if ($user['rank'] <= 3): ?>
                                                     <span class="rank-badge rank-<?php echo $user['rank']; ?>">
                                                         <?php if ($user['rank'] == 1): ?>
@@ -88,25 +88,27 @@ include 'includes/header.php';
                                                         <?php else: ?>
                                                             <i class="fas fa-medal" style="color: #CD7F32;"></i>
                                                         <?php endif; ?>
-                                                        <?php echo $user['rank']; ?>
+                                                        <span class="rank-number"><?php echo $user['rank']; ?></span>
                                                     </span>
                                                 <?php else: ?>
-                                                    <?php echo $user['rank']; ?>
+                                                    <span class="rank-number"><?php echo $user['rank']; ?></span>
                                                 <?php endif; ?>
                                             </td>
-                                            <td>
+                                            <td class="user-col">
                                                 <div class="d-flex align-items-center">
                                                     <div class="user-avatar me-2 bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
                                                         <?php echo strtoupper(substr($user['username'], 0, 1)); ?>
                                                     </div>
-                                                    <span><?php echo htmlspecialchars($user['username']); ?></span>
-                                                    <?php if ($auth->isLoggedIn() && $user['id'] == $current_user['id']): ?>
-                                                        <span class="badge bg-secondary ms-2">You</span>
-                                                    <?php endif; ?>
+                                                    <div class="user-info">
+                                                        <span class="username"><?php echo htmlspecialchars($user['username']); ?></span>
+                                                        <?php if ($auth->isLoggedIn() && $user['id'] == $current_user['id']): ?>
+                                                            <span class="badge bg-secondary ms-2 user-badge">You</span>
+                                                        <?php endif; ?>
+                                                    </div>
                                                 </div>
                                             </td>
-                                            <td class="pe-3">
-                                                <strong><?php echo formatPoints($user['points']); ?></strong>
+                                            <td class="pe-3 points-col text-end">
+                                                <strong class="points-value"><?php echo formatPoints($user['points']); ?></strong>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -234,6 +236,7 @@ include 'includes/header.php';
     .table-responsive table {
         border-spacing: 0;
         border-collapse: separate;
+        width: 100%;
     }
     
     .table-responsive table thead th {
@@ -253,6 +256,111 @@ include 'includes/header.php';
     
     .table-responsive table tbody tr:hover {
         background-color: rgba(0, 123, 255, 0.03);
+    }
+    
+    /* Mobile responsiveness improvements */
+    @media (max-width: 576px) {
+        .table-responsive {
+            margin: 0 -15px; /* Negative margin to expand table to full width */
+        }
+        
+        .table-responsive table {
+            font-size: 0.875rem; /* Smaller font for mobile */
+        }
+        
+        .table-responsive table thead th {
+            padding: 0.75rem 0.5rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .table-responsive table tbody td {
+            padding: 0.65rem 0.5rem;
+        }
+        
+        /* Specific column widths for mobile */
+        .rank-col {
+            width: 15% !important;
+            text-align: center;
+        }
+        
+        .user-col {
+            width: 60% !important;
+        }
+        
+        .points-col {
+            width: 25% !important;
+        }
+        
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .username {
+            font-size: 0.85rem;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .user-badge {
+            font-size: 0.6rem;
+            padding: 0.25rem 0.5rem;
+            margin-left: 0 !important;
+            margin-top: 0.2rem;
+        }
+        
+        .points-value {
+            font-size: 0.85rem;
+        }
+        
+        .rank-badge {
+            padding: 3px 6px;
+            font-size: 0.75rem;
+        }
+        
+        .rank-number {
+            font-size: 0.8rem;
+        }
+        
+        .user-avatar {
+            width: 32px !important;
+            height: 32px !important;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+        
+        /* Adjust card padding for mobile */
+        .card-body {
+            padding: 1rem 0.75rem;
+        }
+        
+        /* Make the "Your Rank" badge stack on mobile */
+        .my-rank-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+        
+        /* Optimize leaderboard description on mobile */
+        .leaderboard-description p {
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Adjust card headers for mobile */
+        .card-header h5 {
+            font-size: 1rem;
+        }
+        
+        .stats-item span {
+            font-size: 0.875rem;
+        }
     }
 </style>
 
