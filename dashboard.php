@@ -166,60 +166,36 @@ include 'includes/header.php';
                                             <!-- Slide 1 - Monopoly Go (Blue) -->
                                             <div class="promo-slide" id="slide-0" style="background-color: #0d6efd;">
                                                 <div class="slide-content text-white">
-                                                    <div class="w-100">
-                                                        <div class="d-flex align-items-center w-100">
-                                                            <div class="promo-text w-100">
-                                                                <h4 class="mb-2">Exchange Points for Monopoly Go Spins</h4>
-                                                                <p class="mb-3">Use your earned points to get free Monopoly Go spins delivered to your account instantly!</p>
-                                                                <a href="/rewards" class="btn btn-light">Redeem Now</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    <h4 class="mb-2">Exchange Points for Monopoly Go Spins</h4>
+                                                    <p class="mb-3">Use your earned points to get free Monopoly Go spins delivered to your account instantly!</p>
+                                                    <a href="/rewards" class="btn btn-light">Redeem Now</a>
                                                 </div>
                                             </div>
                                             
                                             <!-- Slide 2 - Coin Master (Green) -->
                                             <div class="promo-slide" id="slide-1" style="background-color: #198754;">
                                                 <div class="slide-content text-white">
-                                                    <div class="w-100">
-                                                        <div class="d-flex align-items-center w-100">
-                                                            <div class="promo-text w-100">
-                                                                <h4 class="mb-2">Exchange Points for Coin Master Spins</h4>
-                                                                <p class="mb-3">Get more Coin Master spins by exchanging your points. Delivery within 24 hours!</p>
-                                                                <a href="/rewards" class="btn btn-light">Get Spins Now</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    <h4 class="mb-2">Exchange Points for Coin Master Spins</h4>
+                                                    <p class="mb-3">Get more Coin Master spins by exchanging your points. Delivery within 24 hours!</p>
+                                                    <a href="/rewards" class="btn btn-light">Get Spins Now</a>
                                                 </div>
                                             </div>
                                             
                                             <!-- Slide 3 - Referrals (Yellow) -->
                                             <div class="promo-slide" id="slide-2" style="background-color: #ffc107;">
                                                 <div class="slide-content text-dark">
-                                                    <div class="w-100">
-                                                        <div class="d-flex align-items-center w-100">
-                                                            <div class="promo-text w-100">
-                                                                <h4 class="mb-2">Refer Friends & Earn 100 Spins</h4>
-                                                                <p class="mb-3">Invite your friends and earn 100 free spins for each friend who joins through your link!</p>
-                                                                <a href="/referrals" class="btn btn-dark">Invite Friends</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    <h4 class="mb-2">Refer Friends & Earn 100 Spins</h4>
+                                                    <p class="mb-3">Invite your friends and earn 100 free spins for each friend who joins through your link!</p>
+                                                    <a href="/referrals" class="btn btn-dark">Invite Friends</a>
                                                 </div>
                                             </div>
                                             
                                             <!-- Slide 4 - Tasks (Red) -->
                                             <div class="promo-slide" id="slide-3" style="background-color: #dc3545;">
                                                 <div class="slide-content text-white">
-                                                    <div class="w-100">
-                                                        <div class="d-flex align-items-center w-100">
-                                                            <div class="promo-text w-100">
-                                                                <h4 class="mb-2">Complete Tasks, Earn Free Spins</h4>
-                                                                <p class="mb-3">Try apps, complete offers, and earn free spins instantly. Easy and fun ways to earn!</p>
-                                                                <a href="<?php echo url('tasks'); ?>" class="btn btn-light">Start Tasks</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    <h4 class="mb-2">Complete Tasks, Earn Free Spins</h4>
+                                                    <p class="mb-3">Try apps, complete offers, and earn free spins instantly. Easy and fun ways to earn!</p>
+                                                    <a href="<?php echo url('tasks'); ?>" class="btn btn-light">Start Tasks</a>
                                                 </div>
                                             </div>
                                         </div>

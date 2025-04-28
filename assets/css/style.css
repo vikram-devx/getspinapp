@@ -3248,10 +3248,11 @@ body.dashboard-page .dashboard-stat-card {
 }
 
 .slide-content {
-    padding: 1.5rem;
+    padding: 2rem;
     height: 100%;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
     width: 100%;
     box-sizing: border-box;
 }
@@ -3297,17 +3298,6 @@ body.dashboard-page .dashboard-stat-card {
 }
 
 /* Specific styling for promo slide components */
-.promo-text {
-    flex: 1;
-    width: calc(100% - 100px);
-    max-width: calc(100% - 100px);
-}
-
-.promo-icon {
-    width: 80px;
-    min-width: 80px;
-    text-align: center;
-}
 
 /* Responsive styling for the promotion slides */
 @media (max-width: 767px) {
@@ -3332,19 +3322,5 @@ body.dashboard-page .dashboard-stat-card {
     .slide-content .btn {
         font-size: 0.8rem;
         padding: 0.25rem 0.5rem;
-    }
-    
-    .promo-text {
-        width: calc(100% - 70px);
-        max-width: calc(100% - 70px);
-    }
-    
-    .promo-icon {
-        width: 60px;
-        min-width: 60px;
-    }
-    
-    .promo-icon .fa-4x {
-        font-size: 2.5em;
     }
 }
