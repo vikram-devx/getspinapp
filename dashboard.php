@@ -254,7 +254,7 @@ include 'includes/header.php';
                                     <h5 class="mb-0"><i class="fas fa-trophy me-2"></i>Leaderboard</h5>
                                     <a href="<?php echo url('leaderboard'); ?>" class="btn btn-sm btn-outline-primary">Full Leaderboard</a>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body px-3">
                                     <?php if (count($top_users) > 0): ?>
                                     <div class="user-rank-highlight mb-3">
                                         <div class="alert alert-primary mb-0 d-flex justify-content-between align-items-center">
@@ -262,11 +262,11 @@ include 'includes/header.php';
                                             <span class="badge bg-primary">#<?php echo $user_rank['rank']; ?></span>
                                         </div>
                                     </div>
-                                    <div class="top-users-list">
+                                    <div class="top-users-list px-1">
                                         <?php foreach ($top_users as $index => $user): ?>
                                             <div class="leaderboard-item d-flex justify-content-between align-items-center py-2 <?php echo ($user['id'] == $current_user['id']) ? 'bg-light' : ''; ?>" style="border-bottom: 1px solid #eee;">
                                                 <div class="d-flex align-items-center">
-                                                    <div class="rank-number me-2">
+                                                    <div class="rank-number me-2 ps-1">
                                                         <?php if ($user['rank'] <= 3): ?>
                                                             <?php if ($user['rank'] == 1): ?>
                                                                 <i class="fas fa-trophy text-warning"></i>
@@ -289,7 +289,7 @@ include 'includes/header.php';
                                                         <?php endif; ?>
                                                     </div>
                                                 </div>
-                                                <div class="points">
+                                                <div class="points pe-1">
                                                     <strong><?php echo formatPoints($user['points']); ?></strong>
                                                 </div>
                                             </div>
@@ -308,21 +308,21 @@ include 'includes/header.php';
                                     <h5 class="mb-0"><i class="fas fa-exchange-alt me-2"></i>Recent Transactions</h5>
                                     <a href="<?php echo url('transactions'); ?>" class="btn btn-sm btn-outline-primary">View All</a>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body px-3">
                                     <?php if (count($transactions) > 0): ?>
                                     <div class="table-responsive">
                                         <table class="table table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th>Type</th>
+                                                    <th class="ps-2">Type</th>
                                                     <th>Points</th>
-                                                    <th>Date</th>
+                                                    <th class="pe-2">Date</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <?php foreach ($transactions as $transaction): ?>
                                                 <tr>
-                                                    <td>
+                                                    <td class="ps-2">
                                                         <?php if ($transaction['type'] === 'earn'): ?>
                                                             <span class="badge bg-success">Earned</span>
                                                         <?php else: ?>
@@ -330,7 +330,7 @@ include 'includes/header.php';
                                                         <?php endif; ?>
                                                     </td>
                                                     <td><?php echo formatPoints($transaction['points']); ?></td>
-                                                    <td><?php echo formatDate($transaction['created_at']); ?></td>
+                                                    <td class="pe-2"><?php echo formatDate($transaction['created_at']); ?></td>
                                                 </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
@@ -349,7 +349,7 @@ include 'includes/header.php';
                                     <h5 class="mb-0"><i class="fas fa-gift me-2"></i>Your Redemptions</h5>
                                     <a href="<?php echo url('redemption_history'); ?>" class="btn btn-sm btn-outline-primary">View All</a>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body px-3">
                                     <?php 
                                     // Only show user's own redemptions
                                     $recent_redemptions = array_slice($redemptions, 0, 5);
@@ -359,15 +359,15 @@ include 'includes/header.php';
                                         <table class="table table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th>Reward</th>
+                                                    <th class="ps-2">Reward</th>
                                                     <th>Status</th>
-                                                    <th>Date</th>
+                                                    <th class="pe-2">Date</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <?php foreach ($recent_redemptions as $redemption): ?>
                                                 <tr>
-                                                    <td>
+                                                    <td class="ps-2">
                                                         <?php echo htmlspecialchars($redemption['name']); ?>
                                                         <?php 
                                                         // Check if this is a game reward with redemption details
@@ -390,7 +390,7 @@ include 'includes/header.php';
                                                             <span class="badge bg-danger">Rejected</span>
                                                         <?php endif; ?>
                                                     </td>
-                                                    <td><?php echo formatDate($redemption['created_at']); ?></td>
+                                                    <td class="pe-2"><?php echo formatDate($redemption['created_at']); ?></td>
                                                 </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
