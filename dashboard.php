@@ -123,25 +123,25 @@ include 'includes/header.php';
                                 <div class="card-body">
                                     <div class="row quick-actions">
                                         <div class="col-6 col-md-3 mb-3">
-                                            <a href="<?php echo url('tasks'); ?>" class="btn btn-primary d-flex flex-column align-items-center justify-content-center py-3 quick-action-btn">
+                                            <a href="/tasks" class="btn btn-primary d-flex flex-column align-items-center justify-content-center py-3 quick-action-btn">
                                                 <i class="fas fa-tasks mb-2 action-icon"></i>
                                                 <span>Find Tasks</span>
                                             </a>
                                         </div>
                                         <div class="col-6 col-md-3 mb-3">
-                                            <a href="<?php echo url('tasks'); ?>" class="btn btn-danger d-flex flex-column align-items-center justify-content-center py-3 quick-action-btn">
+                                            <a href="/tasks" class="btn btn-danger d-flex flex-column align-items-center justify-content-center py-3 quick-action-btn">
                                                 <i class="fas fa-sync mb-2 action-icon"></i>
                                                 <span>Earn Free Spins</span>
                                             </a>
                                         </div>
                                         <div class="col-6 col-md-3 mb-3">
-                                            <a href="<?php echo url('rewards'); ?>" class="btn btn-success d-flex flex-column align-items-center justify-content-center py-3 quick-action-btn">
+                                            <a href="/rewards" class="btn btn-success d-flex flex-column align-items-center justify-content-center py-3 quick-action-btn">
                                                 <i class="fas fa-gift mb-2 action-icon"></i>
                                                 <span>View Rewards</span>
                                             </a>
                                         </div>
                                         <div class="col-6 col-md-3 mb-3">
-                                            <a href="<?php echo url('profile'); ?>" class="btn btn-info d-flex flex-column align-items-center justify-content-center py-3 quick-action-btn">
+                                            <a href="/profile" class="btn btn-info d-flex flex-column align-items-center justify-content-center py-3 quick-action-btn">
                                                 <i class="fas fa-user mb-2 action-icon"></i>
                                                 <span>Edit Profile</span>
                                             </a>
@@ -170,7 +170,7 @@ include 'includes/header.php';
                                                             <div class="col-md-8">
                                                                 <h4 class="mb-2">Exchange Points for Monopoly Go Spins</h4>
                                                                 <p class="mb-3">Use your earned points to get free Monopoly Go spins delivered to your account instantly!</p>
-                                                                <a href="<?php echo url('rewards'); ?>" class="btn btn-light">Redeem Now</a>
+                                                                <a href="/rewards" class="btn btn-light">Redeem Now</a>
                                                             </div>
                                                             <div class="col-md-4 text-center">
                                                                 <i class="fas fa-dice fa-4x d-none d-md-inline-block"></i>
@@ -186,7 +186,7 @@ include 'includes/header.php';
                                                             <div class="col-md-8">
                                                                 <h4 class="mb-2">Exchange Points for Coin Master Spins</h4>
                                                                 <p class="mb-3">Get more Coin Master spins by exchanging your points. Delivery within 24 hours!</p>
-                                                                <a href="<?php echo url('rewards'); ?>" class="btn btn-light">Get Spins Now</a>
+                                                                <a href="/rewards" class="btn btn-light">Get Spins Now</a>
                                                             </div>
                                                             <div class="col-md-4 text-center">
                                                                 <i class="fas fa-coins fa-4x d-none d-md-inline-block"></i>
@@ -202,7 +202,7 @@ include 'includes/header.php';
                                                             <div class="col-md-8">
                                                                 <h4 class="mb-2">Refer Friends & Earn 100 Spins</h4>
                                                                 <p class="mb-3">Invite your friends and earn 100 free spins for each friend who joins through your link!</p>
-                                                                <a href="<?php echo url('referrals'); ?>" class="btn btn-dark">Invite Friends</a>
+                                                                <a href="/referrals" class="btn btn-dark">Invite Friends</a>
                                                             </div>
                                                             <div class="col-md-4 text-center">
                                                                 <i class="fas fa-user-plus fa-4x d-none d-md-inline-block"></i>
@@ -248,7 +248,7 @@ include 'includes/header.php';
                             <div class="card h-100">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h5 class="mb-0"><i class="fas fa-trophy me-2"></i>Leaderboard</h5>
-                                    <a href="<?php echo url('leaderboard'); ?>" class="btn btn-sm btn-outline-primary">Full Leaderboard</a>
+                                    <a href="/leaderboard" class="btn btn-sm btn-outline-primary">Full Leaderboard</a>
                                 </div>
                                 <div class="card-body px-3">
                                     <?php if (count($top_users) > 0): ?>
@@ -302,7 +302,7 @@ include 'includes/header.php';
                             <div class="card h-100">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h5 class="mb-0"><i class="fas fa-exchange-alt me-2"></i>Recent Transactions</h5>
-                                    <a href="<?php echo url('transactions'); ?>" class="btn btn-sm btn-outline-primary">View All</a>
+                                    <a href="/transactions" class="btn btn-sm btn-outline-primary">View All</a>
                                 </div>
                                 <div class="card-body px-3">
                                     <?php if (count($transactions) > 0): ?>
@@ -343,7 +343,7 @@ include 'includes/header.php';
                             <div class="card h-100">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h5 class="mb-0"><i class="fas fa-gift me-2"></i>Your Redemptions</h5>
-                                    <a href="<?php echo url('redemption_history'); ?>" class="btn btn-sm btn-outline-primary">View All</a>
+                                    <a href="/redemption_history" class="btn btn-sm btn-outline-primary">View All</a>
                                 </div>
                                 <div class="card-body px-3">
                                     <?php 
