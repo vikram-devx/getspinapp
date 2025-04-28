@@ -29,7 +29,7 @@
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/emailjs-com@3/dist/email.min.js"></script>
-    <script src="<?php echo url('assets/js/emailjs-config.js'); ?>"></script>
-    <script src="<?php echo url('assets/js/main.js'); ?>"></script>
+    <script src="/assets/js/emailjs-config.js"></script>
+    <script src="/assets/js/main.js"></script>
 </body>
 </html>

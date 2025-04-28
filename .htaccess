@@ -4,6 +4,11 @@ RewriteEngine On
 # RewriteCond %{HTTP_HOST} !^www\. [NC]
 # RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
 
+# Add a base URL path for relative resources
+RewriteCond %{REQUEST_URI} !^/assets
+RewriteCond %{REQUEST_URI} !^/uploads
+RewriteRule .* - [E=BASE_URL:/]
+
 # Remove trailing slash
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)/$ /$1 [R=301,L]
