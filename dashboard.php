@@ -51,8 +51,8 @@ include 'includes/header.php';
 ?>
 
 <div class="dashboard-container">
-    <!-- Dashboard Sidebar - Hidden on mobile -->
-    <div class="dashboard-sidebar d-none d-md-block">
+    <!-- Dashboard Sidebar - Hidden on mobile, visible on desktop -->
+    <div class="dashboard-sidebar d-none d-lg-block">
         <?php include 'includes/sidebar.php'; ?>
     </div>
     

@@ -1156,8 +1156,15 @@ body .navbar + .full-width-container {
         transition: right 0.3s ease;
         box-shadow: -3px 0 10px rgba(0, 0, 0, 0.1);
         overflow-y: auto;
-        display: flex;
+        display: none; /* Hide by default on all screens */
         flex-direction: column;
+    }
+    
+    /* Only display the mobile slide menu on screens smaller than lg */
+    @media (max-width: 991.98px) {
+        .mobile-slide-menu {
+            display: flex; /* Use flex layout on mobile screens */
+        }
     }
     
     .mobile-slide-menu.active {
@@ -1173,6 +1180,13 @@ body .navbar + .full-width-container {
         background-color: rgba(0, 0, 0, 0.5);
         z-index: 1040;
         display: none;
+    }
+    
+    /* Only display menu backdrop on mobile screens */
+    @media (min-width: 992px) {
+        .menu-backdrop, .menu-backdrop.active {
+            display: none !important;
+        }
     }
     
     .menu-backdrop.active {
