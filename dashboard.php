@@ -51,17 +51,13 @@ include 'includes/header.php';
 ?>
 
 <div class="dashboard-container">
-    <!-- Dashboard Sidebar -->
-    <div class="dashboard-sidebar">
-        <!-- Mobile-only heading for the sidebar (Hidden on mobile) -->
-        <div class="mobile-sidebar-heading d-none">
-            <i class="fas fa-user-circle me-2"></i>Your Profile
-        </div>
+    <!-- Dashboard Sidebar - Hidden on mobile -->
+    <div class="dashboard-sidebar d-none d-md-block">
         <?php include 'includes/sidebar.php'; ?>
     </div>
     
     <!-- Dashboard Content -->
-    <div class="dashboard-content">
+    <div class="dashboard-content w-100">
         <div class="card">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Dashboard Overview</h5>
@@ -408,5 +404,48 @@ include 'includes/header.php';
         </div>
     </div>
 </div>
+
+<style>
+    /* Mobile optimization for dashboard */
+    @media (max-width: 767px) {
+        .dashboard-container {
+            padding: 0;
+            margin: 0;
+            width: 100%;
+        }
+        
+        .dashboard-content {
+            padding: 0.5rem;
+        }
+        
+        .card-header h5 {
+            font-size: 1.1rem;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+        }
+        
+        .card-title {
+            font-size: 0.9rem;
+        }
+        
+        .dashboard-slide-content h4 {
+            font-size: 1.2rem;
+        }
+        
+        .dashboard-slide-content p {
+            font-size: 0.9rem;
+        }
+        
+        .leaderboard-title {
+            font-size: 1.1rem;
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+        }
+    }
+</style>
 
 <?php include 'includes/dashboard_footer.php'; ?>
