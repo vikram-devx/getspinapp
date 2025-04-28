@@ -1547,9 +1547,24 @@ body .navbar + .full-width-container {
         margin-bottom: 0;
     }
     
-    /* Quick actions section */
+    /* Quick actions section - Match Dashboard Overview style */
+    .quick-actions-section .card {
+        border: none;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+    
+    .quick-actions-section .card-header {
+        background: transparent;
+        border: none;
+        padding-left: 0.5rem;
+        padding-bottom: 0;
+    }
+    
     .quick-actions-section .card-body {
         padding: 0.75rem;
+        background: transparent;
     }
     
     .quick-actions.row {
@@ -1610,17 +1625,30 @@ body .navbar + .full-width-container {
     
     .dashboard-slide-content {
         padding: 1rem;
-        min-height: 200px;
+        min-height: 120px;
+    }
+    
+    .dashboard-slide-content .row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+    
+    .dashboard-slide-content .col-md-8,
+    .dashboard-slide-content .col-md-4 {
+        width: auto;
+        flex: 1 1 auto;
     }
     
     .dashboard-slide-content h4 {
         font-size: 1.1rem;
         word-wrap: break-word; /* Ensure text wraps rather than overflows */
+        margin-bottom: 0.25rem;
     }
     
     .dashboard-slide-content p {
         font-size: 0.85rem;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.5rem;
         word-wrap: break-word; /* Ensure text wraps rather than overflows */
         max-width: 100%; /* Ensure text doesn't overflow container */
     }
@@ -1628,6 +1656,7 @@ body .navbar + .full-width-container {
     .dashboard-slide-content .btn {
         padding: 0.25rem 0.75rem;
         font-size: 0.85rem;
+        float: right;
     }
     
     /* Fix dashboard slider width */
@@ -1639,6 +1668,20 @@ body .navbar + .full-width-container {
     .dashboard-promo-slider {
         max-width: 100%;
         overflow: hidden;
+    }
+    
+    /* Featured Promotions card styling */
+    .card-header:has(i.fa-bullhorn) {
+        background: transparent !important;
+        border-bottom: none !important;
+        padding-left: 0.5rem !important;
+    }
+    
+    .card:has(.dashboard-promo-slider) {
+        border: none;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
     }
     
     /* Mobile slider horizontal scroll */
