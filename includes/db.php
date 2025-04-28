@@ -11,7 +11,43 @@ class Database {
             $this->connection = new PDO('sqlite:' . DB_PATH);
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-            die('Database Connection Error: ' . $e->getMessage());
+            // Check if this is a readonly database error
+            if (strpos($e->getMessage(), 'readonly database') !== false) {
+                // Try to fix permissions
+                $this->fixDatabasePermissions();
+                
+                // Try to connect again
+                try {
+                    $this->connection = new PDO('sqlite:' . DB_PATH);
+                    $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                } catch (PDOException $e2) {
+                    // If it still fails, show a more helpful error message
+                    die('Database Permission Error: Unable to write to the database. Please check server permissions for: ' . DB_PATH);
+                }
+            } else {
+                die('Database Connection Error: ' . $e->getMessage());
+            }
+        }
+    }
+    
+    // Function to fix database permissions
+    private function fixDatabasePermissions() {
+        // Check and create data directory with proper permissions
+        $dataDir = dirname(DB_PATH);
+        if (!file_exists($dataDir)) {
+            if (!mkdir($dataDir, 0777, true)) {
+                error_log("Failed to create data directory: " . $dataDir);
+            }
+        }
+        
+        // Set directory permissions
+        if (file_exists($dataDir)) {
+            chmod($dataDir, 0777);
+        }
+        
+        // Set file permissions if the database file exists
+        if (file_exists(DB_PATH)) {
+            chmod(DB_PATH, 0666);
         }
     }
     
@@ -33,15 +69,51 @@ class Database {
         try {
             return $this->connection->query($sql);
         } catch (PDOException $e) {
-            // Log error for debugging
-            error_log("Query Error: " . $e->getMessage() . "\nSQL: " . $sql);
-            return false;
+            // Check if this is a readonly database error
+            if (strpos($e->getMessage(), 'readonly database') !== false) {
+                // Try to fix permissions
+                $this->fixDatabasePermissions();
+                
+                // Try the query again
+                try {
+                    return $this->connection->query($sql);
+                } catch (PDOException $e2) {
+                    // Log error for debugging
+                    error_log("Query Error (after permission fix attempt): " . $e2->getMessage() . "\nSQL: " . $sql);
+                    throw new Exception("Database Permission Error: Unable to write to the database. Please contact the administrator.");
+                }
+            } else {
+                // Log error for debugging
+                error_log("Query Error: " . $e->getMessage() . "\nSQL: " . $sql);
+                return false;
+            }
         }
     }
     
     // Prepare statement
     public function prepare($sql) {
-        return $this->connection->prepare($sql);
+        try {
+            return $this->connection->prepare($sql);
+        } catch (PDOException $e) {
+            // Check if this is a readonly database error
+            if (strpos($e->getMessage(), 'readonly database') !== false) {
+                // Try to fix permissions
+                $this->fixDatabasePermissions();
+                
+                // Try to prepare again
+                try {
+                    return $this->connection->prepare($sql);
+                } catch (PDOException $e2) {
+                    // Log error for debugging
+                    error_log("Prepare Error (after permission fix attempt): " . $e2->getMessage() . "\nSQL: " . $sql);
+                    throw new Exception("Database Permission Error: Unable to write to the database. Please contact the administrator.");
+                }
+            } else {
+                // Log error and rethrow
+                error_log("Prepare Error: " . $e->getMessage() . "\nSQL: " . $sql);
+                throw $e;
+            }
+        }
     }
     
     // Escape string - PDO uses parametrized queries, but keeping method for compatibility

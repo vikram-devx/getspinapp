@@ -27,9 +27,19 @@ error_reporting(E_ALL);
 // Timezone
 date_default_timezone_set('UTC');
 
-// Create data directory if it doesn't exist
+// Create data directory if it doesn't exist and ensure proper permissions
 if (!file_exists(__DIR__ . '/../data')) {
     mkdir(__DIR__ . '/../data', 0777, true);
+}
+
+// Check and set proper permissions on the data directory for live environments
+if (file_exists(__DIR__ . '/../data')) {
+    chmod(__DIR__ . '/../data', 0777);
+}
+
+// If database file exists, ensure it has write permissions
+if (file_exists(DB_PATH)) {
+    chmod(DB_PATH, 0666);
 }
 
 // Load EmailJS settings from database if they exist
