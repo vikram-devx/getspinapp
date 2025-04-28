@@ -126,19 +126,25 @@ include 'includes/header.php';
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-6 col-md-4 mb-3">
+                                        <div class="col-6 col-md-3 mb-3">
                                             <a href="<?php echo url('tasks'); ?>" class="btn btn-primary d-flex flex-column align-items-center justify-content-center py-3">
                                                 <i class="fas fa-tasks mb-2 action-icon"></i>
                                                 <span>Find Tasks</span>
                                             </a>
                                         </div>
-                                        <div class="col-6 col-md-4 mb-3">
+                                        <div class="col-6 col-md-3 mb-3">
+                                            <a href="<?php echo url('tasks'); ?>" class="btn btn-danger d-flex flex-column align-items-center justify-content-center py-3">
+                                                <i class="fas fa-sync mb-2 action-icon"></i>
+                                                <span>Earn Free Spins</span>
+                                            </a>
+                                        </div>
+                                        <div class="col-6 col-md-3 mb-3">
                                             <a href="<?php echo url('rewards'); ?>" class="btn btn-success d-flex flex-column align-items-center justify-content-center py-3">
                                                 <i class="fas fa-gift mb-2 action-icon"></i>
                                                 <span>View Rewards</span>
                                             </a>
                                         </div>
-                                        <div class="col-6 col-md-4 mb-3">
+                                        <div class="col-6 col-md-3 mb-3">
                                             <a href="#" class="btn btn-info d-flex flex-column align-items-center justify-content-center py-3">
                                                 <i class="fas fa-user mb-2 action-icon"></i>
                                                 <span>Edit Profile</span>
