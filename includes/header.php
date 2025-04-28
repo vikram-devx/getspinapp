@@ -72,8 +72,8 @@ $app_logo = getSetting('app_logo', '');
     </script>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <!-- Fixed Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-header">
         <div class="container px-3">
             <a class="navbar-brand" href="/">
                 <?php if ($is_public_page && !empty($app_logo)): ?>
@@ -230,7 +230,13 @@ $app_logo = getSetting('app_logo', '');
     </div>
     <?php endif; ?>
     
-    <!-- Main Content Container -->
-    <div class="<?php echo ($current_page === 'index.php' || $request_path === '' || $request_path === 'index') && !$auth->isLoggedIn() ? 'full-width-container' : 'container py-4'; ?>"><?php 
-    /* Use full width for homepage when not logged in, otherwise use regular container */
+    <!-- Main Content Container with spacing for fixed header -->
+    <div class="<?php 
+        if (($current_page === 'index.php' || $request_path === '' || $request_path === 'index') && !$auth->isLoggedIn()) {
+            echo 'full-width-container';
+        } else {
+            echo $auth->isLoggedIn() ? 'container py-4 content-with-fixed-header' : 'container py-4';
+        }
+    ?>"><?php 
+    /* Add content-with-fixed-header class only for authenticated users */
     ?>

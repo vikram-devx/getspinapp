@@ -1,4 +1,22 @@
 $(document).ready(function() {
+    // Fixed Header Scroll Effect
+    const fixedHeader = $('.fixed-header');
+    
+    if (fixedHeader.length) {
+        // Listen for scroll events
+        $(window).on('scroll', function() {
+            if ($(this).scrollTop() > 10) {
+                fixedHeader.addClass('scrolled');
+            } else {
+                fixedHeader.removeClass('scrolled');
+            }
+        });
+        
+        // Call on page load to set initial state
+        if ($(window).scrollTop() > 10) {
+            fixedHeader.addClass('scrolled');
+        }
+    }
     // Promo Slider Functionality
     if ($('.promo-slider').length) {
         var currentSlide = 0;

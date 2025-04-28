@@ -2158,6 +2158,29 @@ body .navbar + .full-width-container {
     margin-top: 5px;
 }
 
+/* Fixed Header for App-like Experience */
+.navbar.fixed-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.content-with-fixed-header {
+    padding-top: 56px; /* Adjust based on navbar height */
+}
+
+/* Add animation for header scroll state */
+.navbar.fixed-header.scrolled {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background-color: rgba(13, 110, 253, 0.98) !important; /* More transparent when scrolled */
+}
+
 /* Mobile Optimizations for Referrals Page */
 @media (max-width: 767px) {
     /* Mobile title styles */
