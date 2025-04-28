@@ -16,8 +16,8 @@ $auth_card_logo = getSetting('auth_card_logo', '');
 // Handle logout action
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     $auth->logout();
-    // Use direct file reference to avoid pretty URL redirection issues
-    header('Location: login.php');
+    // Use pretty URL format for consistency with rest of app
+    header('Location: /login');
     exit;
 }
 
