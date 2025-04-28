@@ -10,6 +10,7 @@ $current_user = $auth->getUser();
 // Pagination setup
 $users_per_page = 10;
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$current_page = intval($current_page); // Convert to integer
 $current_page = max(1, $current_page); // Ensure page is at least 1
 $offset = ($current_page - 1) * $users_per_page;
 
@@ -145,6 +146,8 @@ include 'includes/header.php';
                                     
                                     <!-- Page Numbers -->
                                     <?php
+                                    // Ensure current_page is an integer
+                                    $current_page = intval($current_page);
                                     $start_page = max(1, $current_page - 2);
                                     $end_page = min($total_pages, $start_page + 4);
                                     
@@ -161,7 +164,7 @@ include 'includes/header.php';
                                     
                                     <!-- Next Page Button -->
                                     <li class="page-item <?php echo ($current_page >= $total_pages) ? 'disabled' : ''; ?>">
-                                        <a class="page-link" href="<?php echo ($current_page < $total_pages) ? '/leaderboard?page=' . (intval($current_page) + 1) : '#'; ?>" aria-label="Next">
+                                        <a class="page-link" href="<?php echo ($current_page < $total_pages) ? '/leaderboard?page=' . ($current_page + 1) : '#'; ?>" aria-label="Next">
                                             <span aria-hidden="true">&raquo;</span>
                                         </a>
                                     </li>
