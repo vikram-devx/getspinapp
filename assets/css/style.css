@@ -514,19 +514,29 @@ body .navbar + .full-width-container {
 /* Dashboard Layout */
 .dashboard-container {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: row; /* Force row layout by default */
+    width: 100%;
+    max-width: 100%;
     gap: 1.5rem;
+}
+
+.dashboard-sidebar {
+    flex: 0 0 auto; /* Don't grow or shrink, use auto width */
+}
+
+.dashboard-content {
+    flex: 1; /* Take up remaining space */
 }
 
 /* Default layout for large screens */
 @media (min-width: 1200px) {
     .dashboard-container {
         display: flex;
-        flex-direction: row;
+        flex-direction: row !important;
     }
     
     .dashboard-sidebar {
-        flex: 0 0 300px;
+        flex: 0 0 300px !important;
         display: block !important;
         position: sticky;
         top: 90px;
@@ -592,17 +602,21 @@ body .navbar + .full-width-container {
 /* Desktop layout */
 @media (min-width: 992px) {
     .dashboard-container {
-        flex-direction: row;
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
     }
     
     .dashboard-sidebar {
+        width: 300px;
         flex: 0 0 300px;
-        order: 1; /* Default order for desktop */
+        display: block !important;
     }
     
     .dashboard-content {
         flex: 1;
-        order: 2; /* Default order for desktop */
+        width: calc(100% - 315px);
+        max-width: calc(100% - 315px);
     }
     
     .mobile-sidebar-heading {
@@ -2365,15 +2379,16 @@ body.dashboard-page .dashboard-stat-card {
 @media (min-width: 992px) and (max-width: 1199.98px) {
     /* Fix dashboard layout to display sidebar and content side by side */
     .dashboard-container {
-        display: flex;
+        display: flex !important;
         flex-direction: row !important;
+        flex-wrap: nowrap !important;
         width: 100%;
         max-width: 100%;
     }
     
     .dashboard-sidebar {
+        width: 250px !important;
         flex: 0 0 250px !important; /* Fixed width sidebar */
-        order: 1;
         display: block !important;
         margin-right: 15px;
         position: sticky;
@@ -2384,7 +2399,7 @@ body.dashboard-page .dashboard-stat-card {
     
     .dashboard-content {
         flex: 1 !important;
-        order: 2;
+        width: calc(100% - 265px) !important;
         max-width: calc(100% - 265px) !important;
         padding-left: 0 !important;
     }

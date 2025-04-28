@@ -446,6 +446,25 @@ include 'includes/header.php';
             font-size: 1.1rem;
         }
     }
+    
+    /* Small desktop and desktop layout fix */
+    @media (min-width: 992px) {
+        .dashboard-container {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+        }
+        
+        .dashboard-sidebar {
+            flex: 0 0 auto !important;
+            width: 250px !important;
+        }
+        
+        .dashboard-content {
+            flex: 1 !important;
+            max-width: calc(100% - 265px) !important;
+        }
+    }
 </style>
 
 <?php include 'includes/dashboard_footer.php'; ?>
