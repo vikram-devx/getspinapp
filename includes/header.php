@@ -100,12 +100,12 @@ if ($current_page_name === 'dashboard') {
             
             <!-- Mobile menu controls - different styles for logged in vs non-logged in users -->
             <?php if ($auth->isLoggedIn()): ?>
-            <!-- For logged-in users: avatar toggle for slide menu + desktop hamburger -->
-            <button class="navbar-toggler d-lg-none user-avatar-toggle" type="button" id="mobileMenuToggle" aria-label="Toggle mobile menu">
+            <!-- For logged-in users: avatar toggle for slide menu (mobile & small tablet only) -->
+            <button class="navbar-toggler d-md-none user-avatar-toggle" type="button" id="mobileMenuToggle" aria-label="Toggle mobile menu">
                 <span class="user-avatar-icon"><?php echo strtoupper(substr($current_user['username'], 0, 1)); ?></span>
             </button>
-            <!-- Traditional navigation dropdown for desktop only -->
-            <button class="navbar-toggler d-none d-lg-block" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <!-- Traditional navigation dropdown for desktop and small desktop -->
+            <button class="navbar-toggler d-none d-md-block" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <?php else: ?>

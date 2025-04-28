@@ -2339,6 +2339,40 @@ body.dashboard-page .dashboard-stat-card {
     }
 }
 
+/* Small desktop layout fixes (992px to 1199px) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    /* Fix dashboard stat cards on small desktop to display in a row */
+    .dashboard-stat-card {
+        min-height: 120px;
+    }
+    
+    .dashboard-stat-card .card-title {
+        font-size: 0.9rem;
+    }
+    
+    .dashboard-stat-card .stat-value {
+        font-size: 1.5rem;
+    }
+    
+    /* Fix the navbar display on small desktop */
+    .navbar-nav .nav-link {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+    
+    /* Ensure the avatar toggle doesn't appear on small desktop */
+    .user-avatar-toggle {
+        display: none !important;
+    }
+    
+    /* Ensure mobile menu doesn't appear on small desktop */
+    @media (min-width: 992px) {
+        .mobile-slide-menu, .menu-backdrop {
+            display: none !important;
+        }
+    }
+}
+
 @media (max-width: 767.98px) {
     body.dashboard-page .card {
         overflow-x: hidden;
