@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = $auth->register($username, $email, $password, $referral_code);
         
         if ($result['status'] === 'success') {
-            $success = 'Registration successful! You can now <a href="' . url('login') . '">login</a>.';
+            $success = 'Registration successful! You can now <a href="/login">login</a>.';
             
             // Add additional message if they used a referral code
             if (!empty($referral_code)) {
@@ -92,7 +92,7 @@ include $base_path . 'includes/header.php';
                 <div class="alert alert-success"><?php echo $success; ?></div>
                 <?php else: ?>
                 
-                <form id="registerForm" method="post" action="<?php echo url('register'); ?>">
+                <form id="registerForm" method="post" action="/register">
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
                         <input type="text" class="form-control" id="username" name="username" value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>" required>
@@ -126,7 +126,7 @@ include $base_path . 'includes/header.php';
                 </form>
                 
                 <div class="auth-footer">
-                    <p>Already have an account? <a href="<?php echo url('login'); ?>">Login</a></p>
+                    <p>Already have an account? <a href="/login">Login</a></p>
                 </div>
                 <?php endif; ?>
             </div>
