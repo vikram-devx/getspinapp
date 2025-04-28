@@ -7,7 +7,7 @@ $current_user = $auth->getUser();
 $stats = getUserStats($current_user['id']);
 ?>
 
-<div class="card mb-4">
+<div class="card mb-4 d-none d-md-block">
     <div class="card-header">
         <h5 class="mb-0">User Profile</h5>
     </div>

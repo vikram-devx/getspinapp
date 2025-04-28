@@ -346,11 +346,12 @@ include 'includes/header.php';
                         <div class="col-md-6 col-lg-4 mb-4">
                             <div class="card h-100">
                                 <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0"><i class="fas fa-gift me-2"></i>Recent Redemptions</h5>
+                                    <h5 class="mb-0"><i class="fas fa-gift me-2"></i>Your Redemptions</h5>
                                     <a href="<?php echo url('redemption_history'); ?>" class="btn btn-sm btn-outline-primary">View All</a>
                                 </div>
                                 <div class="card-body">
                                     <?php 
+                                    // Only show user's own redemptions
                                     $recent_redemptions = array_slice($redemptions, 0, 5);
                                     if (count($recent_redemptions) > 0): 
                                     ?>
