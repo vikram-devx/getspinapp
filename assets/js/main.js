@@ -74,7 +74,7 @@ $(document).ready(function() {
     // Task progress tracking
     function loadTaskProgress() {
         $.ajax({
-            url: 'get_task_progress.php',
+            url: '/get_task_progress.php',
             type: 'GET',
             dataType: 'json',
             success: function(response) {
@@ -298,7 +298,7 @@ $(document).ready(function() {
     // Function to cancel a task
     function cancelTask(offerId) {
         $.ajax({
-            url: 'task_action.php',
+            url: '/task_action.php',
             type: 'POST',
             data: {
                 action: 'cancel',
@@ -345,7 +345,7 @@ $(document).ready(function() {
     // Function to resume a task
     function resumeTask(offerId) {
         $.ajax({
-            url: 'task_action.php',
+            url: '/task_action.php',
             type: 'POST',
             data: {
                 action: 'resume',
@@ -635,7 +635,7 @@ $(document).ready(function() {
                 
                 // Use AJAX to submit the form in the background
                 $.ajax({
-                    url: 'tasks.php',
+                    url: '/tasks.php',
                     data: formData,
                     type: 'GET',
                     success: function(response) {
