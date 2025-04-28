@@ -127,7 +127,7 @@ include 'includes/header.php';
                     </div>
                 </div>
                 
-                <form id="redeemForm" method="post" action="redeem.php">
+                <form id="redeemForm" method="post" action="<?php echo url('redeem'); ?>">
                     <input type="hidden" name="reward_id" value="">
                     <div id="gameDetailsFields" style="display: none;">
                         <div class="mb-3">

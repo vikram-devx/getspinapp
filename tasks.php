@@ -735,7 +735,7 @@ include 'includes/header.php';
                 </div>
                 
                 <!-- Hidden form that records the task start in our database -->
-                <form id="taskForm" method="get" action="tasks.php" style="display:none;">
+                <form id="taskForm" method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>" style="display:none;">
                     <input type="hidden" name="action" value="start">
                     <input type="hidden" name="offer_id" value="">
                     <input type="hidden" name="offer_link" value="">

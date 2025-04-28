@@ -211,7 +211,7 @@ require_once 'includes/header.php';
                         </div>
                     <?php endif; ?>
                     
-                    <form method="post" action="/profile">
+                    <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                         <div class="row mb-3">
                             <label for="current_password" class="col-sm-3 col-form-label">Current Password</label>
                             <div class="col-sm-9">
