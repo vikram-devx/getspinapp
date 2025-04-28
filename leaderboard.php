@@ -48,7 +48,7 @@ include 'includes/header.php';
         <div class="col-lg-9">
             <div class="card shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                    <h5 class="mb-0 me-2">User Leaderboard</h5>
+                    <h5 class="mb-0 me-2"><i class="fas fa-trophy text-warning me-2"></i>User Leaderboard</h5>
                     <?php if ($auth->isLoggedIn() && !$auth->isAdmin()): ?>
                         <div class="my-rank-badge">
                             <span class="badge bg-primary">Your Rank: <?php echo $current_user_rank['rank']; ?></span>
@@ -123,7 +123,7 @@ include 'includes/header.php';
         <div class="col-lg-3 mt-4 mt-lg-0">
             <div class="card shadow-sm mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0">Leaderboard Stats</h5>
+                    <h5 class="mb-0"><i class="fas fa-chart-bar text-info me-2"></i>Leaderboard Stats</h5>
                 </div>
                 <div class="card-body px-4">
                     <div class="stats-item mb-3">
@@ -172,7 +172,7 @@ include 'includes/header.php';
             
             <div class="card shadow-sm">
                 <div class="card-header">
-                    <h5 class="mb-0">How to Earn Points</h5>
+                    <h5 class="mb-0"><i class="fas fa-coins text-warning me-2"></i>How to Earn Points</h5>
                 </div>
                 <div class="card-body px-4">
                     <ul class="list-unstyled">
