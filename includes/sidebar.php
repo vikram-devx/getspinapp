@@ -28,7 +28,7 @@ $stats = getUserStats($current_user['id']);
         <div class="d-grid gap-2">
             <a href="<?php echo url('rewards'); ?>" class="btn btn-primary"><i class="fas fa-gift me-2"></i>Redeem Points</a>
             <a href="<?php echo url('tasks'); ?>" class="btn btn-outline-primary"><i class="fas fa-tasks me-2"></i>Available Tasks <span class="badge bg-warning text-dark ms-1" style="font-size: 0.7rem;">Earn Free Spins</span></a>
-            <a href="profile.php" class="btn btn-outline-secondary"><i class="fas fa-user-cog me-2"></i>Edit Profile</a>
+            <a href="<?php echo url('profile'); ?>" class="btn btn-outline-secondary"><i class="fas fa-user-cog me-2"></i>Edit Profile</a>
         </div>
     </div>
 </div>
