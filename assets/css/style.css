@@ -2210,6 +2210,18 @@ body .navbar + .full-width-container {
     margin-top: 20px;
 }
 
+/* Extra padding specifically for dashboard and tasks pages */
+body.dashboard-page .content-with-fixed-header,
+body.tasks-page .content-with-fixed-header {
+    padding-top: 140px !important; /* Extra padding just for these pages */
+}
+
+/* Even more top padding for first card on dashboard and tasks */
+body.dashboard-page .card:first-of-type,
+body.tasks-page .card:first-of-type {
+    margin-top: 30px !important;
+}
+
 /* Mobile-specific padding for fixed header and bottom nav */
 @media (max-width: 767.98px) {
     .content-with-fixed-header {
@@ -2230,6 +2242,12 @@ body .navbar + .full-width-container {
     /* Fix for tasks page specifically */
     .card-header {
         padding-top: 15px !important;
+    }
+    
+    /* Extra padding for dashboard and tasks on mobile */
+    body.dashboard-page .content-with-fixed-header,
+    body.tasks-page .content-with-fixed-header {
+        padding-top: 140px !important; /* Extra padding just for these pages on mobile */
     }
 }
 

@@ -71,7 +71,19 @@ $app_logo = getSetting('app_logo', '');
         <?php endif; ?>
     </script>
 </head>
-<body>
+<?php
+// Determine the current page for body class
+$current_page_name = basename($_SERVER['PHP_SELF'], '.php');
+$body_class = '';
+
+// Add specific classes for pages that need extra padding
+if ($current_page_name === 'dashboard') {
+    $body_class = 'dashboard-page';
+} elseif ($current_page_name === 'tasks') {
+    $body_class = 'tasks-page';
+}
+?>
+<body class="<?php echo $body_class; ?>">
     <!-- Fixed Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-header">
         <div class="container px-3">
