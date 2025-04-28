@@ -798,57 +798,7 @@ $(document).ready(function() {
         var dashCurrentSlide = 0;
         var dashSlides = $('.dashboard-slide');
         var dashTotalSlides = dashSlides.length;
-        var dashSlideWidth = 25; // 25% per slide (for 4 slides)
         var dashAutoSlideInterval;
-        
-        // Handle slider differently based on viewport width
-        var isTablet = window.matchMedia('(min-width: 768px) and (max-width: 991.98px)').matches;
-        
-        // Initialize slider if multiple slides exist
-        if (dashTotalSlides > 1) {
-            if (!isTablet) {
-                // Start auto-sliding for non-tablet devices
-                dashStartAutoSlide();
-            }
-            
-            // Handle dot click
-            $(document).on('click', '.dashboard-slider-dot', function() {
-                var index = $(this).data('slide');
-                
-                if (isTablet) {
-                    // Tablet - just scroll to the slide
-                    var slideElement = $('.dashboard-slide').eq(index);
-                    if (slideElement.length) {
-                        $('.dashboard-slider').animate({
-                            scrollLeft: slideElement.position().left
-                        }, 500);
-                        
-                        // Update active dot
-                        $('.dashboard-slider-dot').removeClass('active');
-                        $(this).addClass('active');
-                    }
-                } else {
-                    // Desktop/Mobile - use transition
-                    dashGoToSlide(index);
-                    dashResetAutoSlide();
-                }
-            });
-            
-            // For tablet, add scroll event to highlight the right dot
-            if (isTablet) {
-                $('.dashboard-slider').on('scroll', function() {
-                    var scrollPos = $(this).scrollLeft();
-                    var slideWidth = $('.dashboard-slide').first().outerWidth(true);
-                    
-                    // Calculate which slide is most visible
-                    var currentIndex = Math.round(scrollPos / slideWidth);
-                    
-                    // Update dots
-                    $('.dashboard-slider-dot').removeClass('active');
-                    $('.dashboard-slider-dot[data-slide="' + currentIndex + '"]').addClass('active');
-                });
-            }
-        }
         
         // Function to go to a specific slide
         function dashGoToSlide(slideIndex) {
@@ -862,20 +812,8 @@ $(document).ready(function() {
             // Update currentSlide
             dashCurrentSlide = slideIndex;
             
-            // Check screen size to determine slide behavior
-            if (window.innerWidth <= 768) {
-                // On mobile, we use scroll behavior for a more native feel
-                var slideElement = $('.dashboard-slide').eq(slideIndex);
-                var scrollContainer = $('.dashboard-slider');
-                
-                // Smooth scroll to the target slide
-                scrollContainer.animate({
-                    scrollLeft: slideElement.position().left
-                }, 500);
-            } else {
-                // On desktop, use transform for sliding
-                $('.dashboard-slider').css('transform', 'translateX(-' + (slideIndex * dashSlideWidth) + '%)');
-            }
+            // Use transform for sliding on all devices
+            $('.dashboard-slider').css('transform', 'translateX(-' + (slideIndex * 100) + '%)');
             
             // Update active dot
             $('.dashboard-slider-dot').removeClass('active');
@@ -892,6 +830,42 @@ $(document).ready(function() {
         function dashResetAutoSlide() {
             clearInterval(dashAutoSlideInterval);
             dashStartAutoSlide();
+        }
+        
+        // Initialize slider if multiple slides exist
+        if (dashTotalSlides > 1) {
+            // Start auto-sliding on all devices
+            dashStartAutoSlide();
+            
+            // Handle dot click
+            $(document).on('click', '.dashboard-slider-dot', function() {
+                var index = $(this).data('slide');
+                
+                // Use transition for all devices
+                dashGoToSlide(index);
+                dashResetAutoSlide();
+            });
+            
+            // Add left/right arrow navigation for the slider if not present
+            if ($('.dashboard-slider-arrows').length === 0) {
+                var arrowsHTML = '<div class="dashboard-slider-arrows">' +
+                                 '<div class="dashboard-slider-arrow dashboard-slider-arrow-left"><i class="fas fa-chevron-left"></i></div>' +
+                                 '<div class="dashboard-slider-arrow dashboard-slider-arrow-right"><i class="fas fa-chevron-right"></i></div>' +
+                                 '</div>';
+                
+                $('.dashboard-slider-wrapper').append(arrowsHTML);
+                
+                // Handle arrow clicks
+                $('.dashboard-slider-arrow-left').on('click', function() {
+                    dashGoToSlide(dashCurrentSlide - 1);
+                    dashResetAutoSlide();
+                });
+                
+                $('.dashboard-slider-arrow-right').on('click', function() {
+                    dashGoToSlide(dashCurrentSlide + 1);
+                    dashResetAutoSlide();
+                });
+            }
         }
     }
     

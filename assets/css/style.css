@@ -2303,7 +2303,7 @@ body .navbar + .full-width-container {
     
     .dashboard-slide {
         scroll-snap-align: start;
-        min-width: a00%;
+        min-width: 100%;
         max-width: 100%;
         flex: 0 0 100%;
         margin-right: 0; /* No margin between slides */
