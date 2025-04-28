@@ -1756,12 +1756,18 @@ body .navbar + .full-width-container {
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: #ffffff;
-    box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
     display: none;
     height: 65px;
-    z-index: 1000;
+    z-index: 1500; /* Increased z-index to ensure it's on top */
     border-top: 1px solid rgba(0,0,0,0.05);
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
 }
 
 .mobile-bottom-nav .nav-items {
@@ -1788,18 +1794,31 @@ body .navbar + .full-width-container {
 
 .mobile-bottom-nav .nav-item.active {
     color: #007bff;
+    animation: nav-item-active 0.3s ease-out;
+}
+
+@keyframes nav-item-active {
+    0% {
+        transform: translateY(5px);
+        opacity: 0.5;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .mobile-bottom-nav .nav-item.active::after {
     content: '';
     position: absolute;
-    bottom: -8px;
+    bottom: 0;
     left: 50%;
     transform: translateX(-50%);
     width: 6px;
     height: 6px;
     background-color: #007bff;
     border-radius: 50%;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
 }
 
 .mobile-bottom-nav .nav-item i {
@@ -1823,17 +1842,22 @@ body .navbar + .full-width-container {
 
 @media (max-width: 576px) {
     .mobile-bottom-nav {
-        display: block;
+        display: block !important; /* Force display with !important */
     }
     
     /* Add padding to the bottom of the page to account for the nav bar */
     body {
-        padding-bottom: 60px;
+        padding-bottom: 70px !important; /* Increased to match the menu height */
     }
     
     /* Hide the footer or adjust on mobile */
     .footer {
-        margin-bottom: 60px;
+        margin-bottom: 70px;
+    }
+    
+    /* Ensure content doesn't get hidden behind the bottom menu */
+    .dashboard-content {
+        padding-bottom: 80px !important;
     }
 }
 
