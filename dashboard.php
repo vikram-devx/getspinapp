@@ -47,9 +47,6 @@ $stmt = $conn->prepare($rank_query);
 $stmt->execute(['user_id' => $user_id]);
 $user_rank = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Determine active tab
-$tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
-
 include 'includes/header.php';
 ?>
 
@@ -66,23 +63,11 @@ include 'includes/header.php';
     <!-- Dashboard Content -->
     <div class="dashboard-content">
         <div class="card">
-            <div class="card-header bg-white">
-                <ul class="nav nav-tabs card-header-tabs" id="dashboardTab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link <?php echo $tab === 'overview' ? 'active' : ''; ?>" id="overview-tab" data-bs-toggle="tab" href="#overview" role="tab" aria-controls="overview" aria-selected="<?php echo $tab === 'overview' ? 'true' : 'false'; ?>">Overview</a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link <?php echo $tab === 'transactions' ? 'active' : ''; ?>" id="transactions-tab" data-bs-toggle="tab" href="#transactions" role="tab" aria-controls="transactions" aria-selected="<?php echo $tab === 'transactions' ? 'true' : 'false'; ?>">Transactions</a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link <?php echo $tab === 'redemptions' ? 'active' : ''; ?>" id="redemptions-tab" data-bs-toggle="tab" href="#redemptions" role="tab" aria-controls="redemptions" aria-selected="<?php echo $tab === 'redemptions' ? 'true' : 'false'; ?>">Redemptions</a>
-                    </li>
-                </ul>
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Dashboard Overview</h5>
             </div>
-            <div class="tab-content" id="dashboardTabContent">
-                <!-- Overview Tab -->
-                <div class="tab-pane fade <?php echo $tab === 'overview' ? 'show active' : ''; ?>" id="overview" role="tabpanel" aria-labelledby="overview-tab">
-                    <h3 class="mb-4">Dashboard Overview</h3>
+            <div class="card-body">
+                <!-- Main Dashboard Content -->
                     
                     <!-- Stats Cards -->
                     <div class="row mb-4">
@@ -210,7 +195,7 @@ include 'includes/header.php';
                             <div class="card h-100">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h5 class="mb-0">Recent Transactions</h5>
-                                    <a href="#transactions" data-bs-toggle="tab" class="btn btn-sm btn-outline-primary">View All</a>
+                                    <a href="<?php echo url('transactions'); ?>" class="btn btn-sm btn-outline-primary">View All</a>
                                 </div>
                                 <div class="card-body">
                                     <?php if (count($transactions) > 0): ?>
@@ -251,7 +236,7 @@ include 'includes/header.php';
                             <div class="card h-100">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h5 class="mb-0">Recent Redemptions</h5>
-                                    <a href="#redemptions" data-bs-toggle="tab" class="btn btn-sm btn-outline-primary">View All</a>
+                                    <a href="<?php echo url('redemption_history'); ?>" class="btn btn-sm btn-outline-primary">View All</a>
                                 </div>
                                 <div class="card-body">
                                     <?php 
@@ -306,113 +291,6 @@ include 'includes/header.php';
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Transactions Tab -->
-                <div class="tab-pane fade <?php echo $tab === 'transactions' ? 'show active' : ''; ?>" id="transactions" role="tabpanel" aria-labelledby="transactions-tab">
-                    <h3 class="mb-4">Transaction History</h3>
-                    
-                    <?php 
-                    // Get all transactions for the user
-                    $all_transactions = getUserTransactions($user_id, 100);
-                    if (count($all_transactions) > 0): 
-                    ?>
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Description</th>
-                                    <th>Type</th>
-                                    <th>Points</th>
-                                    <th>Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($all_transactions as $transaction): ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($transaction['description']); ?></td>
-                                    <td>
-                                        <?php if ($transaction['type'] === 'earn'): ?>
-                                            <span class="badge bg-success">Earned</span>
-                                        <?php else: ?>
-                                            <span class="badge bg-secondary">Spent</span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td><?php echo formatPoints($transaction['points']); ?></td>
-                                    <td><?php echo formatDate($transaction['created_at']); ?></td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                    <?php else: ?>
-                    <div class="alert alert-info text-center">
-                        <i class="fas fa-info-circle me-2"></i>
-                        No transactions yet. Start completing tasks to earn points!
-                    </div>
-                    <?php endif; ?>
-                </div>
-                
-                <!-- Redemptions Tab -->
-                <div class="tab-pane fade <?php echo $tab === 'redemptions' ? 'show active' : ''; ?>" id="redemptions" role="tabpanel" aria-labelledby="redemptions-tab">
-                    <h3 class="mb-4">Redemption History</h3>
-                    
-                    <?php if (count($redemptions) > 0): ?>
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Reward</th>
-                                    <th>Points Used</th>
-                                    <th>Status</th>
-                                    <th>Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($redemptions as $redemption): ?>
-                                <tr>
-                                    <td>
-                                        <?php echo htmlspecialchars($redemption['name']); ?>
-                                        <?php 
-                                        // Check if this is a game reward and has redemption details
-                                        if (($redemption['reward_id'] == 6 || $redemption['reward_id'] == 7) && !empty($redemption['redemption_details'])):
-                                            $details = json_decode($redemption['redemption_details'], true);
-                                            if ($details && isset($details['username']) && isset($details['spins'])):
-                                        ?>
-                                        <br>
-                                        <small class="text-muted">
-                                            Game Username: <strong><?php echo htmlspecialchars($details['username']); ?></strong><br>
-                                            Spins: <strong><?php echo htmlspecialchars($details['spins']); ?></strong>
-                                        </small>
-                                        <?php endif; endif; ?>
-                                    </td>
-                                    <td><?php echo formatPoints($redemption['points_used']); ?></td>
-                                    <td>
-                                        <?php if ($redemption['status'] === 'pending'): ?>
-                                            <span class="badge bg-warning">Pending</span>
-                                        <?php elseif ($redemption['status'] === 'completed'): ?>
-                                            <span class="badge bg-success">Completed</span>
-                                        <?php else: ?>
-                                            <span class="badge bg-danger">Rejected</span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td><?php echo formatDate($redemption['created_at']); ?></td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                    <?php else: ?>
-                    <div class="alert alert-info text-center">
-                        <i class="fas fa-info-circle me-2"></i>
-                        No redemptions yet. Redeem your points for rewards!
-                    </div>
-                    <div class="text-center mt-4">
-                        <a href="<?php echo url('rewards'); ?>" class="btn btn-primary">
-                            <i class="fas fa-gift me-2"></i> Browse Rewards
-                        </a>
-                    </div>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>

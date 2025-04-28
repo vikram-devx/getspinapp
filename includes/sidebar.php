@@ -84,12 +84,12 @@ $stats = getUserStats($current_user['id']);
                 </a>
             </li>
             <li class="list-group-item">
-                <a href="<?php echo url('dashboard', ['tab' => 'redemptions']); ?>" class="text-decoration-none">
+                <a href="<?php echo url('redemption_history'); ?>" class="text-decoration-none">
                     <i class="fas fa-history me-2"></i> Redemption History
                 </a>
             </li>
             <li class="list-group-item">
-                <a href="<?php echo url('dashboard', ['tab' => 'transactions']); ?>" class="text-decoration-none">
+                <a href="<?php echo url('transactions'); ?>" class="text-decoration-none">
                     <i class="fas fa-exchange-alt me-2"></i> Transaction History
                 </a>
             </li>
