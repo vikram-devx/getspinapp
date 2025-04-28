@@ -126,19 +126,41 @@ body .navbar + .full-width-container {
 /* Card Styles */
 .card {
     border: none;
-    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
-    border-radius: 0.5rem;
+    box-shadow: 0 0.2rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+    border-radius: 0.75rem;
     margin-bottom: 1.5rem;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    box-shadow: 0 0.3rem 2rem 0 rgba(58, 59, 69, 0.15);
 }
 
 .card-header {
     background-color: #fff;
     border-bottom: 1px solid #e3e6f0;
     padding: 1rem 1.25rem;
+    font-weight: 600;
 }
 
 .card-header:first-child {
-    border-radius: 0.5rem 0.5rem 0 0;
+    border-radius: 0.75rem 0.75rem 0 0;
+}
+
+.card-header h5 {
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.card-body {
+    padding: 1.25rem;
+}
+
+/* Enhance dashboard cards specifically */
+.dashboard-content .card {
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
 }
 
 /* Avatar Styles */
@@ -527,6 +549,33 @@ body .navbar + .full-width-container {
 
 .dashboard-content {
     flex: 1; /* Take up remaining space */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Custom scrollbar styling for all dashboard components */
+.dashboard-container *::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.dashboard-container *::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.dashboard-container *::-webkit-scrollbar-thumb {
+    background-color: #d0d0d0;
+    border-radius: 10px;
+}
+
+.dashboard-container *::-webkit-scrollbar-thumb:hover {
+    background-color: #a0a0a0;
+}
+
+/* Firefox scrollbar */
+.dashboard-container * {
+    scrollbar-width: thin;
+    scrollbar-color: #d0d0d0 #f1f1f1;
 }
 
 /* Default layout for large screens */
@@ -534,20 +583,65 @@ body .navbar + .full-width-container {
     .dashboard-container {
         display: flex;
         flex-direction: row !important;
+        gap: 1.75rem; /* Increased gap for better separation */
+        align-items: flex-start;
+        max-width: 1400px; /* Set a max-width for very large screens */
+        margin: 0 auto; /* Center the dashboard content on large screens */
     }
     
     .dashboard-sidebar {
-        flex: 0 0 300px !important;
+        flex: 0 0 320px !important; /* Slightly wider sidebar */
         display: block !important;
-        position: relative; /* Changed from sticky to relative */
-        padding-right: 5px; /* Add padding for spacing */
+        position: sticky; /* Make sidebar sticky on large screens */
+        top: 90px; /* Position from top to match header height */
+        height: calc(100vh - 110px); /* Set a fixed height */
+        padding: 0 10px 20px 0; /* Add padding for spacing */
         overflow-x: hidden; /* Only hide horizontal overflow */
-        overflow-y: visible; /* Allow vertical content to flow normally */
+        overflow-y: auto; /* Allow scrolling for tall sidebar content */
+        transition: all 0.3s ease; /* Smooth transitions */
     }
     
     .dashboard-content {
         flex: 1;
-        max-width: calc(100% - 315px);
+        max-width: calc(100% - 350px); /* Adjusted to account for wider sidebar */
+        min-width: 0; /* Prevent flex items from overflowing */
+    }
+    
+    /* Card adjustments for large screens */
+    .dashboard-content .card {
+        border-radius: 0.75rem;
+        box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.08);
+        transition: box-shadow 0.3s ease;
+    }
+    
+    .dashboard-content .card:hover {
+        box-shadow: 0 0.35rem 1.25rem rgba(0, 0, 0, 0.12);
+    }
+    
+    /* Stats card improvements */
+    .dashboard-stat-card {
+        min-height: 140px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .dashboard-stat-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    /* Better spacing for quick action buttons */
+    .quick-action-btn {
+        padding: 1rem !important;
+        font-size: 1.05rem;
+    }
+    
+    .action-icon {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Dashboard promo slider enhancements */
+    .dashboard-slide-content {
+        padding: 1.75rem !important;
     }
 }
 
@@ -576,15 +670,41 @@ body .navbar + .full-width-container {
     .dashboard-stat-card {
         margin-bottom: 0.75rem;
         overflow: hidden; /* Prevent content from spilling out */
+        border-radius: 0.75rem;
+        box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.08);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .dashboard-stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.35rem 1.5rem rgba(0, 0, 0, 0.12);
     }
     
     .dashboard-stat-card .card-body {
-        padding: 0.75rem; /* Less padding on mobile */
+        padding: 1rem; /* Better padding for all screen sizes */
     }
     
     .dashboard-stat-card .stat-value {
-        font-size: 1.5rem; /* Smaller font for stats on mobile */
+        font-size: 1.5rem; /* Optimized font size for stats */
+        font-weight: 700; /* Bolder font weight */
         word-break: break-word; /* Break long numbers if needed */
+    }
+    
+    .dashboard-stat-card .stat-icon {
+        font-size: 1.2rem;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        margin-right: 0.75rem;
+    }
+    
+    .dashboard-stat-card .card-title {
+        font-weight: 600;
+        font-size: 0.95rem;
     }
     
     /* Add a heading for mobile sidebar to make it clear it's the user profile section */
@@ -2403,50 +2523,120 @@ body.dashboard-page .dashboard-stat-card {
 
 /* Small desktop layout fixes (992px to 1199px) */
 @media (min-width: 992px) and (max-width: 1199.98px) {
-    /* Fix dashboard layout to display sidebar and content side by side */
+    /* Optimized dashboard layout for small desktop screens */
     .dashboard-container {
         display: flex !important;
         flex-direction: row !important;
         flex-wrap: nowrap !important;
         width: 100%;
         max-width: 100%;
+        gap: 1.25rem; /* Add gap between sidebar and content */
     }
     
     .dashboard-sidebar {
-        width: 250px !important;
-        flex: 0 0 250px !important; /* Fixed width sidebar */
+        width: 280px !important;
+        flex: 0 0 280px !important; /* Adjusted width for small desktop */
         display: block !important;
-        margin-right: 15px;
-        position: sticky;
-        top: 90px;
-        height: calc(100vh - 90px);
-        overflow-y: auto;
+        position: sticky; /* Keep sidebar in view while scrolling */
+        top: 80px; /* Align with header */
+        height: calc(100vh - 95px);
+        overflow-y: auto; /* Allow scrolling for tall sidebar */
+        padding-right: 10px; /* Add padding for scrollbar */
+        transition: all 0.3s ease; /* Smooth transitions */
+        /* Styled scrollbar for webkit browsers */
+        scrollbar-width: thin;
+        scrollbar-color: #e0e0e0 transparent;
+    }
+    
+    /* Custom scrollbar styling */
+    .dashboard-sidebar::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .dashboard-sidebar::-webkit-scrollbar-thumb {
+        background-color: #e0e0e0;
+        border-radius: 10px;
+    }
+    
+    .dashboard-sidebar::-webkit-scrollbar-thumb:hover {
+        background-color: #d0d0d0;
     }
     
     .dashboard-content {
         flex: 1 !important;
-        width: calc(100% - 265px) !important;
-        max-width: calc(100% - 265px) !important;
+        width: calc(100% - 290px) !important;
+        max-width: calc(100% - 290px) !important;
         padding-left: 0 !important;
+        min-width: 0; /* Prevent content from overflowing */
     }
     
-    /* Fix dashboard stat cards on small desktop to display in a row */
+    /* Improved cards for small desktop displays */
     .dashboard-stat-card {
         min-height: 120px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        margin-bottom: 15px;
+    }
+    
+    .dashboard-stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     }
     
     .dashboard-stat-card .card-title {
         font-size: 0.9rem;
+        font-weight: 600;
+        white-space: normal; /* Allow title to wrap if needed */
     }
     
     .dashboard-stat-card .stat-value {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
+        font-weight: 700;
+    }
+    
+    .dashboard-stat-card .stat-icon {
+        font-size: 1.2rem;
+    }
+    
+    /* Optimized quick actions section */
+    .quick-actions .col-md-3 {
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+    
+    .quick-action-btn {
+        padding: 0.85rem !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .quick-action-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .quick-action-btn .action-icon {
+        font-size: 1.3rem;
+        margin-bottom: 0.4rem;
+    }
+    
+    /* Enhanced dashboard promo slider */
+    .dashboard-slide-content {
+        padding: 1.25rem 1.5rem;
+    }
+    
+    .dashboard-slide-content h4 {
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+    
+    .dashboard-slide-content p {
+        font-size: 0.95rem;
     }
     
     /* Fix the navbar display on small desktop */
     .navbar-nav .nav-link {
         padding-left: 0.5rem;
         padding-right: 0.5rem;
+        font-size: 0.95rem;
     }
     
     /* Ensure the avatar toggle doesn't appear on small desktop */
@@ -2459,20 +2649,34 @@ body.dashboard-page .dashboard-stat-card {
         display: none !important;
     }
     
-    /* Improve spacing in small desktop layout */
+    /* Optimize card spacing in small desktop layout */
     body.dashboard-page .card-body {
-        padding-left: 10px !important;
-        padding-right: 10px !important;
+        padding: 1rem !important;
     }
     
-    /* Fix sidebar profile avatar section */
+    body.dashboard-page .card-header {
+        padding: 0.85rem 1rem !important;
+    }
+    
+    /* Enhanced sidebar profile section */
     .sidebar-profile {
         padding: 15px 10px;
     }
     
     .sidebar-profile .avatar-container {
-        width: 80px;
-        height: 80px;
+        width: 70px;
+        height: 70px;
+        margin: 0 auto 10px;
+    }
+    
+    /* Better leaderboard display */
+    .user-rank-highlight {
+        padding: 0.5rem;
+    }
+    
+    /* Recent activity section */
+    .activity-item {
+        padding: 0.5rem 0.75rem;
     }
 }
 
@@ -2526,6 +2730,86 @@ body.dashboard-page .dashboard-stat-card {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     background-color: rgba(13, 110, 253, 0.98) !important; /* More transparent when scrolled */
+}
+
+/* Extra large screens (1400px and up) */
+@media (min-width: 1400px) {
+    /* Center the dashboard content for better readability on ultra-wide screens */
+    .dashboard-container {
+        max-width: 1500px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    /* Enhance dashboard stats display */
+    .dashboard-stat-card {
+        min-height: 160px;
+    }
+    
+    .dashboard-stat-card .stat-icon {
+        font-size: 1.8rem;
+        margin-right: 0.75rem;
+    }
+    
+    .dashboard-stat-card .stat-value {
+        font-size: 2.2rem;
+    }
+    
+    /* Enhanced sidebar for extra large screens */
+    .dashboard-sidebar {
+        flex: 0 0 350px !important;
+        width: 350px !important;
+    }
+    
+    .dashboard-content {
+        max-width: calc(100% - 380px);
+    }
+    
+    /* Make cards more prominent with extra spacing */
+    .dashboard-content .card {
+        margin-bottom: 2rem;
+    }
+    
+    .dashboard-content .card-header {
+        padding: 1.25rem 1.5rem;
+    }
+    
+    .dashboard-content .card-body {
+        padding: 1.5rem;
+    }
+    
+    /* Larger quick action buttons */
+    .quick-action-btn {
+        padding: 1.25rem !important;
+    }
+    
+    .quick-action-btn .action-icon {
+        font-size: 1.75rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .quick-action-btn span {
+        font-size: 1.1rem;
+    }
+    
+    /* Enhanced promo slider */
+    .dashboard-slide-content {
+        padding: 2rem !important;
+    }
+    
+    .dashboard-slide-content h4 {
+        font-size: 1.6rem;
+    }
+    
+    .dashboard-slide-content p {
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .dashboard-slide-content .btn {
+        padding: 0.6rem 1.5rem;
+        font-size: 1.05rem;
+    }
 }
 
 /* Mobile Optimizations for Referrals Page */
