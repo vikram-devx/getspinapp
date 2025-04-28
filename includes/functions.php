@@ -1853,7 +1853,12 @@ function url($page, $params = [], $absolute = false) {
     // Get the base path of the application (might be in a subdirectory)
     $base_path = '';
     if (isset($_SERVER['SCRIPT_NAME'])) {
-        $base_path = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+        $original_base_path = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+        
+        // Fix: Remove "/dashboard" if it's in the path when it shouldn't be
+        // This addresses the issue where $base_path incorrectly adds /dashboard to URLs
+        $base_path = preg_replace('|/dashboard$|', '', $original_base_path);
+        
         // If we're in the root directory, $base_path will be empty or '/'
         if ($base_path === '/') {
             $base_path = '';
@@ -1867,7 +1872,7 @@ function url($page, $params = [], $absolute = false) {
         return $protocol . $host . $base_path . '/' . $page . $query;
     }
     
-    // For relative URLs
+    // For relative URLs - ensure no double slashes
     return $base_path . '/' . $page . $query;
 }
 
