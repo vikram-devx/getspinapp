@@ -7,23 +7,38 @@ require_once 'includes/db.php';
 $auth = new Auth();
 $current_user = $auth->getUser();
 
-// Fetch top users ordered by points (limited to top 20)
+// Pagination setup
+$users_per_page = 10;
+$current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$current_page = max(1, $current_page); // Ensure page is at least 1
+$offset = ($current_page - 1) * $users_per_page;
+
+// Fetch users for the current page
 $db = Database::getInstance();
 $conn = $db->getConnection();
 
-// Base query for top users by points
+// Get total number of non-admin users for pagination
+$count_query = "SELECT COUNT(*) as total FROM users WHERE is_admin = 0";
+$count_result = $conn->query($count_query);
+$total_users = $count_result->fetch(PDO::FETCH_ASSOC)['total'];
+$total_pages = ceil($total_users / $users_per_page);
+
+// Base query for users by points with pagination
 $query = "SELECT id, username, points, 
           (SELECT COUNT(*) FROM users u2 WHERE u2.points > u1.points) + 1 AS rank 
           FROM users u1 
           WHERE is_admin = 0 
           ORDER BY points DESC 
-          LIMIT 20";
+          LIMIT :limit OFFSET :offset";
 
-$result = $conn->query($query);
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':limit', $users_per_page, PDO::PARAM_INT);
+$stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+$stmt->execute();
+
 $leaderboard_users = [];
-
-if ($result) {
-    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+if ($stmt) {
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $leaderboard_users[] = $row;
     }
 }
@@ -115,6 +130,45 @@ include 'includes/header.php';
                                 </tbody>
                             </table>
                         </div>
+                        
+                        <!-- Pagination Controls -->
+                        <?php if ($total_pages > 1): ?>
+                        <div class="pagination-container mt-4">
+                            <nav aria-label="Leaderboard pagination">
+                                <ul class="pagination justify-content-center">
+                                    <!-- Previous Page Button -->
+                                    <li class="page-item <?php echo ($current_page <= 1) ? 'disabled' : ''; ?>">
+                                        <a class="page-link" href="<?php echo ($current_page > 1) ? '/leaderboard?page=' . ($current_page - 1) : '#'; ?>" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    
+                                    <!-- Page Numbers -->
+                                    <?php
+                                    $start_page = max(1, $current_page - 2);
+                                    $end_page = min($total_pages, $start_page + 4);
+                                    
+                                    if ($end_page - $start_page < 4 && $total_pages > 4) {
+                                        $start_page = max(1, $end_page - 4);
+                                    }
+                                    
+                                    for ($i = $start_page; $i <= $end_page; $i++): 
+                                    ?>
+                                        <li class="page-item <?php echo ($i == $current_page) ? 'active' : ''; ?>">
+                                            <a class="page-link" href="/leaderboard?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                        </li>
+                                    <?php endfor; ?>
+                                    
+                                    <!-- Next Page Button -->
+                                    <li class="page-item <?php echo ($current_page >= $total_pages) ? 'disabled' : ''; ?>">
+                                        <a class="page-link" href="<?php echo ($current_page < $total_pages) ? '/leaderboard?page=' . ($current_page + 1) : '#'; ?>" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
             </div>
@@ -200,6 +254,7 @@ include 'includes/header.php';
 </div>
 
 <style>
+    /* Leaderboard rank badges */
     .rank-badge {
         padding: 5px 8px;
         border-radius: 50%;
@@ -222,6 +277,40 @@ include 'includes/header.php';
     .rank-3 {
         background-color: rgba(205, 127, 50, 0.2);
         color: #CD7F32;
+    }
+    
+    /* Pagination styling */
+    .pagination-container {
+        margin-top: 1.5rem;
+    }
+    
+    .pagination .page-link {
+        color: #0d6efd;
+        background-color: #fff;
+        border-color: #dee2e6;
+        padding: 0.5rem 0.75rem;
+        transition: all 0.2s ease;
+    }
+    
+    .pagination .page-link:hover {
+        background-color: #f8f9fa;
+        border-color: #dee2e6;
+        color: #0a58ca;
+        z-index: 2;
+    }
+    
+    .pagination .page-item.active .page-link {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        color: white;
+        font-weight: 500;
+    }
+    
+    .pagination .page-item.disabled .page-link {
+        color: #6c757d;
+        pointer-events: none;
+        background-color: #fff;
+        border-color: #dee2e6;
     }
     
     .table-primary {
@@ -360,6 +449,22 @@ include 'includes/header.php';
         
         .stats-item span {
             font-size: 0.875rem;
+        }
+        
+        /* Mobile pagination adjustments */
+        .pagination .page-link {
+            padding: 0.35rem 0.6rem;
+            font-size: 0.85rem;
+        }
+        
+        .pagination-container {
+            overflow-x: auto;
+            padding-bottom: 5px; /* Add space for potential scrollbar */
+        }
+        
+        .pagination {
+            flex-wrap: nowrap;
+            min-width: min-content;
         }
     }
 </style>
