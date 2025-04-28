@@ -104,10 +104,7 @@ if ($current_page_name === 'dashboard') {
             <button class="navbar-toggler d-lg-none user-avatar-toggle" type="button" id="mobileMenuToggle" aria-label="Toggle mobile menu">
                 <span class="user-avatar-icon"><?php echo strtoupper(substr($current_user['username'], 0, 1)); ?></span>
             </button>
-            <!-- Traditional navigation dropdown for desktop and small desktop -->
-            <button class="navbar-toggler d-none d-lg-block" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <!-- No hamburger toggle for desktop screens - navbar is always visible -->
             <?php else: ?>
             <!-- For non-logged in users: simplified navigation with icons only -->
             <div class="d-flex align-items-center non-logged-nav">
@@ -122,9 +119,9 @@ if ($current_page_name === 'dashboard') {
             </div>
             <?php endif; ?>
             
-            <!-- Navigation menu items - only show for logged in users on mobile -->
+            <!-- Navigation menu items - always visible on desktop, collapse on mobile -->
             <?php if ($auth->isLoggedIn()): ?>
-            <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="/dashboard">Dashboard</a>
