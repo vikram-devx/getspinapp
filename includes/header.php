@@ -96,9 +96,22 @@ $app_logo = getSetting('app_logo', '');
             </a>
             <?php endif; ?>
             
+            <!-- Modified for new mobile menu - show on mobile only -->
+            <?php if ($auth->isLoggedIn()): ?>
+            <button class="navbar-toggler d-lg-none" type="button" id="mobileMenuToggle" aria-label="Toggle mobile menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Traditional navigation dropdown for desktop only -->
+            <button class="navbar-toggler d-none d-lg-block" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <?php else: ?>
+            <!-- Regular hamburger menu for non-logged in users -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            <?php endif; ?>
+            
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <?php if ($auth->isLoggedIn()): ?>
@@ -155,6 +168,78 @@ $app_logo = getSetting('app_logo', '');
             </div>
         </div>
     </nav>
+    
+    <?php if ($auth->isLoggedIn()): ?>
+    <!-- New Mobile Slide Menu -->
+    <div class="menu-backdrop"></div>
+    <div class="mobile-slide-menu">
+        <div class="mobile-menu-header">
+            <button class="mobile-menu-close" aria-label="Close menu">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="mobile-user-avatar">
+                <?php echo strtoupper(substr($current_user['username'], 0, 1)); ?>
+            </div>
+            <div class="mobile-user-info">
+                <div class="mobile-user-name">
+                    <?php echo htmlspecialchars($current_user['username']); ?>
+                    <?php if ($auth->isAdmin()): ?>
+                    <span class="mobile-admin-badge">Admin</span>
+                    <?php endif; ?>
+                </div>
+                <div class="mobile-user-points">
+                    <i class="fas fa-coins"></i> <?php echo formatPoints($current_user['points']); ?> Points
+                </div>
+            </div>
+        </div>
+        
+        <ul class="mobile-menu-list">
+            <li class="mobile-menu-item">
+                <a href="/dashboard" class="mobile-menu-link <?php echo ($current_page === 'dashboard.php' || $request_path === 'dashboard') ? 'active' : ''; ?>">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </li>
+            <li class="mobile-menu-item">
+                <a href="/tasks" class="mobile-menu-link <?php echo ($current_page === 'tasks.php' || $request_path === 'tasks') ? 'active' : ''; ?>">
+                    <i class="fas fa-tasks"></i> Earn Points
+                </a>
+            </li>
+            <li class="mobile-menu-item">
+                <a href="/rewards" class="mobile-menu-link <?php echo ($current_page === 'rewards.php' || $request_path === 'rewards') ? 'active' : ''; ?>">
+                    <i class="fas fa-gift"></i> Rewards
+                </a>
+            </li>
+            <li class="mobile-menu-item">
+                <a href="/referrals" class="mobile-menu-link <?php echo ($current_page === 'referrals.php' || $request_path === 'referrals') ? 'active' : ''; ?>">
+                    <i class="fas fa-user-plus"></i> Refer Friends
+                </a>
+            </li>
+            <li class="mobile-menu-item">
+                <a href="/leaderboard" class="mobile-menu-link <?php echo ($current_page === 'leaderboard.php' || $request_path === 'leaderboard') ? 'active' : ''; ?>">
+                    <i class="fas fa-trophy"></i> Leaderboard
+                </a>
+            </li>
+            <li class="mobile-menu-item">
+                <a href="/profile" class="mobile-menu-link <?php echo ($current_page === 'profile.php' || $request_path === 'profile') ? 'active' : ''; ?>">
+                    <i class="fas fa-user-cog"></i> My Profile
+                </a>
+            </li>
+            <?php if ($auth->isAdmin()): ?>
+            <li class="mobile-menu-item">
+                <a href="/admin/index" class="mobile-menu-link">
+                    <i class="fas fa-tools"></i> Admin Panel
+                </a>
+            </li>
+            <?php endif; ?>
+        </ul>
+        
+        <div class="mobile-menu-footer">
+            <a href="/login?action=logout" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+    <?php endif; ?>
     
     <!-- Main Content Container -->
     <div class="<?php echo ($current_page === 'index.php' || $request_path === '' || $request_path === 'index') && !$auth->isLoggedIn() ? 'full-width-container' : 'container py-4'; ?>"><?php 

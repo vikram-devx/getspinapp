@@ -840,4 +840,33 @@ $(document).ready(function() {
             dashStartAutoSlide();
         }
     }
+    
+    // Mobile Slide Menu Functionality
+    if ($('.mobile-slide-menu').length) {
+        // Show mobile menu when hamburger is clicked
+        $('#mobileMenuToggle').on('click', function(e) {
+            e.preventDefault();
+            $('.mobile-slide-menu').addClass('active');
+            $('.menu-backdrop').addClass('active');
+            $('body').css('overflow', 'hidden'); // Prevent scrolling when menu is open
+        });
+        
+        // Hide mobile menu when close button or backdrop is clicked
+        $('.mobile-menu-close, .menu-backdrop').on('click', function(e) {
+            e.preventDefault();
+            $('.mobile-slide-menu').removeClass('active');
+            $('.menu-backdrop').removeClass('active');
+            $('body').css('overflow', ''); // Restore scrolling
+        });
+        
+        // Close menu when clicking a link (for better mobile experience)
+        $('.mobile-menu-link').on('click', function() {
+            // Small timeout to allow the click to register before closing the menu
+            setTimeout(function() {
+                $('.mobile-slide-menu').removeClass('active');
+                $('.menu-backdrop').removeClass('active');
+                $('body').css('overflow', '');
+            }, 150);
+        });
+    }
 });
