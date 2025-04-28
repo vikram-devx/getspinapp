@@ -518,6 +518,7 @@ body .navbar + .full-width-container {
     width: 100%;
     max-width: 100%;
     gap: 1.5rem;
+    align-items: flex-start; /* Align items to the top */
 }
 
 .dashboard-sidebar {
@@ -538,37 +539,10 @@ body .navbar + .full-width-container {
     .dashboard-sidebar {
         flex: 0 0 300px !important;
         display: block !important;
-        position: sticky;
-        top: 90px;
-        height: calc(100vh - 90px);
-        overflow-y: auto;
-        overflow-x: hidden; /* Hide horizontal scrollbar */
-        padding-right: 5px; /* Add some padding for scrollbar */
-    }
-    
-    /* Hide scrollbar for Chrome, Safari and Opera */
-    .dashboard-sidebar::-webkit-scrollbar {
-        width: 8px;
-    }
-    
-    .dashboard-sidebar::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-    }
-    
-    .dashboard-sidebar::-webkit-scrollbar-thumb {
-        background: #ccc;
-        border-radius: 10px;
-    }
-    
-    .dashboard-sidebar::-webkit-scrollbar-thumb:hover {
-        background: #999;
-    }
-    
-    /* Firefox scrollbar styling */
-    .dashboard-sidebar {
-        scrollbar-width: thin;
-        scrollbar-color: #ccc #f1f1f1;
+        position: relative; /* Changed from sticky to relative */
+        padding-right: 5px; /* Add padding for spacing */
+        overflow-x: hidden; /* Only hide horizontal overflow */
+        overflow-y: visible; /* Allow vertical content to flow normally */
     }
     
     .dashboard-content {
@@ -638,28 +612,10 @@ body .navbar + .full-width-container {
         width: 300px;
         flex: 0 0 300px;
         display: block !important;
-        overflow-x: hidden; /* Hide horizontal scrollbar */
-        scrollbar-width: thin;
-        scrollbar-color: #ccc #f1f1f1;
-    }
-    
-    /* Hide scrollbar for Chrome, Safari and Opera */
-    .dashboard-sidebar::-webkit-scrollbar {
-        width: 8px;
-    }
-    
-    .dashboard-sidebar::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-    }
-    
-    .dashboard-sidebar::-webkit-scrollbar-thumb {
-        background: #ccc;
-        border-radius: 10px;
-    }
-    
-    .dashboard-sidebar::-webkit-scrollbar-thumb:hover {
-        background: #999;
+        overflow-x: hidden; /* Only hide horizontal overflow */
+        overflow-y: visible; /* Allow vertical content to flow normally */
+        position: relative;
+        padding-top: 0; /* Remove extra padding at the top */
     }
     
     .dashboard-content {
