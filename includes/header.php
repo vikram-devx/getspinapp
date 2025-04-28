@@ -130,7 +130,7 @@ $app_logo = getSetting('app_logo', '');
                 <ul class="navbar-nav ms-auto">
                     <?php if ($auth->isAdmin()): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="/admin/index">Admin Panel</a>
+                            <a class="nav-link" href="/admin/dashboard">Admin Panel</a>
                         </li>
                     <?php endif; ?>
                     <li class="nav-item">
@@ -212,7 +212,7 @@ $app_logo = getSetting('app_logo', '');
             </li>
             <?php if ($auth->isAdmin()): ?>
             <li class="mobile-menu-item">
-                <a href="/admin/index" class="mobile-menu-link">
+                <a href="/admin/dashboard" class="mobile-menu-link">
                     <i class="fas fa-tools"></i> Admin Panel
                 </a>
             </li>
