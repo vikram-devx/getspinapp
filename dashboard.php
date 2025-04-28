@@ -306,7 +306,7 @@ include 'includes/header.php';
                             <div class="card h-100">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h5 class="mb-0"><i class="fas fa-exchange-alt me-2"></i>Recent Transactions</h5>
-                                    <a href="<?php echo url('transactions'); ?>" class="btn btn-sm btn-outline-primary">View All</a>
+                                    <a href="transactions.php" class="btn btn-sm btn-outline-primary">View All</a>
                                 </div>
                                 <div class="card-body px-3">
                                     <?php if (count($transactions) > 0): ?>
@@ -347,7 +347,7 @@ include 'includes/header.php';
                             <div class="card h-100">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h5 class="mb-0"><i class="fas fa-gift me-2"></i>Your Redemptions</h5>
-                                    <a href="<?php echo url('redemption_history'); ?>" class="btn btn-sm btn-outline-primary">View All</a>
+                                    <a href="redemption_history.php" class="btn btn-sm btn-outline-primary">View All</a>
                                 </div>
                                 <div class="card-body px-3">
                                     <?php 
