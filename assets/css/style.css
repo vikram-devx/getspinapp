@@ -121,6 +121,9 @@ body .navbar + .full-width-container {
     font-weight: 700;
     padding: 0.75rem 1rem;
     font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    height: 100%;
 }
 
 /* Card Styles */
@@ -1605,6 +1608,7 @@ body .navbar + .full-width-container {
         background-color: rgba(255, 255, 255, 0.2);
         margin-left: 8px;
         margin-right: 10px; /* Add right margin to prevent icon from touching the edge */
+        align-self: center; /* Center vertically within parent flex container */
     }
     
     .user-avatar-icon {
@@ -2538,10 +2542,12 @@ body .navbar + .full-width-container {
         display: none !important;
     }
     
-    /* Simplify the header height for mobile */
+    /* Simplify the header height for mobile and ensure vertical centering */
     .dashboard-page .navbar.fixed-header,
     .tasks-page .navbar.fixed-header {
         height: 56px;
+        display: flex;
+        align-items: center;
     }
     
     /* Adjust content padding for mobile */
@@ -2553,6 +2559,9 @@ body .navbar + .full-width-container {
 
 .navbar.fixed-header .container {
     overflow: visible !important; /* Ensure dropdowns are visible outside the container */
+    display: flex;
+    align-items: center;
+    height: 100%;
 }
 
 .content-with-fixed-header {
