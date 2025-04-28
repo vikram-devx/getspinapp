@@ -862,6 +862,15 @@ $(document).ready(function() {
                 'transform': 'translateX(-' + (slideIndex * 100) + '%)'
             });
             
+            // Force background colors to be visible
+            $('.dashboard-slide').each(function(i) {
+                if (i === slideIndex) {
+                    $(this).css('z-index', '5');
+                } else {
+                    $(this).css('z-index', '1');
+                }
+            });
+            
             // Update active dot indicator
             $('.dashboard-slider-dot').removeClass('active');
             $('.dashboard-slider-dot[data-slide="' + slideIndex + '"]').addClass('active');
@@ -888,11 +897,27 @@ $(document).ready(function() {
                 $(this).css({
                     'width': '100%',
                     'flex': '0 0 100%',
-                    'min-width': '100%'
+                    'min-width': '100%',
+                    'background-color': (index === 0) ? '#0d6efd' : (index === 1) ? '#198754' : (index === 2) ? '#ffc107' : '#dc3545'
                 });
                 
+                // Force slide content to match the slide's data index
+                var slideContent = $(this).find('.dashboard-slide-content');
+                if (slideContent.length) {
+                    slideContent.css({
+                        'display': 'flex',
+                        'width': '100%',
+                        'height': '100%',
+                        'z-index': '2',
+                        'background-color': (index === 0) ? '#0d6efd !important' : 
+                                          (index === 1) ? '#198754 !important' : 
+                                          (index === 2) ? '#ffc107 !important' : 
+                                          '#dc3545 !important'
+                    });
+                }
+                
                 // Verify slide is ready
-                console.log("Slide " + index + " prepared");
+                console.log("Slide " + index + " prepared with proper styling");
             });
             
             // Immediately go to the first slide to ensure proper initialization

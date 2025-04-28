@@ -164,8 +164,8 @@ include 'includes/header.php';
                                         <div class="dashboard-slider-wrapper">
                                             <div class="dashboard-slider">
                                                 <!-- Promo Slide 1 - Monopoly Go -->
-                                                <div class="dashboard-slide">
-                                                    <div class="dashboard-slide-content bg-primary text-white">
+                                                <div class="dashboard-slide" data-slide-index="0">
+                                                    <div class="dashboard-slide-content bg-primary text-white" style="background-color: #0d6efd !important;">
                                                         <div class="row align-items-center">
                                                             <div class="col-md-8">
                                                                 <h4 class="mb-2">Exchange Points for Monopoly Go Spins</h4>
@@ -180,8 +180,8 @@ include 'includes/header.php';
                                                 </div>
                                                 
                                                 <!-- Promo Slide 2 - Coin Master -->
-                                                <div class="dashboard-slide">
-                                                    <div class="dashboard-slide-content bg-success text-white">
+                                                <div class="dashboard-slide" data-slide-index="1">
+                                                    <div class="dashboard-slide-content bg-success text-white" style="background-color: #198754 !important;">
                                                         <div class="row align-items-center">
                                                             <div class="col-md-8">
                                                                 <h4 class="mb-2">Exchange Points for Coin Master Spins</h4>
@@ -196,8 +196,8 @@ include 'includes/header.php';
                                                 </div>
                                                 
                                                 <!-- Promo Slide 3 - Referrals -->
-                                                <div class="dashboard-slide">
-                                                    <div class="dashboard-slide-content bg-warning text-dark">
+                                                <div class="dashboard-slide" data-slide-index="2">
+                                                    <div class="dashboard-slide-content bg-warning text-dark" style="background-color: #ffc107 !important;">
                                                         <div class="row align-items-center">
                                                             <div class="col-md-8">
                                                                 <h4 class="mb-2">Refer Friends & Earn 100 Spins</h4>
@@ -212,8 +212,8 @@ include 'includes/header.php';
                                                 </div>
                                                 
                                                 <!-- Promo Slide 4 - Tasks -->
-                                                <div class="dashboard-slide">
-                                                    <div class="dashboard-slide-content bg-danger text-white">
+                                                <div class="dashboard-slide" data-slide-index="3">
+                                                    <div class="dashboard-slide-content bg-danger text-white" style="background-color: #dc3545 !important;">
                                                         <div class="row align-items-center">
                                                             <div class="col-md-8">
                                                                 <h4 class="mb-2">Complete Tasks, Earn Free Spins</h4>

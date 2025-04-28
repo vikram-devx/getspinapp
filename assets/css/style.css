@@ -1777,6 +1777,8 @@ body .navbar + .full-width-container {
     position: relative;
     width: 100%;
     overflow: hidden;
+    margin: 0;
+    padding: 0;
 }
 
 .dashboard-slider {
@@ -1786,13 +1788,12 @@ body .navbar + .full-width-container {
     width: 100%;
     position: relative;
     transition: transform 0.5s ease-in-out; /* Add transition for smooth slide movement */
-    padding: 0.5rem;
+    padding: 0;
     box-sizing: border-box;
     transform: translateZ(0); /* Force hardware acceleration for smooth transitions */
-    transform-style: preserve-3d; /* Help with rendering */
+    -webkit-transform-style: flat; /* Simpler rendering for webkit */
+    transform-style: flat; /* Simpler rendering style */
     will-change: transform; /* Optimization hint for browsers */
-    -webkit-backface-visibility: hidden; /* Prevent flickering on Safari/Chrome */
-    backface-visibility: hidden; /* Prevent flickering */
 }
 
 /* Make sure slider takes up full width */
@@ -1800,6 +1801,16 @@ body .navbar + .full-width-container {
     width: 100%;
     position: relative;
     overflow: hidden; /* Ensure overflowing slides are hidden */
+    padding: 0;
+    margin: 0;
+}
+
+/* Remove any padding from the slider card body */
+.card-body.p-0 .dashboard-promo-slider,
+.card-body.p-0 .dashboard-slider-wrapper,
+.card-body.p-0 .dashboard-slider {
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 /* Hide any existing arrow navigation */
@@ -1819,14 +1830,11 @@ body .navbar + .full-width-container {
     position: relative;
     box-sizing: border-box;
     padding: 0.25rem;
-    transform: translateZ(0); /* Force hardware acceleration */
-    will-change: transform; /* Optimization for animations */
-    -webkit-backface-visibility: hidden; /* Prevent flickering during transitions in webkit */
-    backface-visibility: hidden; /* Prevent flickering during transitions */
     opacity: 1 !important; /* Ensure all slides are fully visible */
     visibility: visible !important; /* Make sure slides are visible */
-    transform-style: preserve-3d; /* Help with rendering */
     display: block; /* Ensure display is always block */
+    z-index: 1; /* Make sure slide is positioned correctly in stacking context */
+    margin: 0;
 }
 
 .dashboard-slide-content {
@@ -1835,6 +1843,11 @@ body .navbar + .full-width-container {
     border-radius: 0.5rem;
     display: flex;
     flex-direction: row;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 2;
 }
 
 .dashboard-slide-content h4 {
