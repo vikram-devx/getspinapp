@@ -75,7 +75,7 @@ $app_logo = getSetting('app_logo', '');
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="<?php echo url('index'); ?>">
+            <a class="navbar-brand" href="/">
                 <?php if ($is_public_page && !empty($app_logo)): ?>
                 <img src="<?php echo $app_logo; ?>" alt="<?php echo htmlspecialchars($app_name); ?>" height="30" class="d-inline-block align-text-top">
                 <?php else: ?>
@@ -88,10 +88,10 @@ $app_logo = getSetting('app_logo', '');
             
             <?php if (!$auth->isLoggedIn()): ?>
             <!-- Mobile/Tablet Login Icon (only shown on small screens) -->
-            <a href="<?php echo url('login'); ?>" class="d-lg-none mobile-login-icon" title="Login">
+            <a href="/login" class="d-lg-none mobile-login-icon" title="Login">
                 <i class="fas fa-user-circle"></i>
             </a>
-            <a href="<?php echo url('register'); ?>" class="d-lg-none mobile-login-icon mobile-register-icon" title="Register">
+            <a href="/register" class="d-lg-none mobile-login-icon mobile-register-icon" title="Register">
                 <i class="fas fa-user-plus"></i>
             </a>
             <?php endif; ?>
@@ -103,20 +103,20 @@ $app_logo = getSetting('app_logo', '');
                 <ul class="navbar-nav me-auto">
                     <?php if ($auth->isLoggedIn()): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo url('dashboard'); ?>">Dashboard</a>
+                            <a class="nav-link" href="/dashboard">Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo url('tasks'); ?>">Earn Points</a>
+                            <a class="nav-link" href="/tasks">Earn Points</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo url('rewards'); ?>">Rewards</a>
+                            <a class="nav-link" href="/rewards">Rewards</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo url('leaderboard'); ?>">Leaderboard</a>
+                            <a class="nav-link" href="/leaderboard">Leaderboard</a>
                         </li>
                     <?php else: ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo url('index'); ?>">Home</a>
+                            <a class="nav-link" href="/">Home</a>
                         </li>
                     <?php endif; ?>
                 </ul>
@@ -124,7 +124,7 @@ $app_logo = getSetting('app_logo', '');
                     <?php if ($auth->isLoggedIn()): ?>
                         <?php if ($auth->isAdmin()): ?>
                             <li class="nav-item">
-                                <a class="nav-link" href="<?php echo url('admin/index'); ?>">Admin Panel</a>
+                                <a class="nav-link" href="/admin/index">Admin Panel</a>
                             </li>
                         <?php endif; ?>
                         <li class="nav-item">
@@ -137,18 +137,18 @@ $app_logo = getSetting('app_logo', '');
                                 <i class="fas fa-user"></i> <?php echo htmlspecialchars($current_user['username']); ?>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="<?php echo url('dashboard'); ?>"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                                <li><a class="dropdown-item" href="<?php echo url('profile'); ?>"><i class="fas fa-user-cog"></i> My Profile</a></li>
+                                <li><a class="dropdown-item" href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                                <li><a class="dropdown-item" href="/profile"><i class="fas fa-user-cog"></i> My Profile</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="<?php echo url('login', ['action' => 'logout']); ?>"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                                <li><a class="dropdown-item" href="/login?action=logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                             </ul>
                         </li>
                     <?php else: ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo url('login'); ?>">Login</a>
+                            <a class="nav-link" href="/login">Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo url('register'); ?>">Register</a>
+                            <a class="nav-link" href="/register">Register</a>
                         </li>
                     <?php endif; ?>
                 </ul>
