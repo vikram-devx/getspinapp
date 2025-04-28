@@ -2157,3 +2157,127 @@ body .navbar + .full-width-container {
     display: block;
     margin-top: 5px;
 }
+
+/* Mobile Optimizations for Referrals Page */
+@media (max-width: 767px) {
+    /* Mobile title styles */
+    .mobile-title {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .mobile-subtitle {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .mobile-text {
+        font-size: 0.95rem;
+        line-height: 1.4;
+    }
+    
+    /* Referral code display */
+    .mobile-referral-code-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .referral-code-display {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 0.75rem;
+        margin-right: 0 !important;
+    }
+    
+    .mobile-ref-code {
+        font-size: 1.5rem !important;
+    }
+    
+    /* Copy button */
+    .copy-btn {
+        width: 100%;
+        margin-top: 0.5rem;
+        padding: 0.5rem;
+    }
+    
+    .copy-text {
+        font-size: 0.9rem;
+    }
+    
+    /* Share buttons */
+    .share-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 0.5rem;
+    }
+    
+    .share-btn {
+        flex: 1;
+        min-width: calc(25% - 0.5rem);
+        padding: 0.5rem;
+    }
+    
+    /* Stats display */
+    .stats-container {
+        margin: 0 -0.25rem;
+    }
+    
+    .mobile-stat-number {
+        font-size: 1.2rem;
+    }
+    
+    .mobile-stat-label {
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+    
+    /* Table styles */
+    .mobile-table-container {
+        margin: 0 -0.75rem;
+    }
+    
+    .mobile-table {
+        font-size: 0.85rem;
+    }
+    
+    .mobile-th {
+        padding: 0.5rem 0.25rem;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+    
+    .mobile-td {
+        padding: 0.5rem 0.25rem;
+        vertical-align: middle;
+    }
+    
+    .mobile-badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    /* List spacing */
+    .mobile-list li {
+        margin-bottom: 0.75rem;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+    
+    .mobile-list li:last-child {
+        margin-bottom: 0;
+    }
+    
+    /* Alert styling */
+    .mobile-alert {
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+    }
+    
+    /* Form inputs */
+    .mobile-input {
+        font-size: 0.9rem;
+        padding: 0.5rem;
+    }
+}
