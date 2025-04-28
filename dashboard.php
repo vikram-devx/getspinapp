@@ -141,7 +141,7 @@ include 'includes/header.php';
                                             </a>
                                         </div>
                                         <div class="col-6 col-md-3 mb-3">
-                                            <a href="profile.php" class="btn btn-info d-flex flex-column align-items-center justify-content-center py-3 quick-action-btn">
+                                            <a href="<?php echo url('profile'); ?>" class="btn btn-info d-flex flex-column align-items-center justify-content-center py-3 quick-action-btn">
                                                 <i class="fas fa-user mb-2 action-icon"></i>
                                                 <span>Edit Profile</span>
                                             </a>
@@ -302,7 +302,7 @@ include 'includes/header.php';
                             <div class="card h-100">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h5 class="mb-0"><i class="fas fa-exchange-alt me-2"></i>Recent Transactions</h5>
-                                    <a href="transactions.php" class="btn btn-sm btn-outline-primary">View All</a>
+                                    <a href="<?php echo url('transactions'); ?>" class="btn btn-sm btn-outline-primary">View All</a>
                                 </div>
                                 <div class="card-body px-3">
                                     <?php if (count($transactions) > 0): ?>
@@ -343,7 +343,7 @@ include 'includes/header.php';
                             <div class="card h-100">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h5 class="mb-0"><i class="fas fa-gift me-2"></i>Your Redemptions</h5>
-                                    <a href="redemption_history.php" class="btn btn-sm btn-outline-primary">View All</a>
+                                    <a href="<?php echo url('redemption_history'); ?>" class="btn btn-sm btn-outline-primary">View All</a>
                                 </div>
                                 <div class="card-body px-3">
                                     <?php 

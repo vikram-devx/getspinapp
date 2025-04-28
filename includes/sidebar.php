@@ -99,7 +99,7 @@ $stats = getUserStats($current_user['id']);
                 </a>
             </li>
             <li class="list-group-item">
-                <a href="profile.php" class="text-decoration-none">
+                <a href="<?php echo url('profile'); ?>" class="text-decoration-none">
                     <i class="fas fa-user-cog me-2"></i> Edit Profile
                 </a>
             </li>
