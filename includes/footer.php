@@ -2,35 +2,27 @@
     
     <?php if (isset($auth) && $auth->isLoggedIn()): ?>
     <!-- Mobile Bottom Navigation -->
-    <div class="mobile-bottom-nav d-lg-none fixed-bottom">
-        <div class="mobile-bottom-nav-item">
-            <a href="<?php echo url('dashboard'); ?>" class="<?php echo basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : ''; ?>">
+    <div class="mobile-bottom-nav">
+        <div class="nav-items">
+            <a href="<?php echo url('dashboard'); ?>" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : ''; ?>">
                 <i class="fas fa-home"></i>
                 <span>Home</span>
             </a>
-        </div>
-        <div class="mobile-bottom-nav-item">
-            <a href="<?php echo url('tasks'); ?>" class="<?php echo basename($_SERVER['PHP_SELF']) == 'tasks.php' ? 'active' : ''; ?>">
+            <a href="<?php echo url('tasks'); ?>" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'tasks.php' ? 'active' : ''; ?>">
                 <i class="fas fa-tasks"></i>
                 <span>Tasks</span>
             </a>
-        </div>
-        <div class="mobile-bottom-nav-item">
-            <a href="<?php echo url('rewards'); ?>" class="<?php echo basename($_SERVER['PHP_SELF']) == 'rewards.php' ? 'active' : ''; ?>">
+            <a href="<?php echo url('rewards'); ?>" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'rewards.php' ? 'active' : ''; ?>">
                 <i class="fas fa-gift"></i>
                 <span>Rewards</span>
             </a>
-        </div>
-        <div class="mobile-bottom-nav-item">
-            <a href="<?php echo url('leaderboard'); ?>" class="<?php echo basename($_SERVER['PHP_SELF']) == 'leaderboard.php' ? 'active' : ''; ?>">
-                <i class="fas fa-trophy"></i>
-                <span>Leaderboard</span>
-            </a>
-        </div>
-        <div class="mobile-bottom-nav-item">
-            <a href="<?php echo url('referrals'); ?>" class="<?php echo basename($_SERVER['PHP_SELF']) == 'referrals.php' ? 'active' : ''; ?>">
+            <a href="<?php echo url('referrals'); ?>" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'referrals.php' ? 'active' : ''; ?>">
                 <i class="fas fa-user-plus"></i>
-                <span>Invite</span>
+                <span>Refer</span>
+            </a>
+            <a href="<?php echo url('leaderboard'); ?>" class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'leaderboard.php' ? 'active' : ''; ?>">
+                <i class="fas fa-trophy"></i>
+                <span>Ranks</span>
             </a>
         </div>
     </div>
