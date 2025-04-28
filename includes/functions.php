@@ -1780,7 +1780,17 @@ function getSetting($key, $default = null) {
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($result) {
-            return $result['setting_value'];
+            $value = $result['setting_value'];
+            
+            // For image settings, ensure they have absolute paths
+            if (in_array($key, ['app_logo', 'auth_card_logo', 'favicon']) && !empty($value)) {
+                // If the path doesn't start with http or / make it absolute
+                if (strpos($value, 'http') !== 0 && strpos($value, '/') !== 0) {
+                    $value = '/' . $value;
+                }
+            }
+            
+            return $value;
         } else {
             return $default;
         }

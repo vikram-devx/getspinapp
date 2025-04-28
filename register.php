@@ -134,4 +134,4 @@ include $base_path . 'includes/header.php';
     </div>
 </div>
 
-<?php include 'includes/auth_footer.php'; ?>
+<?php include $base_path . 'includes/auth_footer.php'; ?>

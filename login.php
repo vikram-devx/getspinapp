@@ -100,7 +100,7 @@ include $base_path . 'includes/header.php';
                 </form>
                 
                 <div class="auth-footer">
-                    <p>Don't have an account? <a href="register.php">Register</a></p>
+                    <p>Don't have an account? <a href="/register">Register</a></p>
                 </div>
             </div>
         </div>
