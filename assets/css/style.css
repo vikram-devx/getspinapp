@@ -2202,12 +2202,11 @@ body .navbar + .full-width-container {
 /* Special fix for tasks page */
 .card-header h5 {
     padding-top: 10px;
-    padding-bottom: 10px;
 }
 
 /* Additional margin for top card on each page */
 .container > .row > div > .card:first-child {
-    margin-top: 40px;
+    margin-top: 10px;
 }
 
 /* Extra padding and margin for dashboard and tasks pages */
@@ -2222,7 +2221,7 @@ body.dashboard-page .content-with-fixed-header {
 
 body.dashboard-page .card:first-of-type,
 body.tasks-page .card:first-of-type {
-    margin-top: 30px !important; /* More top margin for first card */
+    margin-top: 10px !important; /* More top margin for first card */
 }
 
 /* Make dashboard header more visible with extra styling */
@@ -2248,6 +2247,55 @@ body.dashboard-page .row {
 /* Fix for the specific dashboard stat cards */
 body.dashboard-page .dashboard-stat-card {
     width: 100%;
+}
+
+/* Featured Promotions Slider Fixes for Tablet */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .dashboard-slider .dashboard-slide {
+        display: inline-block;
+        width: 100%;
+    }
+    
+    .dashboard-slider-wrapper {
+        overflow-x: hidden;
+    }
+    
+    .dashboard-slide-content {
+        margin: 0;
+    }
+    
+    .dashboard-slide-content .row {
+        flex-direction: row !important;
+    }
+    
+    .dashboard-slide-content .col-md-8 {
+        width: 65% !important;
+        padding-left: 15px;
+    }
+    
+    .dashboard-slide-content .col-md-4 {
+        width: 35% !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .dashboard-slide-content .col-md-4 i {
+        display: inline-block !important;
+        font-size: 3em !important;
+    }
+}
+
+/* Redemptions and Activity sections for tablet view */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .col-md-6.col-lg-4 {
+        width: 50% !important;
+    }
+    
+    /* Make the third column full width below the first two */
+    .col-md-6.col-lg-4:nth-child(3) {
+        width: 100% !important;
+    }
 }
 
 @media (max-width: 767.98px) {
