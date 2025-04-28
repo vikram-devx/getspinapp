@@ -21,12 +21,8 @@ include 'includes/header.php';
 ?>
 
 <div class="dashboard-container">
-    <!-- Dashboard Sidebar -->
-    <div class="dashboard-sidebar">
-        <!-- Mobile-only heading for the sidebar -->
-        <div class="mobile-sidebar-heading">
-            <i class="fas fa-user-circle me-2"></i>Your Profile
-        </div>
+    <!-- Dashboard Sidebar - hidden on mobile -->
+    <div class="dashboard-sidebar d-none d-md-block">
         <?php include 'includes/sidebar.php'; ?>
     </div>
     
@@ -49,7 +45,7 @@ include 'includes/header.php';
                                 <th>Status</th>
                                 <th>Points</th>
                                 <th>Date</th>
-                                <th>Details</th>
+
                             </tr>
                         </thead>
                         <tbody>
@@ -69,13 +65,7 @@ include 'includes/header.php';
                                 </td>
                                 <td><?php echo formatPoints($redemption['points_required'] ?? 0); ?></td>
                                 <td><?php echo formatDate($redemption['created_at']); ?></td>
-                                <td>
-                                    <?php if (!empty($redemption['reward_details'])): ?>
-                                    <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="tooltip" data-bs-placement="top" title="<?php echo htmlspecialchars($redemption['reward_details']); ?>">
-                                        <i class="fas fa-info-circle"></i>
-                                    </button>
-                                    <?php endif; ?>
-                                </td>
+
                             </tr>
                             <?php endforeach; ?>
                         </tbody>

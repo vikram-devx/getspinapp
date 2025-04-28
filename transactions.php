@@ -21,12 +21,8 @@ include 'includes/header.php';
 ?>
 
 <div class="dashboard-container">
-    <!-- Dashboard Sidebar -->
-    <div class="dashboard-sidebar">
-        <!-- Mobile-only heading for the sidebar -->
-        <div class="mobile-sidebar-heading">
-            <i class="fas fa-user-circle me-2"></i>Your Profile
-        </div>
+    <!-- Dashboard Sidebar - hidden on mobile -->
+    <div class="dashboard-sidebar d-none d-md-block">
         <?php include 'includes/sidebar.php'; ?>
     </div>
     
