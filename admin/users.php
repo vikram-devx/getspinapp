@@ -305,7 +305,7 @@ include 'header.php';
             <div class="row mb-4">
                 <div class="col-md-6">
                     <h5>Adjust Points</h5>
-                    <form action="users.php?action=edit_points&id=<?php echo $user['id']; ?>" method="post">
+                    <form action="<?php echo $_SERVER['PHP_SELF']; ?>?action=edit_points&id=<?php echo $user['id']; ?>" method="post">
                         <div class="mb-3">
                             <label for="points" class="form-label">Points</label>
                             <input type="number" class="form-control" id="points" name="points" min="1" required>
@@ -326,7 +326,7 @@ include 'header.php';
                 </div>
                 <div class="col-md-6">
                     <h5>Change User Role</h5>
-                    <form action="users.php?action=change_role&id=<?php echo $user['id']; ?>" method="post">
+                    <form action="<?php echo $_SERVER['PHP_SELF']; ?>?action=change_role&id=<?php echo $user['id']; ?>" method="post">
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="is_admin" name="is_admin" <?php echo $user['is_admin'] ? 'checked' : ''; ?>>
                             <label class="form-check-label" for="is_admin">Administrator</label>

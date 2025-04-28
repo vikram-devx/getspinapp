@@ -238,7 +238,7 @@ echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-a
                                         data-image="<?php echo htmlspecialchars($slide['image_path']); ?>">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <form method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this slide?');">
+                                <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this slide?');">
                                     <input type="hidden" name="slide_id" value="<?php echo $slide['id']; ?>">
                                     <button type="submit" name="delete" class="btn btn-sm btn-danger">
                                         <i class="fas fa-trash"></i>
@@ -263,7 +263,7 @@ echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-a
 <div class="modal fade" id="slideModal" tabindex="-1" aria-labelledby="slideModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form method="post" enctype="multipart/form-data">
+            <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h5 class="modal-title" id="slideModalLabel">Add/Edit Promo Slide</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
