@@ -2170,13 +2170,38 @@ body .navbar + .full-width-container {
 }
 
 .content-with-fixed-header {
-    padding-top: 85px; /* Increased padding to ensure content is fully visible below header */
+    padding-top: 100px; /* Significantly increased padding to ensure content is fully visible below header */
+    margin-top: 0; /* Reset any margins that might affect positioning */
+}
+
+/* Add additional spacing to first elements in containers to ensure they're not hidden */
+.card:first-child, .row:first-child, .container > h1:first-child, 
+.container > h2:first-child, .container > h3:first-child, 
+.container > .alert:first-child, .container > .card:first-child {
+    margin-top: 15px; /* Extra margin for first elements */
+}
+
+/* Card headers at the top of the page need extra spacing */
+.card-header h5 {
+    margin-top: 0; /* Ensure consistent spacing */
+    margin-bottom: 0; /* Ensure consistent spacing */
+}
+
+/* Add specific spacing for cards and containers at the top of pages */
+.card:first-of-type, .container > .card:first-of-type {
+    margin-top: 20px !important; /* Important to override other styles */
+}
+
+/* Fix for specific task sections */
+.card-header, .card-body {
+    position: relative; /* Ensure proper stacking context */
+    z-index: 5; /* Higher than the fixed header */
 }
 
 /* Mobile-specific padding for fixed header and bottom nav */
 @media (max-width: 767.98px) {
     .content-with-fixed-header {
-        padding-top: 85px; /* Same as desktop to ensure consistency across devices */
+        padding-top: 100px; /* Same as desktop to ensure consistency across devices */
         padding-bottom: 75px; /* Add padding at the bottom for the mobile bottom nav */
     }
     
