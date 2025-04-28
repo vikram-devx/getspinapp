@@ -3252,6 +3252,7 @@ body.dashboard-page .dashboard-stat-card {
     height: 100%;
     display: flex;
     align-items: center;
+    width: 100%;
 }
 
 .slide-content h4 {
@@ -3292,4 +3293,48 @@ body.dashboard-page .dashboard-stat-card {
 .promo-slider-dot.active {
     background-color: white;
     transform: scale(1.2);
+}
+
+/* Specific styling for promo slide components */
+.promo-text {
+    flex: 1;
+}
+
+.promo-icon {
+    width: 80px;
+    text-align: center;
+}
+
+/* Responsive styling for the promotion slides */
+@media (max-width: 767px) {
+    .promo-slides {
+        height: 180px;
+    }
+    
+    .slide-content {
+        padding: 1rem;
+    }
+    
+    .slide-content h4 {
+        font-size: 1.1rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .slide-content p {
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .slide-content .btn {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .promo-icon {
+        width: 60px;
+    }
+    
+    .promo-icon .fa-4x {
+        font-size: 2.5em;
+    }
 }
