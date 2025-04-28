@@ -170,8 +170,8 @@ include 'includes/header.php';
                                                     <h4 class="mb-0">Exchange Points for Monopoly Go Spins</h4>
                                                 </div>
                                                 <p class="mb-3 ms-5 ps-2">Use your earned points to get free Monopoly Go spins delivered to your account instantly!</p>
-                                                <div>
-                                                    <a href="/rewards" class="btn btn-light ms-5 ps-2">Redeem Now</a>
+                                                <div style="margin-left: 3.5rem;">
+                                                    <a href="/rewards" class="btn btn-light">Redeem Now</a>
                                                 </div>
                                             </div>
                                             
@@ -182,8 +182,8 @@ include 'includes/header.php';
                                                     <h4 class="mb-0">Exchange Points for Coin Master Spins</h4>
                                                 </div>
                                                 <p class="mb-3 ms-5 ps-2">Get more Coin Master spins by exchanging your points. Delivery within 24 hours!</p>
-                                                <div>
-                                                    <a href="/rewards" class="btn btn-light ms-5 ps-2">Get Spins Now</a>
+                                                <div style="margin-left: 3.5rem;">
+                                                    <a href="/rewards" class="btn btn-light">Get Spins Now</a>
                                                 </div>
                                             </div>
                                             
@@ -194,8 +194,8 @@ include 'includes/header.php';
                                                     <h4 class="mb-0">Refer Friends & Earn 100 Spins</h4>
                                                 </div>
                                                 <p class="mb-3 ms-5 ps-2">Invite your friends and earn 100 free spins for each friend who joins through your link!</p>
-                                                <div>
-                                                    <a href="/referrals" class="btn btn-dark ms-5 ps-2">Invite Friends</a>
+                                                <div style="margin-left: 3.5rem;">
+                                                    <a href="/referrals" class="btn btn-dark">Invite Friends</a>
                                                 </div>
                                             </div>
                                             
@@ -206,8 +206,8 @@ include 'includes/header.php';
                                                     <h4 class="mb-0">Complete Tasks, Earn Free Spins</h4>
                                                 </div>
                                                 <p class="mb-3 ms-5 ps-2">Try apps, complete offers, and earn free spins instantly. Easy and fun ways to earn!</p>
-                                                <div>
-                                                    <a href="<?php echo url('tasks'); ?>" class="btn btn-light ms-5 ps-2">Start Tasks</a>
+                                                <div style="margin-left: 3.5rem;">
+                                                    <a href="<?php echo url('tasks'); ?>" class="btn btn-light">Start Tasks</a>
                                                 </div>
                                             </div>
                                         </div>
