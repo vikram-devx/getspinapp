@@ -32,14 +32,16 @@ if (!file_exists(__DIR__ . '/../data')) {
     mkdir(__DIR__ . '/../data', 0777, true);
 }
 
-// Check and set proper permissions on the data directory for live environments
+// Try to set proper permissions on the data directory for live environments
+// Use error suppression operator to avoid warnings if permission denied
 if (file_exists(__DIR__ . '/../data')) {
-    chmod(__DIR__ . '/../data', 0777);
+    @chmod(__DIR__ . '/../data', 0777);
 }
 
-// If database file exists, ensure it has write permissions
+// If database file exists, try to set write permissions
+// Use error suppression operator to avoid warnings if permission denied
 if (file_exists(DB_PATH)) {
-    chmod(DB_PATH, 0666);
+    @chmod(DB_PATH, 0666);
 }
 
 // Load EmailJS settings from database if they exist

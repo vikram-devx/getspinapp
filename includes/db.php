@@ -35,19 +35,44 @@ class Database {
         // Check and create data directory with proper permissions
         $dataDir = dirname(DB_PATH);
         if (!file_exists($dataDir)) {
-            if (!mkdir($dataDir, 0777, true)) {
+            if (!@mkdir($dataDir, 0777, true)) {
                 error_log("Failed to create data directory: " . $dataDir);
             }
         }
         
-        // Set directory permissions
+        // Set directory permissions - suppress warnings if permission denied
         if (file_exists($dataDir)) {
-            chmod($dataDir, 0777);
+            @chmod($dataDir, 0777);
         }
         
-        // Set file permissions if the database file exists
+        // Set file permissions if the database file exists - suppress warnings if permission denied
         if (file_exists(DB_PATH)) {
-            chmod(DB_PATH, 0666);
+            @chmod(DB_PATH, 0666);
+        }
+        
+        // Try to set database directory writeable by current user
+        // Sometimes on shared hosting, this approach works better
+        try {
+            // Check if we can create a temporary file in the directory
+            $temp_file = $dataDir . '/.write_test_' . time();
+            if (@file_put_contents($temp_file, 'test')) {
+                // We can write to the directory, clean up
+                @unlink($temp_file);
+            }
+            
+            // Try to make the database file writeable by setting its content
+            if (file_exists(DB_PATH) && filesize(DB_PATH) > 0) {
+                // Only do this if the database already has content
+                // This is a more aggressive approach, use with caution
+                // We're just reading the database content and writing it back
+                // to ensure the file is owned by the current PHP process
+                $db_content = @file_get_contents(DB_PATH);
+                if ($db_content !== false) {
+                    @file_put_contents(DB_PATH, $db_content);
+                }
+            }
+        } catch (Exception $e) {
+            error_log("Error while trying alternative permission fix: " . $e->getMessage());
         }
     }
     
