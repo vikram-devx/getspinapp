@@ -1468,6 +1468,55 @@ body .navbar + .full-width-container {
         padding-left: 0;
     }
     
+    /* Center the dashboard content */
+    .dashboard-content {
+        padding: 0 !important;
+        margin: 0 auto !important;
+        left: 0 !important;
+        right: 0 !important;
+    }
+    
+    /* Center all card sections */
+    .dashboard-overview-section, 
+    .quick-actions-section,
+    .redemption-history-section,
+    .featured-promotions-section {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+    
+    /* Fix the dashboard container to be centered */
+    .dashboard-container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin: 0 auto;
+        max-width: 100%;
+        padding: 0;
+    }
+    
+    /* Add a container for the card sections */
+    .dashboard-content > .card > .card-body {
+        padding: 0.5rem !important;
+        margin: 0 auto !important;
+        width: 100% !important;
+    }
+    
+    /* Fix row alignment */
+    .row {
+        margin-left: auto !important;
+        margin-right: auto !important;
+        justify-content: center !important;
+    }
+    
+    /* Ensure the stats and quick action rows are aligned properly */
+    .dashboard-content .row > [class*="col-"] {
+        display: flex;
+        justify-content: center;
+    }
+    
     .col-6, .col-md-6, .col-lg-3, .col-lg-4, .col-md-4 {
         padding-left: 0.25rem;
         padding-right: 0.25rem;
