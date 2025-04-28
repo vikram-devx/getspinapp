@@ -101,7 +101,7 @@ include 'header.php';
             <h6 class="m-0 font-weight-bold text-primary">Filters</h6>
         </div>
         <div class="card-body">
-            <form method="get" action="transactions.php" class="row g-3">
+            <form method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>" class="row g-3">
                 <div class="col-md-3">
                     <label for="user_id" class="form-label">User</label>
                     <select class="form-select" id="user_id" name="user_id">

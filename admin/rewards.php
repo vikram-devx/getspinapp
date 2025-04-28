@@ -185,7 +185,7 @@ include 'header.php';
                 <h5 class="modal-title" id="addRewardModalLabel">Add New Reward</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="rewards.php?action=add" method="post" id="rewardForm">
+            <form action="<?php echo $_SERVER['PHP_SELF']; ?>?action=add" method="post" id="rewardForm">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="name" class="form-label">Reward Name</label>
@@ -223,7 +223,7 @@ include 'header.php';
                 <h5 class="modal-title" id="editRewardModalLabel">Edit Reward</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="rewards.php?action=edit&id=<?php echo $reward['id']; ?>" method="post">
+            <form action="<?php echo $_SERVER['PHP_SELF']; ?>?action=edit&id=<?php echo $reward['id']; ?>" method="post">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="edit_name" class="form-label">Reward Name</label>

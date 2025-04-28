@@ -261,7 +261,7 @@ include 'header.php';
             <h6 class="m-0 font-weight-bold text-primary">Filters</h6>
         </div>
         <div class="card-body">
-            <form method="get" action="redemptions.php" class="row g-3">
+            <form method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>" class="row g-3">
                 <div class="col-md-6">
                     <label for="status" class="form-label">Status</label>
                     <select class="form-select" id="status" name="status">
