@@ -55,7 +55,7 @@ include 'includes/header.php';
                         <tbody>
                             <?php foreach ($redemptions as $redemption): ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($redemption['reward_name']); ?></td>
+                                <td><?php echo htmlspecialchars($redemption['name']); ?></td>
                                 <td>
                                     <?php if ($redemption['status'] === 'pending'): ?>
                                         <span class="badge bg-warning text-dark">Pending</span>

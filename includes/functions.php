@@ -773,9 +773,18 @@ function getUserTransactions($user_id, $limit = 10) {
     $conn = $db->getConnection();
     
     try {
-        $stmt = $conn->prepare("SELECT * FROM transactions WHERE user_id = :user_id ORDER BY created_at DESC LIMIT :limit");
-        $stmt->bindValue(':user_id', $user_id);
-        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        // Handle null or invalid limit
+        if ($limit === null) {
+            $sql = "SELECT * FROM transactions WHERE user_id = :user_id ORDER BY created_at DESC";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindValue(':user_id', $user_id);
+        } else {
+            $sql = "SELECT * FROM transactions WHERE user_id = :user_id ORDER BY created_at DESC LIMIT :limit";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindValue(':user_id', $user_id);
+            $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        }
+        
         $stmt->execute();
         
         $transactions = [];
