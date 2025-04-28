@@ -160,9 +160,9 @@ include 'includes/header.php';
                                     <h5 class="mb-0"><i class="fas fa-bullhorn me-2"></i>Featured Promotions</h5>
                                 </div>
                                 <div class="card-body p-0">
-                                    <div class="promo-slider-container">
+                                    <div class="promo-slider-container w-100">
                                         <!-- Promo Slides -->
-                                        <div class="promo-slides">
+                                        <div class="promo-slides w-100">
                                             <!-- Slide 1 - Monopoly Go (Blue) -->
                                             <div class="promo-slide" id="slide-0" style="background-color: #0d6efd;">
                                                 <div class="slide-content text-white">

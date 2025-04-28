@@ -3253,6 +3253,7 @@ body.dashboard-page .dashboard-stat-card {
     display: flex;
     align-items: center;
     width: 100%;
+    box-sizing: border-box;
 }
 
 .slide-content h4 {
@@ -3298,10 +3299,13 @@ body.dashboard-page .dashboard-stat-card {
 /* Specific styling for promo slide components */
 .promo-text {
     flex: 1;
+    width: calc(100% - 100px);
+    max-width: calc(100% - 100px);
 }
 
 .promo-icon {
     width: 80px;
+    min-width: 80px;
     text-align: center;
 }
 
@@ -3330,8 +3334,14 @@ body.dashboard-page .dashboard-stat-card {
         padding: 0.25rem 0.5rem;
     }
     
+    .promo-text {
+        width: calc(100% - 70px);
+        max-width: calc(100% - 70px);
+    }
+    
     .promo-icon {
         width: 60px;
+        min-width: 60px;
     }
     
     .promo-icon .fa-4x {
