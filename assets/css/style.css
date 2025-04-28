@@ -1782,13 +1782,12 @@ body .navbar + .full-width-container {
 .dashboard-slider {
     display: flex;
     flex-wrap: nowrap;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
+    overflow: hidden; /* Hide overflow to show only one slide */
+    width: 100%;
+    position: relative;
+    transition: transform 0.5s ease-in-out; /* Add transition for smooth slide movement */
     padding: 0.5rem;
-    width: auto;
-    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .dashboard-slider::-webkit-scrollbar {
@@ -1796,13 +1795,12 @@ body .navbar + .full-width-container {
 }
 
 .dashboard-slide {
-    scroll-snap-align: start;
-    flex: 0 0 85%;
-    min-width: 250px;
+    flex: 0 0 100%; /* Each slide takes full width */
+    width: 100%;
+    min-width: 100%;
     position: relative;
     box-sizing: border-box;
     padding: 0.25rem;
-    margin-right: 0.5rem;
 }
 
 .dashboard-slide-content {
@@ -1850,9 +1848,11 @@ body .navbar + .full-width-container {
 
 /* Desktop and laptop screen sizes */
 @media (min-width: 992px) {
+    /* Desktop - show one slide at a time */
     .dashboard-slide {
-        flex: 0 0 32%; /* Show multiple slides on large screens */
-        min-width: 300px;
+        flex: 0 0 100%; /* Each slide takes full width */
+        min-width: 100%;
+        width: 100%;
     }
     
     .dashboard-slide-content .row {
@@ -1866,9 +1866,11 @@ body .navbar + .full-width-container {
 
 /* Tablet screen sizes */
 @media (min-width: 768px) and (max-width: 991px) {
+    /* Tablet - show one slide at a time */
     .dashboard-slide {
-        flex: 0 0 48%; /* Show two slides on medium screens */
-        min-width: 300px;
+        flex: 0 0 100%; /* Each slide takes full width */
+        min-width: 100%;
+        width: 100%;
     }
     
     .dashboard-slide-content .row {
@@ -1924,18 +1926,19 @@ body .navbar + .full-width-container {
         height: 10px;
     }
     
-    /* Ensure slider is always displayed as a row on mobile */
+    /* Ensure slider shows one slide at a time on mobile */
     .dashboard-slider {
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
+        overflow: hidden; /* Hide overflow */
     }
     
     .dashboard-slide {
-        min-width: 85%;
-        max-width: 85%;
-        flex: 0 0 85%;
-        margin-right: 0.75rem;
+        min-width: 100%;
+        max-width: 100%;
+        flex: 0 0 100%;
+        margin-right: 0;
     }
 }
 
@@ -2284,14 +2287,14 @@ body .navbar + .full-width-container {
         padding: 0;
     }
     
-    /* Mobile slider horizontal scroll */
+    /* Mobile slider - show one slide at a time */
     .dashboard-slider {
         display: flex;
         flex-wrap: nowrap;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
+        overflow: hidden; /* Hide overflow to show only one slide */
         scrollbar-width: none; /* Firefox */
         -ms-overflow-style: none; /* IE/Edge */
+        transition: transform 0.5s ease-in-out; /* Smooth transition for sliding */
     }
     
     .dashboard-slider::-webkit-scrollbar {
@@ -2300,10 +2303,10 @@ body .navbar + .full-width-container {
     
     .dashboard-slide {
         scroll-snap-align: start;
-        min-width: 90%;
-        max-width: 90%;
-        flex: 0 0 90%;
-        margin-right: 0.5rem;
+        min-width: a00%;
+        max-width: 100%;
+        flex: 0 0 100%;
+        margin-right: 0; /* No margin between slides */
     }
 }
 
