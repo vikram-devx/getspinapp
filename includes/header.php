@@ -168,9 +168,9 @@ if ($current_page_name === 'dashboard') {
     </nav>
     
     <?php if ($auth->isLoggedIn()): ?>
-    <!-- New Mobile Slide Menu -->
-    <div class="menu-backdrop"></div>
-    <div class="mobile-slide-menu">
+    <!-- New Mobile Slide Menu - Only visible on mobile devices -->
+    <div class="menu-backdrop d-lg-none"></div>
+    <div class="mobile-slide-menu d-lg-none">
         <div class="mobile-menu-header">
             <button class="mobile-menu-close" aria-label="Close menu">
                 <i class="fas fa-times"></i>
