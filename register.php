@@ -92,7 +92,7 @@ include $base_path . 'includes/header.php';
                 <div class="alert alert-success"><?php echo $success; ?></div>
                 <?php else: ?>
                 
-                <form id="registerForm" method="post" action="/register">
+                <form id="registerForm" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
                         <input type="text" class="form-control" id="username" name="username" value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>" required>
