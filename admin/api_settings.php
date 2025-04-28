@@ -293,7 +293,7 @@ include 'header.php';
                     <h6 class="m-0 font-weight-bold text-primary">API Credentials</h6>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="">
+                    <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                         <div class="mb-3">
                             <label for="api_key" class="form-label">OGAds API Key</label>
                             <div class="input-group">
@@ -327,7 +327,7 @@ include 'header.php';
                     <h6 class="m-0 font-weight-bold text-primary">Offer Settings</h6>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="">
+                    <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                         <div class="mb-3">
                             <label for="max_offers" class="form-label">Maximum Offers</label>
                             <input type="number" class="form-control" id="max_offers" name="max_offers" min="1" max="100" value="<?php echo $max_offers; ?>">

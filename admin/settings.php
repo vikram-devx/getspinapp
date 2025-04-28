@@ -245,7 +245,7 @@ include 'header.php';
             <h6 class="m-0 font-weight-bold text-primary">App Settings</h6>
         </div>
         <div class="card-body">
-            <form method="post" action="" enctype="multipart/form-data">
+            <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
@@ -338,7 +338,7 @@ include 'header.php';
             <h6 class="m-0 font-weight-bold text-primary">Notification Settings</h6>
         </div>
         <div class="card-body">
-            <form method="post" action="">
+            <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                 <div class="mb-3">
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" id="notification_email_enabled" name="notification_email_enabled" 
@@ -426,7 +426,7 @@ include 'header.php';
                         <div class="card-body">
                             <h5 class="card-title">System Notification</h5>
                             <p class="card-text">Test the in-app notification system.</p>
-                            <form method="post" action="">
+                            <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                                 <input type="hidden" name="create_test_notification" value="1">
                                 <button type="button" id="testNotificationBtn" class="btn btn-info">
                                     <i class="fas fa-bell"></i> Create Test Notification

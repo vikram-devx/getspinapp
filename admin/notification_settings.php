@@ -94,7 +94,7 @@ include 'header.php';
             <h6 class="m-0 font-weight-bold text-primary">Notification Settings</h6>
         </div>
         <div class="card-body">
-            <form method="post" action="">
+            <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                 <div class="mb-3">
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" id="notification_email_enabled" name="notification_email_enabled" 
@@ -133,7 +133,7 @@ include 'header.php';
                 You can test the notifications system by clicking the button below. 
                 This will create a test notification that will appear in your notifications panel.
             </p>
-            <form method="post" action="">
+            <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                 <input type="hidden" name="create_test_notification" value="1">
                 <button type="button" id="testNotificationBtn" class="btn btn-info">
                     <i class="fas fa-bell"></i> Create Test Notification
