@@ -138,7 +138,7 @@ include 'includes/header.php';
                                 <ul class="pagination justify-content-center">
                                     <!-- Previous Page Button -->
                                     <li class="page-item <?php echo ($current_page <= 1) ? 'disabled' : ''; ?>">
-                                        <a class="page-link" href="<?php echo ($current_page > 1) ? '/leaderboard?page=' . ($current_page - 1) : '#'; ?>" aria-label="Previous">
+                                        <a class="page-link" href="<?php echo ($current_page > 1) ? '/leaderboard?page=' . (intval($current_page) - 1) : '#'; ?>" aria-label="Previous">
                                             <span aria-hidden="true">&laquo;</span>
                                         </a>
                                     </li>
@@ -161,7 +161,7 @@ include 'includes/header.php';
                                     
                                     <!-- Next Page Button -->
                                     <li class="page-item <?php echo ($current_page >= $total_pages) ? 'disabled' : ''; ?>">
-                                        <a class="page-link" href="<?php echo ($current_page < $total_pages) ? '/leaderboard?page=' . ($current_page + 1) : '#'; ?>" aria-label="Next">
+                                        <a class="page-link" href="<?php echo ($current_page < $total_pages) ? '/leaderboard?page=' . (intval($current_page) + 1) : '#'; ?>" aria-label="Next">
                                             <span aria-hidden="true">&raquo;</span>
                                         </a>
                                     </li>
@@ -453,18 +453,30 @@ include 'includes/header.php';
         
         /* Mobile pagination adjustments */
         .pagination .page-link {
-            padding: 0.35rem 0.6rem;
-            font-size: 0.85rem;
+            padding: 0.5rem 0.7rem;
+            font-size: 0.9rem;
+            margin: 0 2px;
         }
         
         .pagination-container {
             overflow-x: auto;
-            padding-bottom: 5px; /* Add space for potential scrollbar */
+            padding: 1rem 0;
+            margin: 0.5rem -0.75rem 0;
+            background-color: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+            display: flex;
+            justify-content: center;
         }
         
         .pagination {
             flex-wrap: nowrap;
             min-width: min-content;
+            margin-bottom: 0;
+        }
+        
+        /* Make pagination stand out more */
+        .pagination .page-item.active .page-link {
+            box-shadow: 0 2px 5px rgba(13, 110, 253, 0.3);
         }
     }
 </style>
