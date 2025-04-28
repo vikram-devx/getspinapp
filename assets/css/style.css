@@ -2513,6 +2513,28 @@ body .navbar + .full-width-container {
     overflow: visible !important; /* Ensure dropdowns are visible outside the navbar */
 }
 
+/* Hide header menu on mobile and tablet for dashboard and other app pages */
+@media (max-width: 991px) {
+    .dashboard-page .navbar.fixed-header .navbar-nav,
+    .tasks-page .navbar.fixed-header .navbar-nav,
+    .dashboard-page .navbar.fixed-header .navbar-collapse,
+    .tasks-page .navbar.fixed-header .navbar-collapse {
+        display: none !important;
+    }
+    
+    /* Simplify the header height for mobile */
+    .dashboard-page .navbar.fixed-header,
+    .tasks-page .navbar.fixed-header {
+        height: 56px;
+    }
+    
+    /* Adjust content padding for mobile */
+    .dashboard-page .content-with-fixed-header,
+    .tasks-page .content-with-fixed-header {
+        padding-top: 70px; /* Reduced padding for mobile */
+    }
+}
+
 .navbar.fixed-header .container {
     overflow: visible !important; /* Ensure dropdowns are visible outside the container */
 }
@@ -2564,6 +2586,43 @@ body .navbar + .full-width-container {
 /* Additional top padding and margin specifically for dashboard page elements */
 body.dashboard-page .content-with-fixed-header {
     padding-top: 20px; /* Extra padding specifically for dashboard */
+}
+
+/* Mobile and tablet specific padding adjustment for dashboard */
+@media (max-width: 991px) {
+    body.dashboard-page .content-with-fixed-header {
+        padding-top: 65px; /* Reduced padding for mobile/tablet */
+    }
+    
+    /* Dashboard page specific container adjustments */
+    body.dashboard-page .dashboard-container {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+    
+    /* Make card headers more visible on mobile */
+    body.dashboard-page .card-header h5 {
+        font-size: 1.1rem;
+        padding-top: 8px;
+        margin-bottom: 8px;
+    }
+    
+    /* Hide anything that might be visible from the header on mobile/tablet */
+    body.dashboard-page .navbar.fixed-header {
+        min-height: 56px;
+        max-height: 56px;
+        overflow: hidden !important;
+    }
+    
+    /* Fix for header overlapping dashboard content */
+    body.dashboard-page .dashboard-content > .card > .card-header {
+        margin-top: 0 !important;
+        padding-top: 12px !important;
+        border-bottom: 1px solid rgba(0,0,0,0.125);
+        background-color: #fff;
+        position: relative;
+        z-index: 5;
+    }
 }
 
 body.dashboard-page .card:first-of-type,
@@ -2864,11 +2923,39 @@ body.dashboard-page .dashboard-stat-card {
     
     body.dashboard-page .dashboard-stat-card {
         min-width: auto;
+        margin-top: 0;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        position: relative;
+        z-index: 10; /* Ensure stats are above any background elements */
     }
     
+    /* Fix overlapping stats in mobile view */
+    body.dashboard-page .dashboard-overview-section {
+        margin-top: 5px;
+        clear: both;
+        position: relative;
+        z-index: 10; /* Ensure it's above any fixed headers */
+    }
+    
+    /* Ensure no horizontal scrolling on mobile */
+    body.dashboard-page .row {
+        margin-left: -5px;
+        margin-right: -5px;
+    }
+    
+    /* Adjust padding to prevent cut-off content */
     body.dashboard-page .card-body {
-        padding-left: 10px;
-        padding-right: 10px;
+        padding: 10px;
+    }
+    
+    /* Ensure Dashboard Overview text doesn't overlap */
+    body.dashboard-page .card-header {
+        position: relative;
+        z-index: 10;
+        background-color: #fff; /* Ensure it's not transparent */
+        margin-top: 0;
+        padding: 10px 15px;
     }
 }
 
