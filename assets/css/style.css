@@ -2172,7 +2172,7 @@ body .navbar + .full-width-container {
 
 .content-with-fixed-header {
     padding-top: 120px; /* Further increased padding to ensure content is fully visible below header */
-    margin-top: 0; /* Reset any margins that might affect positioning */
+    margin-top: 25px; /* Reset any margins that might affect positioning */
 }
 
 /* Add additional spacing to first elements in containers to ensure they're not hidden */
@@ -2207,7 +2207,7 @@ body .navbar + .full-width-container {
 
 /* Additional margin for top card on each page */
 .container > .row > div > .card:first-child {
-    margin-top: 20px;
+    margin-top: 40px;
 }
 
 /* Extra padding and margin for dashboard and tasks pages */
@@ -2217,17 +2217,52 @@ body .navbar + .full-width-container {
 
 /* Additional top padding and margin specifically for dashboard page elements */
 body.dashboard-page .content-with-fixed-header {
-    padding-top: 90px; /* Extra padding specifically for dashboard */
+    padding-top: 20px; /* Extra padding specifically for dashboard */
 }
 
 body.dashboard-page .card:first-of-type,
 body.tasks-page .card:first-of-type {
-    margin-top: 25px !important; /* More top margin for first card */
+    margin-top: 30px !important; /* More top margin for first card */
 }
 
 /* Make dashboard header more visible with extra styling */
 body.dashboard-page .card-header h5 {
     padding-top: 5px;
+}
+
+/* Fix vertical scrollbar in dashboard overview on mobile */
+body.dashboard-page .card-body {
+    overflow-x: hidden;
+    max-width: 100%;
+    padding-right: 0.5rem !important;
+    padding-left: 0.5rem !important;
+}
+
+body.dashboard-page .row {
+    margin-right: 0;
+    margin-left: 0;
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Fix for the specific dashboard stat cards */
+body.dashboard-page .dashboard-stat-card {
+    width: 100%;
+}
+
+@media (max-width: 767.98px) {
+    body.dashboard-page .card {
+        overflow-x: hidden;
+    }
+    
+    body.dashboard-page .dashboard-stat-card {
+        min-width: auto;
+    }
+    
+    body.dashboard-page .card-body {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
 }
 
 /* Mobile-specific padding for fixed header and bottom nav */
@@ -2237,11 +2272,7 @@ body.dashboard-page .card-header h5 {
         padding-bottom: 75px; /* Add padding at the bottom for the mobile bottom nav */
     }
     
-    /* Dashboard and tasks special mobile padding */
-    body.dashboard-page .content-with-fixed-header {
-        padding-top: 100px !important; /* Extra padding for dashboard on mobile */
-    }
-    
+
     /* Ensure content isn't hidden behind bottom nav */
     body {
         padding-bottom: 75px;
@@ -2259,7 +2290,7 @@ body.dashboard-page .card-header h5 {
     
     /* Extra spacing for dashboard card headers */
     body.dashboard-page .card-header {
-        padding-top: 20px !important;
+        padding-top: 10px !important;
     }
 }
 
