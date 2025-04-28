@@ -90,7 +90,7 @@ require_once 'includes/header.php';
                     </p>
                 </div>
                 <div class="card-footer">
-                    <a href="<?php echo url('dashboard'); ?>" class="btn btn-primary btn-sm w-100 mb-2">
+                    <a href="/dashboard" class="btn btn-primary btn-sm w-100 mb-2">
                         <i class="fas fa-tachometer-alt me-1"></i> Dashboard
                     </a>
                 </div>
@@ -137,22 +137,22 @@ require_once 'includes/header.php';
                 <div class="card-body p-0">
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item d-flex justify-content-between align-items-center quick-action-link">
-                            <a href="<?php echo url('tasks'); ?>" class="text-decoration-none text-dark w-100">
+                            <a href="/tasks" class="text-decoration-none text-dark w-100">
                                 <i class="fas fa-tasks me-2 text-primary"></i> Earn Points
                             </a>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center quick-action-link">
-                            <a href="<?php echo url('rewards'); ?>" class="text-decoration-none text-dark w-100">
+                            <a href="/rewards" class="text-decoration-none text-dark w-100">
                                 <i class="fas fa-gift me-2 text-primary"></i> Rewards
                             </a>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center quick-action-link">
-                            <a href="<?php echo url('leaderboard'); ?>" class="text-decoration-none text-dark w-100">
+                            <a href="/leaderboard" class="text-decoration-none text-dark w-100">
                                 <i class="fas fa-trophy me-2 text-primary"></i> Leaderboard
                             </a>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center quick-action-link">
-                            <a href="<?php echo url('referrals'); ?>" class="text-decoration-none text-dark w-100">
+                            <a href="/referrals" class="text-decoration-none text-dark w-100">
                                 <i class="fas fa-users me-2 text-primary"></i> Referrals
                             </a>
                         </li>
@@ -211,7 +211,7 @@ require_once 'includes/header.php';
                         </div>
                     <?php endif; ?>
                     
-                    <form method="post" action="profile.php">
+                    <form method="post" action="/profile">
                         <div class="row mb-3">
                             <label for="current_password" class="col-sm-3 col-form-label">Current Password</label>
                             <div class="col-sm-9">
