@@ -504,17 +504,55 @@ body .navbar + .full-width-container {
     gap: 1.5rem;
 }
 
-.dashboard-sidebar {
-    flex: 0 0 100%;
+/* On mobile, reverse the order of sidebar and content */
+@media (max-width: 991px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+    
+    /* Set the order of elements for mobile - content first, then sidebar */
+    .dashboard-sidebar {
+        flex: 0 0 100%;
+        order: 2; /* Show sidebar after content on mobile */
+    }
+    
+    .dashboard-content {
+        flex: 1;
+        order: 1; /* Show content before sidebar on mobile */
+        margin-bottom: 0; /* Reduce space between content and sidebar */
+    }
+    
+    /* Add a heading for mobile sidebar to make it clear it's the user profile section */
+    .mobile-sidebar-heading {
+        display: block;
+        text-align: center;
+        margin: 1rem 0;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--primary-color);
+    }
 }
 
-.dashboard-content {
-    flex: 1;
-}
-
+/* Desktop layout */
 @media (min-width: 992px) {
+    .dashboard-container {
+        flex-direction: row;
+    }
+    
     .dashboard-sidebar {
         flex: 0 0 300px;
+        order: 1; /* Default order for desktop */
+    }
+    
+    .dashboard-content {
+        flex: 1;
+        order: 2; /* Default order for desktop */
+    }
+    
+    .mobile-sidebar-heading {
+        display: none; /* Hide on desktop */
     }
 }
 
@@ -987,6 +1025,24 @@ body .navbar + .full-width-container {
     /* Responsive adjustments for dashboard */
     .dashboard-content {
         padding-bottom: 70px; /* Additional space for mobile nav */
+    }
+    
+    /* Enhance mobile sidebar cards */
+    .dashboard-sidebar .card {
+        margin-bottom: 1rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* Make quick action buttons full width and more prominent on mobile */
+    .dashboard-sidebar .btn {
+        margin-bottom: 0.5rem;
+        padding: 0.75rem;
+        font-weight: 600;
+    }
+    
+    /* Adjust stat list spacing */
+    .dashboard-sidebar .list-group-item {
+        padding: 0.75rem 1rem;
     }
 }
 
