@@ -160,81 +160,80 @@ include 'includes/header.php';
                                     <h5 class="mb-0"><i class="fas fa-bullhorn me-2"></i>Featured Promotions</h5>
                                 </div>
                                 <div class="card-body p-0">
-                                    <div class="dashboard-promo-slider">
-                                        <div class="dashboard-slider-wrapper">
-                                            <div class="dashboard-slider">
-                                                <!-- Promo Slide 1 - Monopoly Go -->
-                                                <div class="dashboard-slide" data-slide-index="0">
-                                                    <div class="dashboard-slide-content bg-primary text-white" style="background-color: #0d6efd !important;">
-                                                        <div class="row align-items-center">
-                                                            <div class="col-md-8">
-                                                                <h4 class="mb-2">Exchange Points for Monopoly Go Spins</h4>
-                                                                <p class="mb-3">Use your earned points to get free Monopoly Go spins delivered to your account instantly!</p>
-                                                                <a href="/rewards" class="btn btn-light">Redeem Now</a>
-                                                            </div>
-                                                            <div class="col-md-4 text-center">
-                                                                <i class="fas fa-dice fa-4x d-none d-md-inline-block"></i>
-                                                            </div>
+                                    <div class="promo-slider-container">
+                                        <!-- Promo Slides -->
+                                        <div class="promo-slides">
+                                            <!-- Slide 1 - Monopoly Go (Blue) -->
+                                            <div class="promo-slide" id="slide-0" style="background-color: #0d6efd;">
+                                                <div class="slide-content text-white">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-md-8">
+                                                            <h4 class="mb-2">Exchange Points for Monopoly Go Spins</h4>
+                                                            <p class="mb-3">Use your earned points to get free Monopoly Go spins delivered to your account instantly!</p>
+                                                            <a href="/rewards" class="btn btn-light">Redeem Now</a>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                
-                                                <!-- Promo Slide 2 - Coin Master -->
-                                                <div class="dashboard-slide" data-slide-index="1">
-                                                    <div class="dashboard-slide-content bg-success text-white" style="background-color: #198754 !important;">
-                                                        <div class="row align-items-center">
-                                                            <div class="col-md-8">
-                                                                <h4 class="mb-2">Exchange Points for Coin Master Spins</h4>
-                                                                <p class="mb-3">Get more Coin Master spins by exchanging your points. Delivery within 24 hours!</p>
-                                                                <a href="/rewards" class="btn btn-light">Get Spins Now</a>
-                                                            </div>
-                                                            <div class="col-md-4 text-center">
-                                                                <i class="fas fa-coins fa-4x d-none d-md-inline-block"></i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                
-                                                <!-- Promo Slide 3 - Referrals -->
-                                                <div class="dashboard-slide" data-slide-index="2">
-                                                    <div class="dashboard-slide-content bg-warning text-dark" style="background-color: #ffc107 !important;">
-                                                        <div class="row align-items-center">
-                                                            <div class="col-md-8">
-                                                                <h4 class="mb-2">Refer Friends & Earn 100 Spins</h4>
-                                                                <p class="mb-3">Invite your friends and earn 100 free spins for each friend who joins through your link!</p>
-                                                                <a href="/referrals" class="btn btn-dark">Invite Friends</a>
-                                                            </div>
-                                                            <div class="col-md-4 text-center">
-                                                                <i class="fas fa-user-plus fa-4x d-none d-md-inline-block"></i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                
-                                                <!-- Promo Slide 4 - Tasks -->
-                                                <div class="dashboard-slide" data-slide-index="3">
-                                                    <div class="dashboard-slide-content bg-danger text-white" style="background-color: #dc3545 !important;">
-                                                        <div class="row align-items-center">
-                                                            <div class="col-md-8">
-                                                                <h4 class="mb-2">Complete Tasks, Earn Free Spins</h4>
-                                                                <p class="mb-3">Try apps, complete offers, and earn free spins instantly. Easy and fun ways to earn!</p>
-                                                                <a href="<?php echo url('tasks'); ?>" class="btn btn-light">Start Tasks</a>
-                                                            </div>
-                                                            <div class="col-md-4 text-center">
-                                                                <i class="fas fa-tasks fa-4x d-none d-md-inline-block"></i>
-                                                            </div>
+                                                        <div class="col-md-4 text-center">
+                                                            <i class="fas fa-dice fa-4x d-none d-md-inline-block"></i>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             
-                                            <!-- Dashboard Slider Controls -->
-                                            <div class="dashboard-slider-controls">
-                                                <span class="dashboard-slider-dot active" data-slide="0"></span>
-                                                <span class="dashboard-slider-dot" data-slide="1"></span>
-                                                <span class="dashboard-slider-dot" data-slide="2"></span>
-                                                <span class="dashboard-slider-dot" data-slide="3"></span>
+                                            <!-- Slide 2 - Coin Master (Green) -->
+                                            <div class="promo-slide" id="slide-1" style="background-color: #198754;">
+                                                <div class="slide-content text-white">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-md-8">
+                                                            <h4 class="mb-2">Exchange Points for Coin Master Spins</h4>
+                                                            <p class="mb-3">Get more Coin Master spins by exchanging your points. Delivery within 24 hours!</p>
+                                                            <a href="/rewards" class="btn btn-light">Get Spins Now</a>
+                                                        </div>
+                                                        <div class="col-md-4 text-center">
+                                                            <i class="fas fa-coins fa-4x d-none d-md-inline-block"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
+                                            
+                                            <!-- Slide 3 - Referrals (Yellow) -->
+                                            <div class="promo-slide" id="slide-2" style="background-color: #ffc107;">
+                                                <div class="slide-content text-dark">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-md-8">
+                                                            <h4 class="mb-2">Refer Friends & Earn 100 Spins</h4>
+                                                            <p class="mb-3">Invite your friends and earn 100 free spins for each friend who joins through your link!</p>
+                                                            <a href="/referrals" class="btn btn-dark">Invite Friends</a>
+                                                        </div>
+                                                        <div class="col-md-4 text-center">
+                                                            <i class="fas fa-user-plus fa-4x d-none d-md-inline-block"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Slide 4 - Tasks (Red) -->
+                                            <div class="promo-slide" id="slide-3" style="background-color: #dc3545;">
+                                                <div class="slide-content text-white">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-md-8">
+                                                            <h4 class="mb-2">Complete Tasks, Earn Free Spins</h4>
+                                                            <p class="mb-3">Try apps, complete offers, and earn free spins instantly. Easy and fun ways to earn!</p>
+                                                            <a href="<?php echo url('tasks'); ?>" class="btn btn-light">Start Tasks</a>
+                                                        </div>
+                                                        <div class="col-md-4 text-center">
+                                                            <i class="fas fa-tasks fa-4x d-none d-md-inline-block"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Slider Controls -->
+                                        <div class="promo-slider-controls">
+                                            <span class="promo-slider-dot active" data-slide="0"></span>
+                                            <span class="promo-slider-dot" data-slide="1"></span>
+                                            <span class="promo-slider-dot" data-slide="2"></span>
+                                            <span class="promo-slider-dot" data-slide="3"></span>
                                         </div>
                                     </div>
                                 </div>

@@ -3215,3 +3215,81 @@ body.dashboard-page .dashboard-stat-card {
         padding: 0.5rem;
     }
 }
+
+/* Promotional Slider - New Implementation */
+.promo-slider-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 0 0 0.25rem 0.25rem;
+}
+
+.promo-slides {
+    width: 100%;
+    height: 200px; /* Fixed height */
+    position: relative;
+}
+
+.promo-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    border-radius: 0 0 0.25rem 0.25rem;
+    overflow: hidden;
+}
+
+.promo-slide.active {
+    opacity: 1;
+    z-index: 2;
+}
+
+.slide-content {
+    padding: 1.5rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.slide-content h4 {
+    font-weight: 700;
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+}
+
+.slide-content p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.slide-content .btn {
+    font-weight: 600;
+}
+
+.promo-slider-controls {
+    position: absolute;
+    bottom: 1rem;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    z-index: 10;
+}
+
+.promo-slider-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.promo-slider-dot.active {
+    background-color: white;
+    transform: scale(1.2);
+}
