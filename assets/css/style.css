@@ -1553,6 +1553,9 @@ body .navbar + .full-width-container {
         border-radius: 0;
         background: transparent;
         box-shadow: none;
+        padding: 0;
+        margin: 0;
+        width: 100%;
     }
     
     .quick-actions-section .card-header {
@@ -1560,11 +1563,14 @@ body .navbar + .full-width-container {
         border: none;
         padding-left: 0.5rem;
         padding-bottom: 0;
+        padding-right: 0;
+        margin-right: 0;
     }
     
     .quick-actions-section .card-body {
-        padding: 0.75rem;
+        padding: 0.5rem 0;
         background: transparent;
+        width: 100%;
     }
     
     .quick-actions.row {
@@ -1624,39 +1630,58 @@ body .navbar + .full-width-container {
     }
     
     .dashboard-slide-content {
-        padding: 1rem;
+        padding: 0.75rem;
         min-height: 120px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
     }
     
     .dashboard-slide-content .row {
         display: flex;
         flex-direction: row;
         align-items: center;
+        margin: 0;
+        padding: 0;
+        width: 100%;
     }
     
-    .dashboard-slide-content .col-md-8,
+    /* Force horizontal layout */
+    .dashboard-slide-content .col-md-8 {
+        flex: 3;
+        padding: 0.25rem 0.5rem;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
     .dashboard-slide-content .col-md-4 {
-        width: auto;
-        flex: 1 1 auto;
+        flex: 1;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
     
     .dashboard-slide-content h4 {
-        font-size: 1.1rem;
+        font-size: 1rem;
         word-wrap: break-word; /* Ensure text wraps rather than overflows */
         margin-bottom: 0.25rem;
+        width: 100%;
     }
     
     .dashboard-slide-content p {
-        font-size: 0.85rem;
-        margin-bottom: 0.5rem;
+        font-size: 0.8rem;
+        margin-bottom: 0.25rem;
         word-wrap: break-word; /* Ensure text wraps rather than overflows */
         max-width: 100%; /* Ensure text doesn't overflow container */
     }
     
     .dashboard-slide-content .btn {
         padding: 0.25rem 0.75rem;
-        font-size: 0.85rem;
-        float: right;
+        font-size: 0.8rem;
+        align-self: flex-end;
     }
     
     /* Fix dashboard slider width */
@@ -1682,6 +1707,17 @@ body .navbar + .full-width-container {
         border-radius: 0;
         background: transparent;
         box-shadow: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .card:has(.dashboard-promo-slider) .card-body {
+        padding: 0;
+    }
+    
+    .dashboard-slide {
+        background: transparent;
+        padding: 0;
     }
     
     /* Mobile slider horizontal scroll */
