@@ -4,6 +4,7 @@
  * - Left/right arrow navigation
  * - Auto-slide functionality with pause on hover
  * - Smooth transitions between slides
+ * - Perfect looping through slides
  */
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize the promo slider
@@ -21,10 +22,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const prevArrow = document.createElement('button');
         prevArrow.className = 'promo-slider-arrow promo-slider-prev';
         prevArrow.innerHTML = '<i class="fas fa-chevron-left"></i>';
+        prevArrow.setAttribute('aria-label', 'Previous slide');
         
         const nextArrow = document.createElement('button');
         nextArrow.className = 'promo-slider-arrow promo-slider-next';
         nextArrow.innerHTML = '<i class="fas fa-chevron-right"></i>';
+        nextArrow.setAttribute('aria-label', 'Next slide');
         
         slider.appendChild(prevArrow);
         slider.appendChild(nextArrow);
@@ -38,15 +41,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Add event listeners for navigation
         prevArrow.addEventListener('click', function() {
-            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-            showSlide(currentSlide);
-            resetAutoSlide();
+            goToPrevSlide();
         });
         
         nextArrow.addEventListener('click', function() {
-            currentSlide = (currentSlide + 1) % totalSlides;
-            showSlide(currentSlide);
-            resetAutoSlide();
+            goToNextSlide();
         });
         
         // Pause auto-sliding when hovering over the slider
@@ -72,19 +71,33 @@ document.addEventListener('DOMContentLoaded', function() {
         }, { passive: true });
         
         function showSlide(index) {
+            // Make sure index is within valid range
+            if (index < 0) index = totalSlides - 1;
+            if (index >= totalSlides) index = 0;
+            
+            // Hide all slides and show only the active one
             slides.forEach((slide, i) => {
                 slide.classList.remove('active');
-                if (i === index) {
-                    slide.classList.add('active');
-                }
             });
+            
+            slides[index].classList.add('active');
+            currentSlide = index; // Update current slide position
             console.log("Moving to promo slide " + index);
+        }
+        
+        function goToNextSlide() {
+            showSlide((currentSlide + 1) % totalSlides);
+            resetAutoSlide();
+        }
+        
+        function goToPrevSlide() {
+            showSlide((currentSlide - 1 + totalSlides) % totalSlides);
+            resetAutoSlide();
         }
         
         function startAutoSlide() {
             return setInterval(function() {
-                currentSlide = (currentSlide + 1) % totalSlides;
-                showSlide(currentSlide);
+                goToNextSlide();
             }, 4000); // Change slide every 4 seconds
         }
         
@@ -97,14 +110,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const swipeThreshold = 50;
             if (touchEndX < touchStartX - swipeThreshold) {
                 // Swipe left - go to next slide
-                currentSlide = (currentSlide + 1) % totalSlides;
-                showSlide(currentSlide);
-                resetAutoSlide();
+                goToNextSlide();
             } else if (touchEndX > touchStartX + swipeThreshold) {
                 // Swipe right - go to previous slide
-                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-                showSlide(currentSlide);
-                resetAutoSlide();
+                goToPrevSlide();
             }
         }
     }

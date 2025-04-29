@@ -3,6 +3,7 @@
  * - Fully responsive across all device sizes
  * - Uses modern CSS for smooth transitions
  * - Arrow navigation controls
+ * - Perfect looping slides without blank screens
  */
 
 /* Main slider container */
@@ -40,6 +41,7 @@
     opacity: 0;
     transition: opacity 0.8s ease-in-out;
     z-index: 1;
+    overflow: hidden; /* Ensure no content overflows */
 }
 
 /* Active slide */
@@ -59,12 +61,15 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     color: white;
     z-index: 3;
+    transition: all 0.3s ease-in-out;
+    position: relative; /* Ensure proper stacking context */
 }
 
 .slide-content h1 {
     font-size: 2.25rem;
     margin-bottom: 1rem;
     font-weight: 700;
+    line-height: 1.2;
 }
 
 .slide-content .lead {
@@ -78,6 +83,12 @@
     padding: 0.625rem 1.25rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+}
+
+.slide-content .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Arrow navigation */
@@ -99,11 +110,16 @@
     border: none;
     outline: none;
     transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .promo-slider-arrow:hover {
     background-color: rgba(0, 0, 0, 0.8);
     transform: translateY(-50%) scale(1.05);
+}
+
+.promo-slider-arrow:focus {
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
 }
 
 .promo-slider-prev {
@@ -114,7 +130,35 @@
     right: 20px;
 }
 
-/* Responsive adjustments */
+/* Extra large screens - make slider taller and content larger */
+@media (min-width: 1400px) {
+    .promo-slider {
+        height: 600px;
+    }
+    
+    .slide-content {
+        max-width: 500px;
+        margin: 0 0 70px 70px;
+        padding: 2rem;
+    }
+    
+    .slide-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .slide-content .lead {
+        font-size: 1.25rem;
+    }
+}
+
+/* Large desktop */
+@media (min-width: 992px) and (max-width: 1399px) {
+    .promo-slider {
+        height: 520px;
+    }
+}
+
+/* Medium devices (tablets, desktops < 992px) */
 @media (max-width: 991px) {
     .promo-slider {
         height: 450px;
@@ -131,6 +175,7 @@
     }
 }
 
+/* Small devices (landscape phones, tablets < 768px) */
 @media (max-width: 768px) {
     .promo-slider {
         height: 400px;
@@ -159,6 +204,7 @@
     }
 }
 
+/* Extra small devices (portrait phones < 576px) */
 @media (max-width: 576px) {
     .promo-slider {
         height: 350px;
@@ -200,6 +246,7 @@
     }
 }
 
+/* Small phones */
 @media (max-width: 450px) {
     .promo-slider {
         height: 300px;
@@ -218,8 +265,15 @@
     .slide-content .lead {
         font-size: 0.85rem;
     }
+    
+    .promo-slider-arrow {
+        width: 30px;
+        height: 30px;
+        font-size: 0.875rem;
+    }
 }
 
+/* Very small phones */
 @media (max-width: 375px) {
     .promo-slider {
         height: 280px;
@@ -228,5 +282,20 @@
     .slide-content {
         max-width: 220px;
         margin: 0 0 20px 10px;
+        padding: 0.75rem;
+    }
+    
+    .slide-content h1 {
+        font-size: 1.2rem;
+    }
+    
+    .slide-content .lead {
+        font-size: 0.8rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .slide-content .btn {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.8rem;
     }
 }
