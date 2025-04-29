@@ -94,6 +94,7 @@ html, body, .container, .container-fluid, .row {
     padding: 0;
     margin: 0;
     max-width: 100%;
+    padding-top: 64px; /* Match the height of the fixed header */
 }
 
 /* Remove any unwanted margins */
@@ -511,7 +512,7 @@ body .navbar + .full-width-container {
     max-width: 450px;
     margin: 0 auto;
     border-top: 4px solid var(--primary-color);
-    margin-top: 2rem;
+    margin-top: 80px; /* Increased margin to ensure content is below fixed header */
 }
 
 .auth-header {
