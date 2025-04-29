@@ -18,11 +18,18 @@ $message = '';
 $message_type = '';
 
 // Process redemption request
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['reward_id'])) {
-    $reward_id = (int)$_GET['reward_id'];
-    $confirm = isset($_POST['confirm']) ? trim($_POST['confirm']) : '';
-    $game_username = isset($_POST['game_username']) ? trim($_POST['game_username']) : '';
-    $game_invite_link = isset($_POST['game_invite_link']) ? trim($_POST['game_invite_link']) : '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Check for reward_id in both GET and POST parameters for compatibility
+    $reward_id = isset($_POST['reward_id']) ? (int)$_POST['reward_id'] : (isset($_GET['reward_id']) ? (int)$_GET['reward_id'] : 0);
+    
+    // Ensure we have a valid reward_id
+    if ($reward_id <= 0) {
+        $message = 'Invalid reward ID provided. Please try again.';
+        $message_type = 'danger';
+    } else {
+        $confirm = isset($_POST['confirm']) ? trim($_POST['confirm']) : '';
+        $game_username = isset($_POST['game_username']) ? trim($_POST['game_username']) : '';
+        $game_invite_link = isset($_POST['game_invite_link']) ? trim($_POST['game_invite_link']) : '';
     
     // Validate confirmation
     if ($confirm !== 'CONFIRM') {

@@ -573,7 +573,10 @@ $(document).ready(function() {
         $('#rewardModalLabel').text(rewardName);
         $('#rewardDescription').text(rewardDescription);
         $('#rewardPoints').text(rewardPoints + ' points');
-        $('#redeemForm').attr('action', 'redeem.php?reward_id=' + rewardId);
+        $('#redeemForm').attr('action', 'redeem.php');
+        // Set the reward_id as a hidden input field instead of in the URL
+        // This ensures compatibility with both URL formats
+        $('#redeemForm input[name="reward_id"]').val(rewardId);
         
         // Check if this is a game spin reward (CoinMaster or Monopoly)
         if (rewardId == 6 || rewardId == 7) { // IDs for CoinMaster and Monopoly spin rewards
