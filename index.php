@@ -86,12 +86,13 @@ include 'includes/header.php';
             // Display all slides
             foreach ($promoSlides as $index => $slide):
                 $bgImage = !empty($slide['image_path']) ? $slide['image_path'] : 'assets/img/promo-default.jpg';
+                $activeClass = $index === 0 ? 'active' : '';
             ?>
-            <div class="promo-slide" style="background-image: url('<?php echo htmlspecialchars($bgImage); ?>');">
+            <div class="promo-slide <?php echo $activeClass; ?>" style="background-image: url('<?php echo htmlspecialchars($bgImage); ?>');">
                 <?php if (!empty($slide['title']) || !empty($slide['description']) || !empty($slide['button_text'])): ?>
                 <div class="slide-content">
                     <?php if (!empty($slide['title'])): ?>
-                    <h1 class="display-4"><?php echo htmlspecialchars($slide['title']); ?></h1>
+                    <h1><?php echo htmlspecialchars($slide['title']); ?></h1>
                     <?php endif; ?>
                     
                     <?php if (!empty($slide['description'])): ?>
@@ -111,15 +112,7 @@ include 'includes/header.php';
             </div>
             <?php endforeach; ?>
         </div>
-        
-        <!-- Slider controls -->
-        <?php if (count($promoSlides) > 1): ?>
-        <div class="promo-slider-controls">
-            <?php for ($i = 0; $i < count($promoSlides); $i++): ?>
-            <div class="promo-slider-dot <?php echo ($i === 0) ? 'active' : ''; ?>" data-slide="<?php echo $i; ?>"></div>
-            <?php endfor; ?>
-        </div>
-        <?php endif; ?>
+        <!-- Navigation arrows will be added by JavaScript -->
     </div>
 </div>
 

@@ -36,6 +36,7 @@ $app_logo = getSetting('app_logo', '');
     
     <!-- Custom CSS -->
     <link href="/assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/new-promo-slider.css" rel="stylesheet">
     
     <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>

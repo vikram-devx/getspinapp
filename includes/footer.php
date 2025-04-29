@@ -30,7 +30,7 @@
     <script src="assets/js/main.js"></script>
     
     <!-- Promo Slider JS -->
-    <script src="assets/js/promo-slider.js"></script>
+    <script src="assets/js/new-promo-slider.js"></script>
     
     <!-- EmailJS Configuration -->
     <script src="assets/js/emailjs-config.js"></script>
