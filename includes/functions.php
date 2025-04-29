@@ -21,11 +21,10 @@ function detectUserCountry() {
         $ip = $_SERVER['REMOTE_ADDR'] ?? '';
     }
     
-    // For localhost or invalid IPs, don't return default yet, try to get country from IP
+    // For localhost or invalid IPs, return the default country
     if (empty($ip) || $ip == '127.0.0.1' || $ip == '::1') {
-        // Use a fallback IP for country detection if we're on localhost
-        $ip = '93.184.216.34';  // Example.com IP - this is the one specified by the senior developer
-        error_log("Using fallback IP for geolocation: " . $ip);
+        error_log("Local/invalid IP detected: " . $ip . ". Using default country directly: " . $default_country);
+        return $default_country;
     }
     
     // Try to get country using free IP geolocation service
@@ -335,10 +334,9 @@ function getOffers($ip = null, $user_agent = null, $offer_type = null, $max = nu
         
         // Check if the IP is a private/local IP address
         if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
-            // This is a private IP, use a public IP for testing
-            // Using a common test IP (example.com's IP) to ensure we get geo data
-            $ip = '93.184.216.34'; 
-            error_log("Using public IP for OGAds API request: " . $ip);
+            // This is a private/local IP, but we'll still send it to the API
+            // We'll rely on explicitly setting the country parameter instead
+            error_log("Private/local IP detected: " . $ip . ". Will rely on country parameter for geo-targeting.");
         }
     }
     
@@ -500,10 +498,9 @@ function getOfferDetails($offer_id) {
     
     // Check if the IP is a private/local IP address
     if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
-        // This is a private IP, use a public IP for testing
-        // Using a common test IP (example.com's IP) to ensure we get geo data
-        $ip = '93.184.216.34'; 
-        error_log("Using public IP for OGAds API offer details request: " . $ip);
+        // This is a private/local IP, but we'll still send it to the API
+        // We'll rely on explicitly setting the country parameter instead
+        error_log("Private/local IP detected: " . $ip . ". Will rely on country parameter for offer details.");
     }
     
     // Get user's country and add it to the request
