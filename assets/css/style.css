@@ -1063,6 +1063,32 @@ body .navbar + .full-width-container {
     margin-top: -1px; /* Remove the gap between navbar and slider */
 }
 
+/* Promo Slider Controls */
+.promo-slider-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    z-index: 5;
+}
+
+.promo-slider-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.promo-slider-dot.active {
+    background-color: white;
+    transform: scale(1.2);
+}
+
 .promo-slides {
     display: flex;
     transition: transform 0.5s ease-in-out;
@@ -1076,10 +1102,21 @@ body .navbar + .full-width-container {
     align-items: flex-end; /* Align content to bottom */
     justify-content: flex-start; /* Align content to left */
     background-position: center;
-    background-size: cover; /* Changed to cover to fill the container */
+    background-size: cover; /* Cover to fill the container */
     background-repeat: no-repeat;
-    position: relative; /* For positioning overlay content */
+    position: absolute; /* Position absolute for fade transitions */
     background-color: transparent; /* No background color */
+    top: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    z-index: 1;
+}
+
+.promo-slide.active {
+    opacity: 1;
+    z-index: 2;
 }
 
 .slide-content {

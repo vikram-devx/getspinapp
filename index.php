@@ -114,17 +114,10 @@ include 'includes/header.php';
         
         <!-- Slider controls -->
         <?php if (count($promoSlides) > 1): ?>
-        <div class="slider-controls">
+        <div class="promo-slider-controls">
             <?php for ($i = 0; $i < count($promoSlides); $i++): ?>
-            <div class="slider-dot <?php echo ($i === 0) ? 'active' : ''; ?>" data-index="<?php echo $i; ?>"></div>
+            <div class="promo-slider-dot <?php echo ($i === 0) ? 'active' : ''; ?>" data-slide="<?php echo $i; ?>"></div>
             <?php endfor; ?>
-        </div>
-        
-        <div class="slider-arrow slider-arrow-left">
-            <i class="fas fa-chevron-left"></i>
-        </div>
-        <div class="slider-arrow slider-arrow-right">
-            <i class="fas fa-chevron-right"></i>
         </div>
         <?php endif; ?>
     </div>
