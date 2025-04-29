@@ -483,12 +483,17 @@ include 'includes/header.php';
                 <div class="alert alert-<?php echo $message_type; ?>"><?php echo $message; ?></div>
                 <?php endif; ?>
                 
-                <!-- Debug information - User country -->
+                <?php 
+                // Debug information - Show only when debugging is enabled
+                $show_debug_info = defined('SHOW_DEBUG_INFO') ? SHOW_DEBUG_INFO : false;
+                if ($show_debug_info): 
+                ?>
                 <div class="alert alert-info mb-3">
                     <strong>Debug Info:</strong> Detected Country: <?php echo htmlspecialchars($user_country); ?> | 
                     IP: <?php echo htmlspecialchars($_SERVER['REMOTE_ADDR']); ?> | 
                     Device: <?php echo htmlspecialchars($device_type); ?>
                 </div>
+                <?php endif; ?>
                 
                 <?php if (empty($offers)): ?>
                 <div class="alert alert-info">

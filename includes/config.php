@@ -24,6 +24,9 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+// Debug Settings
+define('SHOW_DEBUG_INFO', true); // Set to false to hide debug information
+
 // Timezone
 date_default_timezone_set('UTC');
 
