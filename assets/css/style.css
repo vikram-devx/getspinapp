@@ -94,7 +94,7 @@ html, body, .container, .container-fluid, .row {
     padding: 0;
     margin: 0;
     max-width: 100%;
-    padding-top: 64px; /* Match the height of the fixed header */
+    padding-top: 80px; /* Increased padding to ensure slider is fully visible */
 }
 
 /* Remove any unwanted margins */
@@ -1059,7 +1059,7 @@ body .navbar + .full-width-container {
     width: 100%;
     position: relative;
     overflow: hidden;
-    height: 500px; /* Desktop height */
+    height: 520px; /* Increased desktop height for better visibility */
     background-color: transparent; /* No background color */
     margin-top: -1px; /* Remove the gap between navbar and slider */
 }
@@ -1121,12 +1121,13 @@ body .navbar + .full-width-container {
 }
 
 .slide-content {
-    background-color: rgba(0, 0, 0, 0.6);
-    padding: 1.5rem;
-    border-radius: 5px;
-    max-width: 400px;
-    margin: 0 0 40px 40px; /* Position at bottom left with some spacing */
+    background-color: rgba(0, 0, 0, 0.7); /* Increased opacity for better visibility */
+    padding: 1.75rem;
+    border-radius: 8px;
+    max-width: 450px; /* Increased width for better readability */
+    margin: 0 0 60px 60px; /* More spacing from bottom and left for better visibility */
     text-align: left; /* Left align text */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Added shadow for depth */
 }
 
 .slider-controls {
@@ -1293,7 +1294,7 @@ body .navbar + .full-width-container {
 
 @media (max-width: 576px) {
     .promo-slider {
-        height: 280px; /* Adjusted height for small devices */
+        height: 300px; /* Slightly taller on small devices for better proportions */
     }
     
     .promo-slide {
@@ -1302,24 +1303,26 @@ body .navbar + .full-width-container {
     }
     
     .slide-content {
-        max-width: 250px;
-        margin: 0 0 15px 10px;
-        padding: 0.75rem;
+        max-width: 270px;
+        margin: 0 0 30px 20px; /* More balanced spacing */
+        padding: 1rem;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25); /* Enhanced shadow for mobile */
     }
     
     .slide-content h1 {
-        font-size: 1.3rem;
+        font-size: 1.5rem; /* Slightly larger font for better visibility */
         margin-bottom: 0.5rem;
+        font-weight: 600;
     }
     
     .slide-content .lead {
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
+        font-size: 1rem; /* Slightly larger for better readability */
+        margin-bottom: 0.75rem;
     }
     
     .slide-content .btn {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.875rem;
+        padding: 0.4rem 0.75rem; /* Larger buttons for better touch targets */
+        font-size: 0.9rem;
     }
     
     .slider-arrow {
@@ -1731,35 +1734,31 @@ body .navbar + .full-width-container {
 /* Extra small devices */
 @media (max-width: 400px) {
     .promo-slider {
-        height: 220px;
+        height: 240px; /* Slightly taller for better proportions */
     }
     
     .promo-slide {
         background-size: cover;
+        background-position: center;
     }
     
     .slide-content {
-        max-width: 180px;
-        margin: 0 0 10px 10px;
-        padding: 0.5rem;
+        max-width: 250px;
+        margin: 0 0 25px 15px; /* Adjusted spacing */
+        padding: 0.9rem;
     }
     
     .slide-content h1 {
-        font-size: 1rem;
-        margin-bottom: 0.25rem;
+        font-size: 1.3rem;
     }
     
     .slide-content .lead {
-        font-size: 0.8rem;
-        margin-bottom: 0.25rem;
+        font-size: 0.95rem;
     }
-    
-    .slide-content .btn {
-        padding: 0.2rem 0.4rem;
-        font-size: 0.75rem;
-    }
-    
-    /* Make slider controls smaller on tiny screens */
+}
+
+/* Make slider controls smaller on tiny screens */
+@media (max-width: 360px) {
     .slider-controls {
         bottom: 10px;
     }
@@ -1768,8 +1767,10 @@ body .navbar + .full-width-container {
         width: 8px;
         height: 8px;
     }
-    
-    /* Extreme mobile optimization for dashboard */
+}
+
+/* Extreme mobile optimization for dashboard */
+@media (max-width: 360px) {
     .dashboard-content .card-body {
         padding: 0.5rem;
     }
