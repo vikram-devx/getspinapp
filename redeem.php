@@ -55,6 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $redemption_details = null;
             if ($reward_id == 6 || $reward_id == 7) {
                 $game_type = ($reward_id == 6) ? 'CoinMaster' : 'Monopoly';
+                
+                // Store additional details for game rewards
                 $redemption_details = json_encode([
                     'game_type' => $game_type,
                     'username' => $game_username,

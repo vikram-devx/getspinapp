@@ -131,12 +131,12 @@ include 'includes/header.php';
                     <input type="hidden" name="reward_id" value="">
                     <div id="gameDetailsFields" style="display: none;">
                         <div class="mb-3">
-                            <label for="gameUsername" class="form-label">Game Username:</label>
+                            <label for="gameUsername" class="form-label game-username-label">Game Username:</label>
                             <input type="text" class="form-control" id="gameUsername" name="game_username" placeholder="Enter your game username">
                             <div class="form-text">Your correct game username is required to receive spins.</div>
                         </div>
                         <div class="mb-3">
-                            <label for="gameInviteLink" class="form-label">Invite Link (Optional):</label>
+                            <label for="gameInviteLink" class="form-label game-invite-label">Invite Link (Optional):</label>
                             <input type="text" class="form-control" id="gameInviteLink" name="game_invite_link" placeholder="Paste invite link here">
                             <div class="form-text">Add your invite link to receive additional bonuses.</div>
                         </div>

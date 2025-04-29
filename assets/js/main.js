@@ -578,7 +578,7 @@ $(document).ready(function() {
         // This ensures compatibility with both URL formats
         $('#redeemForm input[name="reward_id"]').val(rewardId);
         
-        // Check if this is a game spin reward (CoinMaster or Monopoly)
+        // Always show game details fields for CoinMaster and Monopoly spin rewards
         if (rewardId == 6 || rewardId == 7) { // IDs for CoinMaster and Monopoly spin rewards
             $('#gameDetailsFields').show();
             $('#gameUsername').attr('required', true);
@@ -586,8 +586,12 @@ $(document).ready(function() {
             // Set the placeholder text based on the game type
             if (rewardId == 6) {
                 $('#gameUsername').attr('placeholder', 'Enter your CoinMaster username');
+                $('.game-username-label').text('CoinMaster Username:');
+                $('.game-invite-label').text('CoinMaster Invite Link (Optional):');
             } else {
                 $('#gameUsername').attr('placeholder', 'Enter your Monopoly username');
+                $('.game-username-label').text('Monopoly Username:');
+                $('.game-invite-label').text('Monopoly Invite Link (Optional):');
             }
         } else {
             $('#gameDetailsFields').hide();
