@@ -100,6 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     }
+  }
 } else {
     // Redirect to rewards page if no reward_id is provided
     header('Location: rewards.php');
