@@ -2579,11 +2579,13 @@ body .navbar + .full-width-container {
     .rewards-page .navbar.fixed-header .navbar-nav,
     .referrals-page .navbar.fixed-header .navbar-nav,
     .leaderboard-page .navbar.fixed-header .navbar-nav,
+    .profile-page .navbar.fixed-header .navbar-nav,
     .dashboard-page .navbar.fixed-header .navbar-collapse,
     .tasks-page .navbar.fixed-header .navbar-collapse,
     .rewards-page .navbar.fixed-header .navbar-collapse,
     .referrals-page .navbar.fixed-header .navbar-collapse,
-    .leaderboard-page .navbar.fixed-header .navbar-collapse {
+    .leaderboard-page .navbar.fixed-header .navbar-collapse,
+    .profile-page .navbar.fixed-header .navbar-collapse {
         display: none !important;
     }
     
@@ -2592,7 +2594,8 @@ body .navbar + .full-width-container {
     .tasks-page .navbar.fixed-header,
     .rewards-page .navbar.fixed-header,
     .referrals-page .navbar.fixed-header,
-    .leaderboard-page .navbar.fixed-header {
+    .leaderboard-page .navbar.fixed-header,
+    .profile-page .navbar.fixed-header {
         height: 56px;
         display: flex;
         align-items: center;
@@ -2603,7 +2606,8 @@ body .navbar + .full-width-container {
     .tasks-page .content-with-fixed-header,
     .rewards-page .content-with-fixed-header,
     .referrals-page .content-with-fixed-header,
-    .leaderboard-page .content-with-fixed-header {
+    .leaderboard-page .content-with-fixed-header,
+    .profile-page .content-with-fixed-header {
         padding-top: 70px; /* Reduced padding for mobile */
     }
 }
@@ -2705,7 +2709,8 @@ body.dashboard-page .card:first-of-type,
 body.tasks-page .card:first-of-type,
 body.rewards-page .card:first-of-type,
 body.referrals-page .card:first-of-type,
-body.leaderboard-page .card:first-of-type {
+body.leaderboard-page .card:first-of-type,
+body.profile-page .card:first-of-type {
     margin-top: 10px !important; /* More top margin for first card */
 }
 

@@ -88,6 +88,8 @@ if ($current_page_name === 'dashboard') {
     $body_class = 'referrals-page';
 } elseif ($current_page_name === 'leaderboard') {
     $body_class = 'leaderboard-page';
+} elseif ($current_page_name === 'profile') {
+    $body_class = 'profile-page';
 }
 ?>
 <body class="<?php echo $body_class; ?>">
