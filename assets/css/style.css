@@ -94,7 +94,7 @@ html, body, .container, .container-fluid, .row {
     padding: 0;
     margin: 0;
     max-width: 100%;
-    padding-top: 80px; /* Increased padding to ensure slider is fully visible */
+    padding-top: 65px; /* Adjusted padding as requested */
 }
 
 /* Remove any unwanted margins */
@@ -512,7 +512,7 @@ body .navbar + .full-width-container {
     max-width: 450px;
     margin: 0 auto;
     border-top: 4px solid var(--primary-color);
-    margin-top: 80px; /* Increased margin to ensure content is below fixed header */
+    margin-top: 65px; /* Match the padding-top of full-width-container */
 }
 
 .auth-header {
@@ -1067,7 +1067,7 @@ body .navbar + .full-width-container {
 /* Promo Slider Controls */
 .promo-slider-controls {
     position: absolute;
-    bottom: 20px;
+    bottom: 10px; /* Adjust position to be higher inside the slider */
     left: 0;
     right: 0;
     display: flex;
