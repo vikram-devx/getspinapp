@@ -2576,14 +2576,23 @@ body .navbar + .full-width-container {
 @media (max-width: 991px) {
     .dashboard-page .navbar.fixed-header .navbar-nav,
     .tasks-page .navbar.fixed-header .navbar-nav,
+    .rewards-page .navbar.fixed-header .navbar-nav,
+    .referrals-page .navbar.fixed-header .navbar-nav,
+    .leaderboard-page .navbar.fixed-header .navbar-nav,
     .dashboard-page .navbar.fixed-header .navbar-collapse,
-    .tasks-page .navbar.fixed-header .navbar-collapse {
+    .tasks-page .navbar.fixed-header .navbar-collapse,
+    .rewards-page .navbar.fixed-header .navbar-collapse,
+    .referrals-page .navbar.fixed-header .navbar-collapse,
+    .leaderboard-page .navbar.fixed-header .navbar-collapse {
         display: none !important;
     }
     
     /* Simplify the header height for mobile and ensure vertical centering */
     .dashboard-page .navbar.fixed-header,
-    .tasks-page .navbar.fixed-header {
+    .tasks-page .navbar.fixed-header,
+    .rewards-page .navbar.fixed-header,
+    .referrals-page .navbar.fixed-header,
+    .leaderboard-page .navbar.fixed-header {
         height: 56px;
         display: flex;
         align-items: center;
@@ -2591,7 +2600,10 @@ body .navbar + .full-width-container {
     
     /* Adjust content padding for mobile */
     .dashboard-page .content-with-fixed-header,
-    .tasks-page .content-with-fixed-header {
+    .tasks-page .content-with-fixed-header,
+    .rewards-page .content-with-fixed-header,
+    .referrals-page .content-with-fixed-header,
+    .leaderboard-page .content-with-fixed-header {
         padding-top: 70px; /* Reduced padding for mobile */
     }
 }
@@ -2690,7 +2702,10 @@ body.dashboard-page .content-with-fixed-header {
 }
 
 body.dashboard-page .card:first-of-type,
-body.tasks-page .card:first-of-type {
+body.tasks-page .card:first-of-type,
+body.rewards-page .card:first-of-type,
+body.referrals-page .card:first-of-type,
+body.leaderboard-page .card:first-of-type {
     margin-top: 10px !important; /* More top margin for first card */
 }
 

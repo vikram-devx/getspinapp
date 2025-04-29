@@ -82,6 +82,12 @@ if ($current_page_name === 'dashboard') {
     $body_class = 'dashboard-page';
 } elseif ($current_page_name === 'tasks') {
     $body_class = 'tasks-page';
+} elseif ($current_page_name === 'rewards') {
+    $body_class = 'rewards-page';
+} elseif ($current_page_name === 'referrals') {
+    $body_class = 'referrals-page';
+} elseif ($current_page_name === 'leaderboard') {
+    $body_class = 'leaderboard-page';
 }
 ?>
 <body class="<?php echo $body_class; ?>">
