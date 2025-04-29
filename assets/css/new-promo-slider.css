@@ -28,7 +28,7 @@
 .promo-slide {
     min-width: 100%;
     height: 100%;
-    display: flex;
+    display: none; /* Hidden by default */
     align-items: flex-end;
     justify-content: flex-start;
     background-position: center;
@@ -38,15 +38,13 @@
     top: 0;
     left: 0;
     width: 100%;
-    opacity: 0;
-    transition: opacity 0.8s ease-in-out;
     z-index: 1;
     overflow: hidden; /* Ensure no content overflows */
 }
 
 /* Active slide */
 .promo-slide.active {
-    opacity: 1;
+    display: flex; /* Show only active slide */
     z-index: 2;
 }
 

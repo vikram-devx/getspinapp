@@ -1,10 +1,9 @@
 /**
- * Advanced Promo Slider with Arrow Navigation
- * - Fully responsive across all devices
+ * Simple Promo Slider with Arrow Navigation
+ * - One image per slide
  * - Left/right arrow navigation
  * - Auto-slide functionality with pause on hover
- * - Smooth transitions between slides
- * - Perfect looping through slides
+ * - Simple fade transitions between slides
  */
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize the promo slider
@@ -32,9 +31,9 @@ document.addEventListener('DOMContentLoaded', function() {
         slider.appendChild(prevArrow);
         slider.appendChild(nextArrow);
         
-        // Set up initial slide
+        // Set up initial slide - only show the first one
         let currentSlide = 0;
-        showSlide(currentSlide);
+        setupInitialState();
         
         // Set up auto-sliding
         let slideInterval = startAutoSlide();
@@ -70,28 +69,47 @@ document.addEventListener('DOMContentLoaded', function() {
             handleSwipe();
         }, { passive: true });
         
-        function showSlide(index) {
-            // Make sure index is within valid range
-            if (index < 0) index = totalSlides - 1;
-            if (index >= totalSlides) index = 0;
-            
-            // Hide all slides and show only the active one
-            slides.forEach((slide, i) => {
+        function setupInitialState() {
+            // Hide all slides initially
+            slides.forEach((slide, index) => {
+                slide.style.display = 'none';
                 slide.classList.remove('active');
             });
             
+            // Show only the first slide
+            slides[0].style.display = 'flex';
+            slides[0].classList.add('active');
+        }
+        
+        function showSlide(index) {
+            // Make sure index is within valid range (loop around)
+            if (index < 0) index = totalSlides - 1;
+            if (index >= totalSlides) index = 0;
+            
+            // Hide all slides
+            slides.forEach((slide) => {
+                slide.style.display = 'none';
+                slide.classList.remove('active');
+            });
+            
+            // Show only the current slide
+            slides[index].style.display = 'flex';
             slides[index].classList.add('active');
-            currentSlide = index; // Update current slide position
+            
+            // Update current slide index
+            currentSlide = index;
             console.log("Moving to promo slide " + index);
         }
         
         function goToNextSlide() {
-            showSlide((currentSlide + 1) % totalSlides);
+            const nextIndex = (currentSlide + 1) % totalSlides;
+            showSlide(nextIndex);
             resetAutoSlide();
         }
         
         function goToPrevSlide() {
-            showSlide((currentSlide - 1 + totalSlides) % totalSlides);
+            const prevIndex = (currentSlide - 1 + totalSlides) % totalSlides;
+            showSlide(prevIndex);
             resetAutoSlide();
         }
         
